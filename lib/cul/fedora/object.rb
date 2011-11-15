@@ -1,3 +1,4 @@
+require 'cul/fedora/resource_index'
 module Cul
 module Fedora
   TRIPLES_QUERY_TEMPLATE = <<-hd.gsub(/\s+/, " ").strip
@@ -60,7 +61,7 @@ hd
   module Objects
     class BaseObject
       def initialize(document, client=HTTPClient.new)
-        @riurl = RI_CONFIG[:riurl] + '/risearch'
+        @riurl = Cul::Fedora::ResourceIndex.config[:riurl] + '/risearch'
         @http_client = client
         if document[:pid_s].nil?
             _pid = document[:id].split('@')[0]

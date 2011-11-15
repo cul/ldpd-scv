@@ -1,5 +1,6 @@
+require 'active_support/all'
 module ModsHelper
-  include Blacklight::SolrHelper
+#  include Blacklight::SolrHelper
   Namespace = {'mods'=>'http://www.loc.gov/mods/v3'}
   def extract_mods_details(metadata)
     details = []
@@ -75,7 +76,7 @@ module ModsHelper
     ext_link = image_tag("wikimedia/Icon_External_Link.png")
     # URL (external)
     xml.xpath("/mods:mods/mods:location/mods:url",ns).each do |node|
-      details << ["Item in Context:", link_to("#{abbreviate_url(node.content.to_s)}  #{ext_link}", node.content, :target => "blank")]
+      details << ["Item in Context:", link_to("#{abbreviate_url(node.content.to_s)}", node.content, :target => "blank") + ext_link]
     end
     # physicalLocation
     nodes = xml.xpath("/mods:mods/mods:location/mods:physicalLocation",ns) - xml.xpath("/mods:mods/mods:location/mods:physicalLocation[@authority='marcorg']",ns)
@@ -88,7 +89,7 @@ module ModsHelper
         label += ":"
         value = parse_mods_title(node)
         if node.xpath("../mods:location/mods:url",ns).first
-          value = link_to("#{value} #{ext_link}",node.xpath("../mods:location/mods:url",ns).first.text, :target=>"blank")
+          value = link_to("#{value}",node.xpath("../mods:location/mods:url",ns).first.text, :target=>"blank") + ext_link
         end
         details << [label, value]
       end

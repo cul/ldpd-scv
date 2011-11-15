@@ -29,7 +29,7 @@
         %div.yui-u.first
           %span.title_data="XML Metadata:"
         .yui-u{:style=>"margin-left:0px;"}
-          = metadata_list.collect {|x| link_to "#{x[:type]}", x[:show_url]}.join(", ")
+          != metadata_list.collect {|x| link_to "#{x[:type]}", x[:show_url]}.join(", ")
 
 - if groups
   = render :partial => "catalog/_show_partials/groups", :locals => {:document => document}

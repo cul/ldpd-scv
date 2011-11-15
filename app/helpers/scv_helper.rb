@@ -1,7 +1,7 @@
-require 'lib/cul/fedora_object.rb'
 require 'rsolr'
+require 'cul'
 module ScvHelper
-  include Blacklight::SolrHelper
+#  include Blacklight::SolrHelper
   include CatalogHelper
   include ModsHelper
 
@@ -9,8 +9,8 @@ module ScvHelper
     unless @http_client
       @http_client ||= HTTPClient.new
       @http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      uname = FEDORA_CREDENTIALS_CONFIG[:username]
-      pwd = FEDORA_CREDENTIALS_CONFIG[:username]
+      uname = Cul::Fedora.repository.config[:user]
+      pwd = Cul::Fedora.repository.config[:password]
       @http_client.set_auth(nil, uname, pwd)
     end
     @http_client
@@ -64,7 +64,7 @@ module ScvHelper
       "http://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/ImageNA.svg/200px-ImageNA.svg.png"
     else
       base_filename = base_id.gsub(/\:/,"") + '.' +  base_type.gsub(/^[^\/]+\//,"")
-      cachecontent_path("show", base_id, "CONTENT", base_filename)
+      cache_path("show", base_id, "CONTENT", base_filename)
     end
   end
 
@@ -74,7 +74,7 @@ module ScvHelper
     case document["format"]
     when "image/zooming"
       base_id = base_id_for(document)
-      url = RI_CONFIG[:riurl] + "/get/" + base_id + "/SOURCE"
+      url = Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + base_id + "/SOURCE"
       head_req = http_client.head(url)
       # raise head_req.inspect
       file_size = head_req.header["Content-Length"].first.to_i
@@ -97,7 +97,7 @@ module ScvHelper
           dc_filename = base_filename + "_dc.xml"
 
           res[:show_path] = fedora_content_path("show", base_id, "CONTENT", img_filename)
-          res[:cache_path] = cachecontent_path("show", base_id, "CONTENT", img_filename)
+          res[:cache_path] = cache_path("show", base_id, "CONTENT", img_filename)
           res[:download_path] = fedora_content_path("download", base_id, "CONTENT", img_filename)
           res[:dc_path] = fedora_content_path('show_pretty', base_id, "DC", dc_filename)
           results << res
@@ -116,7 +116,7 @@ module ScvHelper
   end
 
   def doc_object_method(doc, method)
-    RI_CONFIG[:riurl] + '/get/' + base_id_for(doc).to_s +  method.to_s
+    Cul::Fedora::ResourceIndex.config[:riurl] + '/get/' + base_id_for(doc).to_s +  method.to_s
   end
 
   def doc_json_method(doc, method)
@@ -154,7 +154,7 @@ module ScvHelper
     document[:index_type_label_s]
   end
   def update_doc(id, fields={})
-      _solr = RSolr.connect :url => SOLR_CONFIG[:url]
+      _solr = RSolr.connect :url => Blacklight.solr_config[:url]
       _doc = _solr.find({:qt => :document, :id => id})
       _doc = _doc.docs.first
       _doc.merge!(fields)
@@ -258,13 +258,13 @@ module ScvHelper
     res = {}
     res[:title] = type
     res[:id] = pid
-    block = res[:title] == "DC" ? "DC" : "CONTENT"
+    block = res[:title] == "DC" ? "DC" : "descMetadata"
     filename = res[:id].gsub(/\:/,"")
     filename += "_" + res[:title].downcase
     filename += ".xml"
        res[:show_url] = fedora_content_path(:show_pretty, res[:id], block, filename) + '?print_binary_octet=true'
     res[:download_url] = fedora_content_path(:download, res[:id], block, filename)
-    res[:direct_link] = RI_CONFIG[:riurl] + "/get/" + res[:id] + "/" + block
+    res[:direct_link] = Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + res[:id] + "/" + block
     res[:type] = block == "DC"  ? "DublinCore" : "MODS"
     res
   end
@@ -278,20 +278,19 @@ module ScvHelper
       idparts = doc[:id].split(/@/)
       md = idparts.last
       if not md.match(/^.*#DC$/)
-        results << decorate_metadata_response("MODS" , md)
+        results << decorate_metadata_response("MODS" , base_id_for(doc))
       end
       results << decorate_metadata_response("DC" , base_id_for(doc))
       return results
     end
 
-    json =  Cul::Fedora::Objects::BaseObject.new(doc,http_client).metadata_list
-    json << {"DC" => base_id_for(doc)}
+    json = [{"descMetadata" => base_id_for(doc)} , {"DC" => base_id_for(doc)}]
 
     json.each do  |meta_hash|
-      meta_hash.each do |desc, uri|
-        res = decorate_metadata_response(desc, trim_fedora_uri_to_pid(uri))
+      meta_hash.each do |dsid, uri|
+        res = decorate_metadata_response(dsid, trim_fedora_uri_to_pid(uri))
         begin
-          res[:xml] = Nokogiri::XML(http_client.get_content(res[:direct_link]))
+          res[:xml] = Nokogiri::XML(Cul::Fedora.repository.datastream_dissemination(:pid=>uri, :dsid=>dsid))
           root = res[:xml].root
           res[:type] = "MODS" if root.name == "mods" && root.attributes["schemaLocation"].value.include?("/mods/")
         rescue
@@ -309,7 +308,7 @@ module ScvHelper
   end
 
   def resolve_fedora_uri(uri)
-    RI_CONFIG[:riurl] + "/get" + uri.gsub(/info\:fedora/,"")
+    Cul::Fedora::ResourceIndex.config[:riurl] + "/get" + uri.gsub(/info\:fedora/,"")
   end
   def link_to_clio(document,link_text="More information in CLIO")
     if document["clio_s"] and document["clio_s"].length > 0

@@ -11,6 +11,6 @@
           .yui-u.first
             %span.title_data="Download Metadata:"
           .yui-u
-            = get_metadata_list(document,true).collect { |x| link_to "#{x[:type]}", x[:show_url]}.join(", ")
+            != get_metadata_list(document,true).collect { |x| link_to "#{x[:type]}", x[:show_url]}.join(", ")
       %hr
       = render :partial => "catalog/_show_partials/image/display_derivatives", :locals => {:document => document} unless document.nil?

@@ -1,4 +1,4 @@
-class ThumbnailController < ApplicationController
+class ThumbnailsController < ApplicationController
   # some thumbnail urls
   NO_THUMB = Rails.root + "/public/images/wikimedia/200px-ImageNA.svg.png"
   COLLECTION_THUMB = Rails.root + "/public/images/crystal/kmultiple.png"
@@ -10,11 +10,11 @@ class ThumbnailController < ApplicationController
   IMAGE_LENGTH = "http://purl.oclc.org/NET/CUL/RESOURCE/STILLIMAGE/BASIC/imageLength"
 
   before_filter :require_staff
-  caches_action :get, :expires_in => 7.days,
+  caches_action :show, :expires_in => 7.days,
     :cache_path => proc { |c|
       c.params
     }
-  def get
+  def show
     pid = params[:id].split(/@/)[0]
     get_by_pid(pid)
   end
@@ -35,7 +35,7 @@ class ThumbnailController < ApplicationController
       # do the triples indicate this is a thumb? fetch
       if thumb_triples?(triples)
         mime = triples[FORMAT].first
-        url = {:url=>RI_CONFIG[:riurl] + "/get/" + pid + "/CONTENT", :mime=>mime}
+        url = {:url=>Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + pid + "/CONTENT", :mime=>mime}
       else
         if triples[MEMBER_OF].nil?
           url = {:url=>NO_THUMB,:mime=>'image/png'}
@@ -120,12 +120,12 @@ class ThumbnailController < ApplicationController
     if base_id.nil?
       {:url=>NO_THUMB, :mime=>'image/png'}
     else
-      {:url=>RI_CONFIG[:riurl] + "/get/" + base_id + "/CONTENT",:mime=>base_type}
+      {:url=>Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + base_id + "/CONTENT",:mime=>base_type}
     end
   end
 
   def jp2_thumbnail(pid)
-    {:url => RI_CONFIG[:riurl] + '/objects/' + pid + '/methods/ldpd:sdef.Image/getView?max=250', :mime => 'image/jpeg'}
+    {:url => Cul::Fedora::ResourceIndex.config[:riurl] + '/objects/' + pid + '/methods/ldpd:sdef.Image/getView?max=250', :mime => 'image/jpeg'}
   end
 
   def pid_from_uri(uri)

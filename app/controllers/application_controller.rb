@@ -1,47 +1,50 @@
-require_dependency 'vendor/plugins/blacklight/app/controllers/application_controller.rb' 
 require "base64"
+require "blacklight"
 require "ruby-prof"
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
-  unloadable
-  helper :all # include all helpers, all the time
-  before_filter :set_current_user
-  before_filter :require_admin, :only => :profile
-  around_filter :profile
+  # Adds a few additional behaviors into the application controller 
+   include Blacklight::Controller
+  # Please be sure to impelement current_user and user_session. Blacklight depends on 
+  # these methods in order to perform user specific actions. 
 
-  def set_current_user
-    Authorization.current_user = current_user
-  end
+  unloadable
+  include Blacklight::Controller
+  helper_method :user_session, :current_user, :fedora_config, :solr_config, :relative_root # share some methods w/ views via helpers
+  helper :all # include all helpers, all the time
+  before_filter :check_new_session
 
   def current_user
     return @current_user if defined?(@current_user)
     
-    if current_user_session
-      @current_user = current_user_session.user
+    if user_session
+      @current_user = user_session.user
     else
       @current_user = false
     end
     @current_user
   end
 
-  def profile
-    return yield if params[:profile].nil?
-    result = RubyProf.profile { yield }
-    printer = RubyProf::GraphPrinter.new(result)
-    out = StringIO.new
-    printer.print(out, 0)
-    response.body.replace out.string
-    response.content_type = "text/plain"
+  def user_session
+    return @user_session if defined?(@user_session)
+    @user_session = UserSession.find
   end
 
   protected
 
+  def check_new_session
+    if(params[:new_session])
+      current_user.set_personal_info_via_ldap
+      current_user.save
+    end
+  end
+
   def require_user
     unless current_user
       store_location
-      redirect_to new_user_session_url
+      redirect_to new_user_session_path
       return false
     end
   end
@@ -53,7 +56,7 @@ class ApplicationController < ActionController::Base
       end
     else
       store_location
-      redirect_to new_user_session_url
+      redirect_to new_user_session_path
       return false
     end
   end
@@ -65,7 +68,7 @@ class ApplicationController < ActionController::Base
       end
     else
       store_location
-      redirect_to new_user_session_url
+      redirect_to new_user_session_path
       return false
     end
   end
@@ -115,15 +118,16 @@ class ApplicationController < ActionController::Base
     javascript_includes << ['accordion', 'zooming_image']
     extra_head_content << [stylesheet_tag(openlayers_css, :media=>'all'), javascript_tag(openlayers_js)]
   end
-  def fedora_creds
-    unless @fedora_creds
-      uname = FEDORA_CREDENTIALS_CONFIG[:username]
-      pwd = FEDORA_CREDENTIALS_CONFIG[:password]
-      fc = "#{uname}:#{pwd}"
-      @fedora_creds = [fc].pack('m').delete("\r\n")
-    end
-    @fedora_creds
-  end
+
+#  def fedora_creds
+#    unless @fedora_creds
+#      uname = FEDORA_CREDENTIALS_CONFIG[:username]
+#      pwd = FEDORA_CREDENTIALS_CONFIG[:password]
+#      fc = "#{uname}:#{pwd}"
+#      @fedora_creds = [fc].pack('m').delete("\r\n")
+#    end
+#    @fedora_creds
+#  end
 
   def http_client
     unless @http_client
@@ -132,13 +136,13 @@ class ApplicationController < ActionController::Base
     @http_client
   end
 
-  def set_fedora_credentials(hc,target)
-    uname = FEDORA_CREDENTIALS_CONFIG[:username]
-    pwd = FEDORA_CREDENTIALS_CONFIG[:password]
-    domain = File.dirname(target) + '/'
-    puts "credential set for user: #{uname} domain: #{domain}"
-    hc.set_auth(domain, uname, pwd)
-    hc
-  end
+#  def set_fedora_credentials(hc,target)
+#    uname = FEDORA_CREDENTIALS_CONFIG[:username]
+#    pwd = FEDORA_CREDENTIALS_CONFIG[:password]
+#    domain = File.dirname(target) + '/'
+#    puts "credential set for user: #{uname} domain: #{domain}"
+#    hc.set_auth(domain, uname, pwd)
+#    hc
+#  end
 
 end

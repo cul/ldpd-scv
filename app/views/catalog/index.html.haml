@@ -6,7 +6,7 @@
   = render :partial => 'did_you_mean'
   = render 'constraints', :localized_params=> params
   %div.pageEntriesInfo
-    = page_entries_info @response.docs, :entry_name=>'item'
+    = render_pagination_info @response, :entry_name=>'item'
 
   = render 'sort_and_per_page'
 

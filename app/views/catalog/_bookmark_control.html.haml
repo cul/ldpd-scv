@@ -1,11 +1,19 @@
-- if current_user and current_user.document_is_bookmarked? document[:id] 
-  %span.addBookmark
-    ="In #{ link_to 'Saved Items', bookmarks_path }"
-- elsif current_user
-  - @bookmark ||= Bookmark.new 
-  - form_for(@bookmark, :html=>{:class=>"addBookmark",:id=>"bookmark_#{document[:id].gsub(/\W/,"_")}"}) do |f| 
-    = f.hidden_field(:document_id, :value => h(document[:id]))
-    = f.hidden_field(:title, :value => h(document[document_show_link_field]))
-    = f.submit 'Save this item', :id => "user_submit_#{document[:id]}"
+- if current_user
+  - existing_bookmark = current_user.existing_bookmark_for(document.object_id)
+  - # Note these two forms are pretty similar but for different :methods, classes, and labels. 
+  - # but it was simpler to leave them seperate instead of DRYing them, got confusing trying that.
+  - # the data-doc-id attribute is used by our JS that converts to a checkbox/label.
+  - unless existing_bookmark
+
+    = form_tag( bookmark_path( document[:id] ), :method => :put, :class => "bookmark_toggle", "data-doc-id" => document[:id], :title=> document[document_show_link_field] ) do
+      = hidden_field(:bookmark, :title, :value => document[document_show_link_field] )
+      = submit_tag("Bookmark", :id => "bookmark_toggle_#{document[:id].to_s.parameterize}", :class => "bookmark_add")
+  
+  - else
+  
+    = form_tag( bookmark_path( document[:id] ), :method => :delete, :class => "bookmark_toggle", "data-doc-id" => document[:id], :title=> document[document_show_link_field]) do
+      = hidden_field(:bookmark, :title, :value => document[document_show_link_field] )
+      = submit_tag("Remove bookmark", :id => "bookmark_toggle_#{document[:id].to_s.parameterize}", :class => "bookmark_remove")
+      
 - else
-  ="&nbsp;"
+  &nbsp;

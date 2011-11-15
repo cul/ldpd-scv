@@ -3,7 +3,7 @@
   %dl.defList#groups
     %dt="From:"
     %dd
-      = groups.collect {|x| link_to_document(x)}.join(", ") 
+      != groups.collect {|x| link_to_document(x)}.join(", ") 
       %span="(Click  for More Information)"
 - else
   .hide

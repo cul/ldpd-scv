@@ -7,15 +7,22 @@ class DownloadController < ApplicationController
     :cache_path => proc { |c|
       c.params
     }
-  def cachecontent
-    url = RI_CONFIG[:riurl] + "/get/" + params[:uri]+ "/" + params[:block]
 
-    cl = http_client
+  def download_headers(pid, dsid)
     h_cd = "filename=""#{CGI.escapeHTML(params[:filename].to_s)}"""
-    h_ct = cl.head(url).header["Content-Type"].to_s
+    h_ct = Cul::Fedora.repository.datastream_dissemination({:pid => pid, :dsid => dsid, :method => :head})["Content-Type"].to_s
+    {"Content-Disposition" => h_cd, "Content-Type" => h_ct}
+  end
+
+  def cachecontent
+    #url = Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + params[:uri]+ "/" + params[:block]
+
+    #cl = http_client
+    #h_cd = "filename=""#{CGI.escapeHTML(params[:filename].to_s)}"""
+    #h_ct = Cul::Fedora.repository.datastream_dissemination({:pid => params[:uri], :dsid => params[:block], :method => :head})["Content-Type"].to_s
+    #h_ct = cl.head(url).header["Content-Type"].to_s
     headers.delete "Cache-Control"
-    headers["Content-Disposition"] = h_cd
-    headers["Content-Type"] = h_ct
+    headers.merge! download_headers(params[:uri], params[:block])
     
     render :status => 200, :text => cl.get_content(url)
   end
@@ -38,52 +45,37 @@ class DownloadController < ApplicationController
     params[:object] = @download
   end
   def fedora_content
-      
-    url = RI_CONFIG[:riurl] + "/get/" + params[:uri]+ "/" + params[:block]
-
-    cl = http_client
-    h_cd = "filename=""#{CGI.escapeHTML(params[:filename].to_s)}"""
-    h_ct = cl.head(url).header["Content-Type"].to_s
+    #url = Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + params[:uri]+ "/" + params[:block]
+    #cl = http_client
+    #h_cd = "filename=""#{CGI.escapeHTML(params[:filename].to_s)}"""
+    #h_ct = cl.head(url).header["Content-Type"].to_s
+    #h_ct = Cul::Fedora.repository.datastream_dissemination({:pid => params[:uri], :dsid => params[:block], :method => :head})["Content-Type"].to_s
+    dl_hdrs = download_headers(params[:uri], params[:block])
     text_result = nil
 
     case params[:download_method]
     when "download"
-      h_cd = "attachment; " + h_cd 
+      dl_hdrs["Content-Disposition"] = "attachment; " + dl_hdrs["Content-Disposition"] 
     when "show_pretty"
-      if h_ct.include?("xml") || params[:print_binary_octet]
+      if dl_hdrs["Content-Type"].include?("xml") || params[:print_binary_octet]
         
         xsl = Nokogiri::XSLT(File.read(Rails.root + "/app/stylesheets/pretty-print.xsl"))
-        xml = Nokogiri(cl.get_content(url))
+        #xml = Nokogiri(cl.get_content(url))
+        xml = Nokogiri(Cul::Fedora.repository.datastream_dissemination(:pid => params[:uri], :dsid => params[:block]))
         text_result = xsl.apply_to(xml).to_s
       else
         text_result = "Non-xml content streams cannot be pretty printed."
       end
     end
-
+    headers.merge! dl_hdrs
     if text_result
       headers["Content-Type"] = "text/plain"
       render :text => text_result
     else
-        
-      headers["Content-Disposition"] = h_cd
-      headers["Content-Type"] = h_ct
-
-      uri = URI.parse(url)
-      cl = Net::HTTP.new(uri.host,uri.port)
-      cl.use_ssl = (uri.scheme == 'https')
-      cl.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      cl.start { |http|
-        req = Net::HTTP::Get.new(uri.path)
-        req.basic_auth FEDORA_CREDENTIALS_CONFIG[:username], FEDORA_CREDENTIALS_CONFIG[:password]
-        render :status=>200, :text=> Proc.new { |response, output|
-          http.request(req) { |res|
-            res.read_body do |seg|
-              output.write seg
-            end
-          }
-        }
-       
-      }
+      rubydora_params = {:pid => params[:uri], :dsid => params[:block]}
+      logger.info "rubydora_params = #{rubydora_params.inspect}"
+      self.response_body =  Cul::Fedora::Streamer.new(rubydora_params)
+      #}
     end
   end
 

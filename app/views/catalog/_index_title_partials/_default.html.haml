@@ -2,14 +2,14 @@
   - if counter
     = (counter + 1 + @response.params[:start].to_i).to_s
   = "."
-  = link_to_document document, :label=>document_show_link_field, :counter => (counter + 1 + @response.params[:start].to_i)
+  = link_to_mash document, :label=>document_show_link_field, :counter => (counter + 1 + @response.params[:start].to_i)
   - if !(document[document_show_link_field].match(/\.$/))
     = "."
   - groups = get_groups(document)
   - if groups.length > 0
     %span.index_title
-      - _links = groups.collect {|g| link_to_document(g,:label=>document_show_link_field)}
-      %span.from_groups="From: #{_links.join(',')}."
+      - _links = groups.collect {|g| link_to_mash(g,:label=>document_show_link_field)}
+      %span.from_groups!="From: #{_links.join(',')}."
       %span.index_metadata
         - if groups[0]["lib_name_display"]
           = groups[0]["lib_name_display"][0] + '.'

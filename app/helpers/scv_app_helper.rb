@@ -70,6 +70,19 @@ module ScvAppHelper
     end
   end
 
+  def link_to_mash(doc, opts={:label=>nil, :counter => nil, :results_view => true})
+    opts[:label] = Blackligh.config.index.shiw_link.to_sym unless opts[:label]
+# blacklight render_document_index_label will not handle a Symbol key appropriately for a Hash/Mash, and must have a proc
+    if opts[:label].instance_of? Symbol
+      old_label = opts[:label]
+      opts[:label] = lambda { |doc, opts| doc[old_label]}
+    end
+    label = render_document_index_label doc, opts
+# blacklight does not pass the correct arguments for Rails 3 url_for
+    url_for_opts = {:controller => :catalog, :action => :show, :id => doc[:id]}
+    link_to_with_data(label, url_for_opts, {:method => :put, :class => label.parameterize, :data => opts}).html_safe
+  end
+
   def url_to_document(doc)
     catalog_path(doc[:id])
   end

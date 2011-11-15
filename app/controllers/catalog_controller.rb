@@ -1,5 +1,7 @@
+require 'blacklight'
 class CatalogController < ApplicationController
   unloadable
+  include Blacklight::Catalog
   include Blacklight::SolrHelper
 
   before_filter :require_staff
@@ -11,13 +13,13 @@ class CatalogController < ApplicationController
   # Whenever an action raises SolrHelper::InvalidSolrID, this block gets executed.
   # Hint: the SolrHelper #get_solr_response_for_doc_id method raises this error,
   # which is used in the #show action here.
-  rescue_from InvalidSolrID, :with => :invalid_solr_id_error
+  rescue_from Blacklight::Exceptions::InvalidSolrID, :with => :invalid_solr_id_error
 
   
   # When RSolr::RequestError is raised, the rsolr_request_error method is executed.
   # The index action will more than likely throw this one.
   # Example, when the standard query parser is used, and a user submits a "bad" query.
-  rescue_from RSolr::RequestError, :with => :rsolr_request_error
+  rescue_from RSolr::Error::Http, :with => :rsolr_request_error
 
   def solr_search_params(extra_controller_params={})
     _params = super(extra_controller_params)
@@ -28,50 +30,12 @@ class CatalogController < ApplicationController
       _params
     end
   end
-
-  
-  # get search results from the solr index
-  def index
-
-    extra_head_content << '<link rel="alternate" type="application/rss+xml" title="RSS for results" href="'+ url_for(params.merge("format" => "rss")) + '">'
-    extra_head_content << '<link rel="alternate" type="application/atom+xml" title="Atom for results" href="'+ url_for(params.merge("format" => "atom")) + '">'
-    
-    (@response, @document_list) = get_search_results
-    @filters = params[:f] || []
-    respond_to do |format|
-      format.html { save_current_search_params }
-      format.rss  { render :layout => false }
-      format.atom { render :layout => false }
-    end
-  end
-  
-  # get single document from the solr index
-  def show
-    @response, @document = get_solr_response_for_doc_id    
-    respond_to do |format|
-      format.html {setup_next_and_previous_documents}
-      
-      # Add all dynamically added (such as by document extensions)
-      # export formats.
-      @document.export_formats.each_key do | format_name |
-        # It's important that the argument to send be a symbol;
-        # if it's a string, it makes Rails unhappy for unclear reasons. 
-        format.send(format_name.to_sym) { render :text => @document.export_as(format_name) }
-      end
-      
-    end
-  end
   
   # updates the search counter (allows the show view to paginate)
   def update
     session[:search][:counter] = params[:counter] unless session[:search][:counter] == params[:counter]
     session[:search][:display_members] = params[:display_members] unless session[:search][:display_members] == params[:display_members]
     redirect_to :action => "show"
-  end
-  
-  # displays values and pagination links for a single facet field
-  def facet
-    @pagination = get_facet_pagination(params[:id], params)
   end
   
   # single document image resource
@@ -182,7 +146,7 @@ class CatalogController < ApplicationController
   def setup_document_by_counter(counter)
     return if counter < 1 || session[:search].blank?
     search = session[:search] || {}
-    get_single_doc_via_search(search.merge({:page => counter}))
+    get_single_doc_via_search(counter, search)
   end
   
   def setup_previous_document

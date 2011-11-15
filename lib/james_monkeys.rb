@@ -66,3 +66,9 @@ class Hash
   
 end
 
+class Rack::Response
+  def close
+    @body.close if @body.respond_to?(:close)
+  end
+end
+

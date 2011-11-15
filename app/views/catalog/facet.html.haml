@@ -11,11 +11,10 @@
   %ul.facet_extended_list
     - @pagination.items.each do |item|
       %li
-        - if facet_in_params?( params[:id], item.value )
-          = render_selected_facet_value(params[:id], item)
+        - if raise( facet_in_params?( params[:id], item.value ))
+          != render_selected_facet_value(params[:id], item)
         - else
-          = render_facet_value(params[:id], item)
-  </ul>
+          != render_facet_value(params[:id], item)
   
   %div.facet_pagination.bottom
     = render :partial=>'facet_pagination'

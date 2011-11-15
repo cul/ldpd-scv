@@ -2,4 +2,5 @@
   - metadata[:details].each do |name, value|
     .yui-gf
       .label.yui-u.first= name
-      .value.yui-u= value
+      .value.yui-u
+        != value

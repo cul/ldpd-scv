@@ -1,5 +1,5 @@
 config/database.yml
-#config/fedora.yml
+config/fedora.yml
 config/fedora_credentials.yml
 config/solr.yml
 config/*.sphinx.conf
