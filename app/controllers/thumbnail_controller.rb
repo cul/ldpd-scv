@@ -1,7 +1,7 @@
 class ThumbnailController < ApplicationController
   # some thumbnail urls
-  NO_THUMB = RAILS_ROOT + "/public/images/wikimedia/200px-ImageNA.svg.png"
-  COLLECTION_THUMB = RAILS_ROOT + "/public/images/crystal/kmultiple.png"
+  NO_THUMB = Rails.root + "/public/images/wikimedia/200px-ImageNA.svg.png"
+  COLLECTION_THUMB = Rails.root + "/public/images/crystal/kmultiple.png"
   # some rel predicates
   FORMAT = "http://purl.org/dc/elements/1.1/format"
   MEMBER_OF = "http://purl.oclc.org/NET/CUL/memberOf"
@@ -35,7 +35,7 @@ class ThumbnailController < ApplicationController
       # do the triples indicate this is a thumb? fetch
       if thumb_triples?(triples)
         mime = triples[FORMAT].first
-        url = {:url=>FEDORA_CONFIG[:riurl] + "/get/" + pid + "/CONTENT", :mime=>mime}
+        url = {:url=>RI_CONFIG[:riurl] + "/get/" + pid + "/CONTENT", :mime=>mime}
       else
         if triples[MEMBER_OF].nil?
           url = {:url=>NO_THUMB,:mime=>'image/png'}
@@ -120,12 +120,12 @@ class ThumbnailController < ApplicationController
     if base_id.nil?
       {:url=>NO_THUMB, :mime=>'image/png'}
     else
-      {:url=>FEDORA_CONFIG[:riurl] + "/get/" + base_id + "/CONTENT",:mime=>base_type}
+      {:url=>RI_CONFIG[:riurl] + "/get/" + base_id + "/CONTENT",:mime=>base_type}
     end
   end
 
   def jp2_thumbnail(pid)
-    {:url => FEDORA_CONFIG[:riurl] + '/objects/' + pid + '/methods/ldpd:sdef.Image/getView?max=250', :mime => 'image/jpeg'}
+    {:url => RI_CONFIG[:riurl] + '/objects/' + pid + '/methods/ldpd:sdef.Image/getView?max=250', :mime => 'image/jpeg'}
   end
 
   def pid_from_uri(uri)

@@ -1,10 +1,9 @@
-require_dependency 'vendor/plugins/blacklight/app/models/user.rb'
-
 class User < ActiveRecord::Base
+  include Blacklight::User
   has_and_belongs_to_many :roles
-  before_validation_on_create :set_personal_info_via_ldap
+  before_validation(:on => :create) :set_personal_info_via_ldap
 
-  named_scope :admins, :conditions => {:admin => true}
+  scope :admins, :conditions => {:admin => true}
 
   acts_as_authentic do |c|
     c.validate_password_field = false

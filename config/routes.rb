@@ -1,34 +1,39 @@
-ActionController::Routing::Routes.draw do |map|
-  map.resources :reports
+CulScv::Application.routes.draw do
+  Blacklight.add_routes(self)
+
+  root :to => 'catalog#index'
+
+  devise_for :users
+
+  resources :reports
 
 
+  match '/download/fedora_content/:download_method/:uri/:block/:filename', 
+    :to => 'download#fedora_content',
+    :constraints => {
+      :block => /(DC|CONTENT|SOURCE)/
+      :uri => /.+/,
+      :filename => /.+/,
+      :download_method => /(download|show|show_pretty)/
+    }
+  match '/download/cache/:download_method/:uri/:block/:filename', 
+    :to => 'download#cachecontent',
+    :constraints => {
+      :block => /(DC|CONTENT|SOURCE)/
+      :uri => /.+/,
+      :filename => /.+/,
+      :download_method => /(download|show|show_pretty)/
+    }
+  match 'wind_logout', :to => 'welcome#logout'
+  match '/access_denied', :to => 'welcome#access_denied'
+  match '/thumbnail/:id', :to => 'thumbnail#get'
 
-
-  Blacklight::Routes.build map
-
-
-  map.fedora_content '/download/fedora_content/:download_method/:uri/:block/:filename', 
-    :controller => 'download', :action => 'fedora_content',
-    :block => /(DC|CONTENT|SOURCE)/,
-    :uri => /.+/, :filename => /.+/, :download_method => /(download|show|show_pretty)/
-  map.cachecontent '/download/cache/:download_method/:uri/:block/:filename', 
-    :controller => 'download', :action => 'cachecontent',
-    :block => /(DC|CONTENT|SOURCE)/,
-    :uri => /.+/, :filename => /.+/, :download_method => /(download|show|show_pretty)/
-  map.wind_logout '/wind_logout', :controller => 'welcome', :action => 'logout'
-  map.access_denied '/access_denied', :controller => 'welcome', :action => 'access_denied'
-  map.thumbnail '/thumbnail/:id', :controller => 'thumbnail', :action => 'get'
-
-#  map.resource :folder
-#  map.connect '/folder/destroy', :controller => 'folder', :action => 'destroy', 
-#    :category => /(by_collection)/
+  resource :report
   
-  map.resource :report
-  
-  map.connect '/reports/preview/:category', :controller => 'reports', :action => 'preview', 
+  match '/reports/preview/:category', :to => 'reports#preview', 
     :category => /(by_collection)/
   
-  map.connect ':controller/:action/:id'
-  map.connect ':controller/:action/:id.:format'
+  match ':controller(/:action(/:id))'
+  match ':controller/:action/:id.:format'
 
 end

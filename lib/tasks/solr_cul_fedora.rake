@@ -313,7 +313,7 @@ namespace :solr do
          # adding collections >
          url_array = [ fedora_uri.merge('/fedora/get/' + pid + '/ldpd:sdef.Core/getIndex?profile=scv').to_s]
        when ENV['SAMPLE_DATA']
-         File.read(File.join(RAILS_ROOT,"test","sample_data","cul_fedora_index.json"))
+         File.read(File.join(Rails.root,"test","sample_data","cul_fedora_index.json"))
        else
          p "No input options given!"
          url_array = []

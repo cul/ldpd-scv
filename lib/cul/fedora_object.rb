@@ -60,7 +60,7 @@ hd
   module Objects
     class BaseObject
       def initialize(document, client=HTTPClient.new)
-        @riurl = FEDORA_CONFIG[:riurl] + '/risearch'
+        @riurl = RI_CONFIG[:riurl] + '/risearch'
         @http_client = client
         if document[:pid_s].nil?
             _pid = document[:id].split('@')[0]

@@ -74,7 +74,7 @@ module ScvHelper
     case document["format"]
     when "image/zooming"
       base_id = base_id_for(document)
-      url = FEDORA_CONFIG[:riurl] + "/get/" + base_id + "/SOURCE"
+      url = RI_CONFIG[:riurl] + "/get/" + base_id + "/SOURCE"
       head_req = http_client.head(url)
       # raise head_req.inspect
       file_size = head_req.header["Content-Length"].first.to_i
@@ -116,7 +116,7 @@ module ScvHelper
   end
 
   def doc_object_method(doc, method)
-    FEDORA_CONFIG[:riurl] + '/get/' + base_id_for(doc).to_s +  method.to_s
+    RI_CONFIG[:riurl] + '/get/' + base_id_for(doc).to_s +  method.to_s
   end
 
   def doc_json_method(doc, method)
@@ -264,7 +264,7 @@ module ScvHelper
     filename += ".xml"
        res[:show_url] = fedora_content_path(:show_pretty, res[:id], block, filename) + '?print_binary_octet=true'
     res[:download_url] = fedora_content_path(:download, res[:id], block, filename)
-    res[:direct_link] = FEDORA_CONFIG[:riurl] + "/get/" + res[:id] + "/" + block
+    res[:direct_link] = RI_CONFIG[:riurl] + "/get/" + res[:id] + "/" + block
     res[:type] = block == "DC"  ? "DublinCore" : "MODS"
     res
   end
@@ -309,7 +309,7 @@ module ScvHelper
   end
 
   def resolve_fedora_uri(uri)
-    FEDORA_CONFIG[:riurl] + "/get" + uri.gsub(/info\:fedora/,"")
+    RI_CONFIG[:riurl] + "/get" + uri.gsub(/info\:fedora/,"")
   end
   def link_to_clio(document,link_text="More information in CLIO")
     if document["clio_s"] and document["clio_s"].length > 0

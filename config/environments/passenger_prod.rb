@@ -1,3 +1,4 @@
+CulScv::Application.configure do
 # Settings specified here will take precedence over those in config/environment.rb
 
 # The production environment is meant for finished, "live" apps.
@@ -28,5 +29,6 @@ config.log_level = :warn
 
 # Enable threaded mode
 # config.threadsafe!
-
+config.active_support.deprecation = :log
 Haml::Template::options[:ugly] = true
+end

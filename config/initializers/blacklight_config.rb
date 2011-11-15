@@ -1,3 +1,4 @@
+require 'blacklight'
 # You can configure Blacklight from here. 
 #   
 #   Blacklight.configure(:environment) do |config| end

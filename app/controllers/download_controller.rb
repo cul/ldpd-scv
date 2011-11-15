@@ -8,7 +8,7 @@ class DownloadController < ApplicationController
       c.params
     }
   def cachecontent
-    url = FEDORA_CONFIG[:riurl] + "/get/" + params[:uri]+ "/" + params[:block]
+    url = RI_CONFIG[:riurl] + "/get/" + params[:uri]+ "/" + params[:block]
 
     cl = http_client
     h_cd = "filename=""#{CGI.escapeHTML(params[:filename].to_s)}"""
@@ -39,7 +39,7 @@ class DownloadController < ApplicationController
   end
   def fedora_content
       
-    url = FEDORA_CONFIG[:riurl] + "/get/" + params[:uri]+ "/" + params[:block]
+    url = RI_CONFIG[:riurl] + "/get/" + params[:uri]+ "/" + params[:block]
 
     cl = http_client
     h_cd = "filename=""#{CGI.escapeHTML(params[:filename].to_s)}"""
@@ -52,7 +52,7 @@ class DownloadController < ApplicationController
     when "show_pretty"
       if h_ct.include?("xml") || params[:print_binary_octet]
         
-        xsl = Nokogiri::XSLT(File.read(RAILS_ROOT + "/app/stylesheets/pretty-print.xsl"))
+        xsl = Nokogiri::XSLT(File.read(Rails.root + "/app/stylesheets/pretty-print.xsl"))
         xml = Nokogiri(cl.get_content(url))
         text_result = xsl.apply_to(xml).to_s
       else

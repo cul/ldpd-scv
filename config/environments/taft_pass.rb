@@ -1,3 +1,4 @@
+CulScv::Application.configure do
 # Settings specified here will take precedence over those in config/environment.rb
 
 # The production environment is meant for finished, "live" apps.
@@ -36,5 +37,6 @@ config.action_mailer.smtp_settings = {
   :domain => "taft.cul.columbia.edu",
    :port => 25
 }
-
+config.active_support.deprecation = :log
 Haml::Template::options[:ugly] = true
+end
