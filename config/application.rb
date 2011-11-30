@@ -1,10 +1,12 @@
 require File.expand_path('../boot', __FILE__)
 require 'facets'
 require 'rails/all'
-
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env) if defined?(Bundler)
+require 'active_fedora'
+require 'active_fedora/railtie'
+require 'cul_scv_hydra/engine'
 
 module CulScv
   class Application < Rails::Application
@@ -42,5 +44,6 @@ module CulScv
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
+    config.consider_all_requests_local = true
   end
 end

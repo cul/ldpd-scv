@@ -73,7 +73,7 @@ module ModsHelper
     end
     details << ["Note:", notes.join(" -- ")] unless notes.empty?
     # external link icon
-    ext_link = image_tag("wikimedia/Icon_External_Link.png")
+    ext_link = image_tag(("wikimedia/Icon_External_Link.png"))
     # URL (external)
     xml.xpath("/mods:mods/mods:location/mods:url",ns).each do |node|
       details << ["Item in Context:", link_to("#{abbreviate_url(node.content.to_s)}", node.content, :target => "blank") + ext_link]

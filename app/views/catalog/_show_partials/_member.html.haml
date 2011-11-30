@@ -1,7 +1,7 @@
 %div.member-item
   %div.yui-gf
     %div.yui-u.first
-      = render_document_partial(document, :thumbnail) unless document.nil?
+      = render_document_partial(document, "thumbnail") unless document.nil?
     %div.yui-u
       - if !document.nil?
         %p.index_title=link_to_clio(document)

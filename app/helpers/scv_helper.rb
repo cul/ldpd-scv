@@ -1,7 +1,7 @@
 require 'rsolr'
+require 'blacklight'
 require 'cul'
 module ScvHelper
-#  include Blacklight::SolrHelper
   include CatalogHelper
   include ModsHelper
 
@@ -68,10 +68,16 @@ module ScvHelper
     end
   end
 
-  def build_resource_list(document)
+  def get_resources(document)
+    members = get_members(document)
+    logger.debug "found #{members.length} members of #{document["id"]}"
+    members = members.delete_if {|x| not x[:has_model_s].include? "info:fedora/ldpd:Resource" }
+    logger.debug "found #{members.length} resources of #{document["id"]}"
     obj_display = (document["object_display"] || []).first
     results = []
-    case document["format"]
+    format = document["format"]
+    format = format.first if format.is_a? Array
+    case format
     when "image/zooming"
       base_id = base_id_for(document)
       url = Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + base_id + "/SOURCE"
@@ -80,30 +86,31 @@ module ScvHelper
       file_size = head_req.header["Content-Length"].first.to_i
       results << {:dimensions => "Original", :mime_type => "image/jp2", :show_path => fedora_content_path("show", base_id, "SOURCE", base_id + "_source.jp2"), :download_path => fedora_content_path("download", base_id , "SOURCE", base_id + "_source.jp2")}  
     when "image"
-      if obj_display
-        images = parse_image_resources!(document)
-        images.each do |image|
-          res = {}
-          res[:dimensions] = image["imageWidth"] + " x " + image["imageHeight"]
-          res[:width] = image["imageWidth"]
-          res[:height] = image["imageHeight"]
-          res[:mime_type] = image["type"]
-          res[:file_size] = image["fileSize"].to_i
-          res[:size] = (image["fileSize"].to_i / 1024).to_s + " Kb"
+        #images = parse_image_resources!(document)
+      members.each do |image|
+        res = {}
+        res[:dimensions] = image["image_width_s"].first + " x " + image["image_length_s"].first
+        res[:width] = image["image_width_s"].first
+        res[:height] = image["image_length_s"].first
+        res[:mime_type] = image["dc_format_t"].first
+        res[:file_size] = image["extent_s"].first.to_i
+        res[:size] = (image["extent_s"].first.to_i / 1024).to_s + " Kb"
 
-          base_id = trim_fedora_uri_to_pid(image["member"])
-          base_filename = base_id.gsub(/\:/,"")
-          img_filename = base_filename + "." + image["type"].gsub(/^[^\/]+\//,"")
-          dc_filename = base_filename + "_dc.xml"
+        base_id = image["id"]
+        base_filename = base_id.gsub(/\:/,"")
+        img_filename = base_filename + "." + image["dc_type_t"].first.gsub(/^[^\/]+\//,"")
+        dc_filename = base_filename + "_dc.xml"
 
-          res[:show_path] = fedora_content_path("show", base_id, "CONTENT", img_filename)
-          res[:cache_path] = cache_path("show", base_id, "CONTENT", img_filename)
-          res[:download_path] = fedora_content_path("download", base_id, "CONTENT", img_filename)
-          res[:dc_path] = fedora_content_path('show_pretty', base_id, "DC", dc_filename)
-          results << res
-        end
+        res[:show_path] = fedora_content_path("show", base_id, "CONTENT", img_filename)
+        res[:cache_path] = cache_path("show", base_id, "CONTENT", img_filename)
+        res[:download_path] = fedora_content_path("download", base_id, "CONTENT", img_filename)
+        res[:dc_path] = fedora_content_path('show_pretty', base_id, "DC", dc_filename)
+        results << res
       end 
+    else
+      raise "Unknown format #{format}"
     end
+    logger.debug "returning #{results.length} resources of #{document["id"]}"
     return results
   end
 
@@ -177,25 +184,29 @@ module ScvHelper
     return [false,docs.length]
   end
 
-  def get_members(document)
-    idquery = document["id"]
-    if document["internal_h"]
-      facet_prefix = document["internal_h"][0]
-    else
-      resp, docs = get_independent_solr_response_for_field_values("id",document["id"])
-      facet_prefix = docs[0]["internal_h"][0]
-    end
-    logger.info idquery
-    logger.info facet_prefix
-    search_field_def = Blacklight.search_field_def_for_key(:"internal_h")
-    _params = get_solr_params_for_field_values("internal_h",facet_prefix)
-    _params[:qt] = search_field_def[:qt] if search_field_def
-    _params[:per_page] = 100
-    resp = Blacklight.solr.find(_params)
-    docs = resp.docs
-    docs.delete_if {|doc| doc["id"].eql? idquery}
-    logger.info "got #{docs.length} docs"
-    docs
+  def get_members(document, format=:solr)
+    agg = GenericAggregator.load_instance_from_solr(document[:id],document)
+    
+    agg.parts(:response_format => format).hits.collect {|hit| SolrDocument.new(hit) }
+
+    #idquery = document["id"]
+    #if document["internal_h"]
+    #  facet_prefix = document["internal_h"][0]
+    #else
+    #  resp, docs = get_independent_solr_response_for_field_values("id",document["id"])
+    #  facet_prefix = docs[0]["internal_h"][0]
+    #end
+    #logger.info idquery
+    #logger.info facet_prefix
+    #search_field_def = Blacklight.search_field_def_for_key(:"internal_h")
+    #_params = get_solr_params_for_field_values("internal_h",facet_prefix)
+    #_params[:qt] = search_field_def[:qt] if search_field_def
+    #_params[:per_page] = 100
+    #resp = Blacklight.solr.find(_params)
+    #docs = resp.docs
+    #docs.delete_if {|doc| doc["id"].eql? idquery}
+    #logger.info "got #{docs.length} docs"
+    #docs
   end
 
   def get_solr_params_for_field_values(field, values, extra_controller_params={})
@@ -211,37 +222,34 @@ module ScvHelper
   end
   def get_independent_solr_response_for_field_values(field, values, extra_controller_params={})
     _params = get_solr_params_for_field_values(field, values, extra_controller_params)
+    if _params[:rows].is_a? Array
+      _params[:rows] =  _params[:rows].first
+    end
+    logger.debug _params.inspect
     resp = Blacklight.solr.find(_params)
     [resp, resp.docs]
   end
   def get_groups(document)
-    idquery = document["id"]
-    if document["internal_h"]
-      internals = document["internal_h"].dup
+    if document.is_a? ActiveFedora::Base
+      document.containers(:response_format => :solr).hits.collect { |hit| SolrDocument.new(hit) }
     else
-      resp, docs = get_solr_response_for_field_values("id",document["id"],{:per_page=>'100'})
-      if docs[0]
-        internals = docs[0]["internal_h"].dup
-      else
-        internals = []
-      end
+      get_groups_for_mash(document)
     end
-    gids = internals.collect { |g|
-      _parts = g.split(/\//,-1)
-      if _parts.length > 2:
-        _parts[-3].gsub(/:/,'\:')
-      else
-        nil
-      end
-    }
-    gids.compact!
-    if gids.length > 0
-      search_params = get_solr_params_for_field_values("pid_s",gids)
-      resp = Blacklight.solr.find(search_params)
-      return resp.docs
+  end
+  def get_groups_for_mash(document)
+    if document.is_a? SolrDocument
+      groups = document.get(:cul_member_of_s)
     else
-      return []
+      groups = document["cul_member_of_s"]
     end
+    groups ||= []
+    groups = [groups] if groups.is_a? String 
+    groups.collect! {|x| x.split(/\//,-1)}
+    resp, docs = get_independent_solr_response_for_field_values("id",groups)
+    docs.collect {|g| SolrDocument.new(g)}
+    #search_params = get_solr_params_for_field_values("pid_s",groups)
+    #resp = Blacklight.solr.find(search_params)
+    #return resp.docs
   end
 
   def get_rows(member_list, row_length)
@@ -275,7 +283,8 @@ module ScvHelper
       return results
     end
     if default
-      idparts = doc[:id].split(/@/)
+      idparts = doc[:id].split(/@/) unless doc[:id].nil?
+      idparts ||= [""]
       md = idparts.last
       if not md.match(/^.*#DC$/)
         results << decorate_metadata_response("MODS" , base_id_for(doc))
@@ -294,6 +303,7 @@ module ScvHelper
           root = res[:xml].root
           res[:type] = "MODS" if root.name == "mods" && root.attributes["schemaLocation"].value.include?("/mods/")
         rescue
+          logger.error "Error fetching datastream #{uri}/#{dsid}"
         end
 
         extract_mods_details(res)
@@ -311,11 +321,35 @@ module ScvHelper
     Cul::Fedora::ResourceIndex.config[:riurl] + "/get" + uri.gsub(/info\:fedora/,"")
   end
   def link_to_clio(document,link_text="More information in CLIO")
-    if document["clio_s"] and document["clio_s"].length > 0
-      "<a href=\"http://clio.cul.columbia.edu:7018/vwebv/holdingsInfo?bibId=#{document["clio_s"][0]}\" target=\"_blank\">#{link_text}</a>"
+     if document.is_a? ActiveFedora::Base
+      clio_id = document.datastreams['descMetadata'].term_values(:clio)
+      clio_id = clio_id.first unless clio_id.nil?
+    else
+      if document["clio_s"] and document["clio_s"].length > 0
+        clio_id = document["clio_s"][0]
+      end
+    end
+
+    if clio_id
+      "<a href=\"http://clio.cul.columbia.edu:7018/vwebv/holdingsInfo?bibId=#{clio_id}\" target=\"_blank\">#{link_text}</a>"
     else
       ""
     end
+  end
+
+  def render_object_index_label doc, opts
+    label = nil
+    label ||= doc.get(opts[:label]) if opts[:label].instance_of? Symbol and doc.is_a? SolrDocument
+    label ||= doc[opts[:label]] if opts[:label].instance_of? Symbol and doc.is_a? Mash
+    label ||= opts[:label].call(doc, opts) if opts[:label].instance_of? Proc
+    label ||= opts[:label] if opts[:label].is_a? String
+    label ||= doc.pid
+  end
+
+  def link_to_object(object, opts={:label=>nil, :counter => nil, :results_view => true})
+    label ||= Blacklight.config[:index][:show_link].to_sym
+    label = render_object_index_label object, opts
+    link_to label, {:controller => :catalog, :id=>object.pid}, :'data-counter' => opts[:counter]
   end
 
 end

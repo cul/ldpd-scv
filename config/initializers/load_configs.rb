@@ -1,6 +1,7 @@
 ri_config_file = Rails.root + "/config/fedora_ri.yml"
 creds_config_file = Rails.root + "/config/fedora_credentials.yml"
 solr_config_file = Rails.root + "/config/solr.yml"
+fedora_config_file = Rails.root + "/config/solr.yml"
 
 if File.exists?(ri_config_file)
   raw_config = File.read(ri_config_file)

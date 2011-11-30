@@ -1,3 +1,4 @@
+require 'authlogic_wind'
 AuthlogicWind::Session::Config.module_eval do
 
   def auto_provision(values = [])

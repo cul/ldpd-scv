@@ -59,9 +59,8 @@ class DownloadController < ApplicationController
     when "show_pretty"
       if dl_hdrs["Content-Type"].include?("xml") || params[:print_binary_octet]
         
-        xsl = Nokogiri::XSLT(File.read(Rails.root + "/app/stylesheets/pretty-print.xsl"))
-        #xml = Nokogiri(cl.get_content(url))
-        xml = Nokogiri(Cul::Fedora.repository.datastream_dissemination(:pid => params[:uri], :dsid => params[:block]))
+        xsl = Nokogiri::XSLT(File.read(Rails.root.join("app/stylesheets/pretty-print.xsl")))
+        xml = Nokogiri::XML.parse(Cul::Fedora.repository.datastream_dissemination(:pid => params[:uri], :dsid => params[:block]))
         text_result = xsl.apply_to(xml).to_s
       else
         text_result = "Non-xml content streams cannot be pretty printed."
@@ -72,10 +71,17 @@ class DownloadController < ApplicationController
       headers["Content-Type"] = "text/plain"
       render :text => text_result
     else
-      rubydora_params = {:pid => params[:uri], :dsid => params[:block]}
-      logger.info "rubydora_params = #{rubydora_params.inspect}"
-      self.response_body =  Cul::Fedora::Streamer.new(rubydora_params)
-      #}
+      ds_parms = {:pid => params[:uri], :dsid => params[:block]}
+      logger.info "rubydora_params = #{ds_parms.inspect}"
+      self.response_body =  Cul::Fedora::Streamer.new(Cul::Fedora.repository, ds_parms)
+    # in Rails 3.1.x, we could do this:
+    #  block_response = Proc.new { |res|
+    #    res.read_body do |seg|
+    #      puts seg.length
+    #      send_data seg
+    #    end
+    #  }
+    #  Cul::Fedora.repository.datastream_dissemination ds_parms, &block_response
     end
   end
 

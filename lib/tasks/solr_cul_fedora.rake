@@ -1,3 +1,4 @@
+require 'cul'
 require 'nokogiri'
 require 'rsolr-ext'
 
@@ -27,24 +28,26 @@ class Node
 end
 class SolrCollection
   attr_reader :pid, :solr
+  attr_accessor :objects
   def initialize(pid, solr_url)
     @pid = pid
     @solr = RSolr.connect :url=>solr_url
     @colon = Regexp.new(':')
   end
   def fedora_query(pid)
-    query = "select $child $parent from <#ri> where walk(<info:fedora/"
-    query = query + pid
-    query = query + "> <cul:memberOf> $parent and $child <cul:memberOf> $parent)"
-    query = URI.escape(query)
-    query = "lang=itql&format=json&limit=&query=" + query
-    fedora_uri = URI.parse(ENV['RI_URL'])
-    risearch = Net::HTTP.new(fedora_uri.host, fedora_uri.port)
-    risearch.use_ssl = (fedora_uri.scheme.eql? "https")
-    risearch.start
-    ri_resp = risearch.post(fedora_uri.path + "/risearch",query)
-    risearch.finish
-    tuples = JSON::parse(ri_resp.body)['results']
+    objuri = "info:fedora/#{pid}"
+    query = <<-ITQL
+     select $child $parent from <#ri> where walk($child <http://purl.oclc.org/NET/CUL/memberOf> <#{objuri}> and $child <http://purl.oclc.org/NET/CUL/memberOf> $parent)
+    ITQL
+    opts = {}
+    opts[:format] = "json"
+    opts[:lang] = "itql"
+    #query = URI.escape(query)
+    #query = "lang=itql&format=json&limit=&query=" + query
+    puts query
+    ri_resp = Cul::Fedora.repository.itql query, opts
+    puts ri_resp
+    tuples = JSON::parse(ri_resp)['results']
     _children = []
     _nodes = {}
     tuples.each { |tuple|
@@ -60,11 +63,13 @@ class SolrCollection
       _nodes[_p].add_child( _nodes[_c])
     }
     _nodes.reject! {|key,node| _children.include? node.pid }
-    paths = []
+    _paths = []
     _nodes.each { |key,node|
-      paths.concat(node.serialize)
+      _paths.concat(node.serialize)
     }
-    paths
+    self.paths=_paths
+    self.objects=_children
+    self.objects << pid
   end
   def solr_query(query, start, rows, fl, collection_prefix=false)
     query_parms = {}
@@ -79,19 +84,14 @@ class SolrCollection
       query_parms["facet.field"]=:internal_h
       query_parms["facet.prefix"]=(collection_prefix + "*")
     end
-    resp_json = solr.request('/select', query_parms)
+    resp_json = solr.get('select', query_parms)
     resp_json
   end
   def paths()
-    if !(@p)
-      @p = []
-      response=solr_query("id:#{pid.gsub(@colon,'\:')}@*",0,1,"internal_h")
-      if response["response"]["docs"][0]
-        @p |= response["response"]["docs"][0]["internal_h"]
-      end
-      @p |= fedora_query(pid)
+    if !(@paths)
+      fedora_query(pid)
     end
-    @p
+    @paths
   end
   def paths=(arg1)
     @paths=arg1
@@ -129,7 +129,7 @@ class SolrCollection
   def members()
     if !(@members)
       @members = []
-        _members = ids().collect{|id| id.split('@')[0] }
+        _members = objects().collect{|id| id.split('@')[0] }
         _members.compact!
         _members.uniq!
         @members |= _members
@@ -179,7 +179,7 @@ class Gatekeeper
     solr = RSolr.connect :url=>solr_url
     colon = Regexp.new(':')
     pids.each { |pid|
-      query_parms[:q]="id:#{pid.gsub(colon,'\:')}@*"
+      query_parms[:q]="id:#{pid.gsub(colon,'\:')}\b*"
       facet_json = solr.request('/select', query_parms)
       #facet_json = solr.get('select', query_parms)
       p facet_json
@@ -206,7 +206,7 @@ namespace :solr do
      desc "load the fedora configuration"
      task :configure => :environment do
        env = ENV['RAILS_ENV'] ? ENV['RAILS_ENV'] : 'development'
-       yaml = YAML::load(File.open("config/fedora.yml"))[env]
+       yaml = YAML::load(File.open("config/fedora_ri.yml"))[env]
        ENV['RI_URL'] ||= yaml['riurl'] 
        ENV['RI_QUERY'] ||= yaml['riquery'] 
        ALLOWED = Gatekeeper.new(yaml['collections'].split(';'))
@@ -278,19 +278,15 @@ namespace :solr do
          collection.paths=facet_vals
          collection.members
          delete_array = collection.ids
-         query = "format=json&lang=itql&query=" + URI.escape(sprintf(ENV['RI_QUERY'],ENV['COLLECTION_PID']))
-         fedora_uri = URI.parse(ENV['RI_URL'])
-         risearch = Net::HTTP.new(fedora_uri.host, fedora_uri.port)
-         risearch.use_ssl = fedora_uri.scheme.eql? "https"
-         risearch.start
-         members = risearch.post(fedora_uri.path + '/risearch',query)
-         risearch.finish
-         members = JSON::parse(members.body)['results']
+         query = sprintf(ENV['RI_QUERY'],ENV['COLLECTION_PID'])
+         opts = {:format => 'json', :lang => 'itql'}
+         members = Cul::Fedora.repository.itql query, opts
+         members = JSON::parse(members)['results']
          members = members.collect {|member|
            member['member'].split('/')[1]
          }
          members |= collection.members
-         url_array = members.collect {|member| fedora_uri.merge('/fedora/get/' + member + '/ldpd:sdef.Core/getIndex?profile=scv').to_s}
+         url_array = members
        when ENV['PID']
          p "indexing pid #{ENV['PID']}"
          pid = ENV['PID']
@@ -311,7 +307,7 @@ namespace :solr do
          }
          collection.paths=facet_vals
          # adding collections >
-         url_array = [ fedora_uri.merge('/fedora/get/' + pid + '/ldpd:sdef.Core/getIndex?profile=scv').to_s]
+         url_array = [pid]
        when ENV['SAMPLE_DATA']
          File.read(File.join(Rails.root,"test","sample_data","cul_fedora_index.json"))
        else
@@ -334,80 +330,43 @@ namespace :solr do
        #  exit
        #end
        delete_array.each do |id|
-         _doc = "<delete><id>#{id}</id></delete>"
-         puts _doc
-         begin
-           Net::HTTP.start(update_uri.host, update_uri.port) do |http|
-               hdrs = {'Content-Type'=>'text/xml','Content-Length'=>_doc.length.to_s}
-             begin
-               delete_res = http.post(update_uri.path + "?commit=true", _doc, hdrs)
-               if delete_res.response.code == "200"
-                  deletes += 1
-               else
-                  puts "#{update_uri} received: #{delete_res.response.code}"
-                  puts "#{update_uri} msg: #{delete_res.response.message}"
-                  puts "\t#{source_uri}"
-               end
-             end
-           end
-         end
+         ActiveFedora::SolrService.instance.conn.delete(id)
+         deletes += 1
        end
-       url_array.each do |source_url|
-         source_uri = URI.parse(source_url)
-         begin
-           source = Net::HTTP.new(source_uri.host, source_uri.port)
-           source.use_ssl = source_uri.scheme.eql? "https"
-           source.start
-           res =  source.get(source_uri.path+'?profile=scv')
-           source.finish
-           if res.response.code == "200" && ALLOWED.accept?(res.body)
-             Net::HTTP.start(update_uri.host, update_uri.port) do |http|
-               hdrs = {'Content-Type'=>'text/xml','Content-Length'=>res.body.length.to_s}
-               begin
-                  update_res = http.post(update_uri.path, res.body, hdrs)
-                  if update_res.response.code == "200"
-                     successes += 1
-                  else
-                     puts "#{update_uri} received: #{update_res.response.code}"
-                     puts "#{update_uri} msg: #{update_res.response.message}"
-                     puts "\t#{source_uri}"
-                  end
-               rescue Exception => e
-                  puts "#{update_uri} threw error #{e.message}"
-               end
-             end
-
-           else
-             if res.response.code == "200"
-               puts "#{source_url} rejected: no allowable collection in hierarchy"
-             else
-               puts "#{source_url} received: #{res.response.code}"
-             end
+       ActiveFedora::SolrService.instance.conn.commit
+       url_array.each do |pid|
+         base_obj = ActiveFedora::Base.load_instance("info:fedora/#{pid}")
+         ActiveFedora::ContentModel.known_models_for(base_obj).each do |model|
+           puts "Found model #{model.to_s}"
+           begin
+             model_obj = model.load_instance("info:fedora/#{pid}")
+             puts model_obj.to_solr
+             model_obj.update_index
+             successes += 1
+           rescue Exception => e
+              puts "#{update_uri} threw error #{e.message}"
            end
-         rescue Exception => e
-           puts "#{source_url} threw error #{e.message}"
          end
-
        end
 
        puts "#{deletes} existing SOLR docs deleted prior to index"
        puts "#{successes} URLs scanned successfully."
-       if (successes > 0)
-             Net::HTTP.start(update_uri.host, update_uri.port) do |http|
-               msg = '<commit waitFlush="false" waitSearcher="false"></commit>'
-               hdrs = {'Content-Type'=>'text/xml','Content-Length'=>msg.length.to_s}
-               begin
-                  commit_res = http.post(update_uri.path, msg, hdrs)
-                  if commit_res.response.code == "200"
-                     puts 'commit successful'
-                  else
-                     puts "#{update_uri} received: #{commit_res.response.code}"
-                     puts "#{update_uri} msg: #{commit_res.response.message}"
-                  end
-               rescue Exception => e
-               end
-             end
-       end
+       #if (successes > 0)
+       #      Net::HTTP.start(update_uri.host, update_uri.port) do |http|
+       #        msg = '<commit waitFlush="false" waitSearcher="false"></commit>'
+       #        hdrs = {'Content-Type'=>'text/xml','Content-Length'=>msg.length.to_s}
+       #        begin
+       #           commit_res = http.post(update_uri.path, msg, hdrs)
+       #           if commit_res.response.code == "200"
+       #              puts 'commit successful'
+       #           else
+       #              puts "#{update_uri} received: #{commit_res.response.code}"
+       #              puts "#{update_uri} msg: #{commit_res.response.message}"
+       #           end
+       #        rescue Exception => e
+       #        end
+       #      end
+       #end
      end
    end
  end

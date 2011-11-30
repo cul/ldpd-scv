@@ -5,13 +5,13 @@ gem 'authlogic', :git => 'http://github.com/binarylogic/authlogic.git'
 gem 'authlogic_wind'
 gem 'hydra-head', '3.1.0'
 gem "rails", '~> 3.0.10'
-gem "blacklight", '3.0.0'  
-gem "active-fedora", '~>3.1.1'
+gem "blacklight"
+gem "active-fedora", '~>3.1.4'
 gem 'builder'
 gem 'columnize'
 gem 'crack'
 gem 'cul_image_props'
-gem 'cul_scv_hydra'
+gem 'cul_scv_hydra' # , :path => "/opt/project_hydra/cul_om_scv"
 gem 'curb'
 gem 'database_cleaner'
 gem 'declarative_authorization'
@@ -26,7 +26,6 @@ gem 'linecache'
 gem 'mime-types'
 gem 'multipart-post'
 gem 'mysql'
-gem 'mysql2', '~> 0.2'
 gem 'net-ldap', '>=0.1.1'
 gem 'nokogiri' # Default to using the version required by Blacklight
 gem 'om', '>=1.4.0'
@@ -34,7 +33,7 @@ gem 'rack'
 gem 'rack-test'
 gem 'rake'
 gem 'rcov'
-gem 'rsolr' # Default to using the version required by Blacklight
+gem 'rsolr', '1.0.2' # Default to using the version required by Blacklight
 gem 'rsolr-ext' # Default to using the version required by Blacklight
 gem 'ruby-prof'
 gem 'rubydora'

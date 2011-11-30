@@ -1,7 +1,7 @@
 class ThumbnailsController < ApplicationController
   # some thumbnail urls
-  NO_THUMB = Rails.root + "/public/images/wikimedia/200px-ImageNA.svg.png"
-  COLLECTION_THUMB = Rails.root + "/public/images/crystal/kmultiple.png"
+  NO_THUMB = Rails.root.join("public/images/wikimedia/200px-ImageNA.svg.png")
+  COLLECTION_THUMB = Rails.root.join("public/images/crystal/kmultiple.png")
   # some rel predicates
   FORMAT = "http://purl.org/dc/elements/1.1/format"
   MEMBER_OF = "http://purl.oclc.org/NET/CUL/memberOf"

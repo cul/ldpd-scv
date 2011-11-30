@@ -70,8 +70,36 @@ module ScvAppHelper
     end
   end
 
+# Return a normalized partial name that can be used to contruct view partial path
+  def object_partial_name(object)
+    # .to_s is necessary otherwise the default return value is not always a string
+    # using "_" as sep. to more closely follow the views file naming conventions
+    # parameterize uses "-" as the default sep. which throws errors
+    display_type = object.class.name
+
+    return 'default' unless display_type
+    display_type = display_type.join(" ") if display_type.respond_to?(:join)
+
+    "#{display_type.gsub("-"," ")}".parameterize("_").to_s
+  end
+
+  # given a doc and action_name, this method attempts to render a partial template
+  # based on the value of doc[:format]
+  # if this value is blank (nil/empty) the "default" is used
+  # if the partial is not found, the "default" partial is rendered instead
+  def render_object_partial(object, action_name, locals = {})
+    format = object_partial_name(object)
+    locals = locals.merge({:object=>object})
+    begin
+      render :partial=>"catalog/_#{action_name}_partials/#{format}", :locals=>locals
+    rescue ActionView::MissingTemplate
+      render :partial=>"catalog/_#{action_name}_partials/default", :locals=>locals
+    end
+
+  end
+
   def link_to_mash(doc, opts={:label=>nil, :counter => nil, :results_view => true})
-    opts[:label] = Blackligh.config.index.shiw_link.to_sym unless opts[:label]
+    opts[:label] = Blacklight.config[:index][:show_link].to_sym unless opts[:label]
 # blacklight render_document_index_label will not handle a Symbol key appropriately for a Hash/Mash, and must have a proc
     if opts[:label].instance_of? Symbol
       old_label = opts[:label]
@@ -80,11 +108,15 @@ module ScvAppHelper
     label = render_document_index_label doc, opts
 # blacklight does not pass the correct arguments for Rails 3 url_for
     url_for_opts = {:controller => :catalog, :action => :show, :id => doc[:id]}
-    link_to_with_data(label, url_for_opts, {:method => :put, :class => label.parameterize, :data => opts}).html_safe
+    link_to_with_data(label, url_for_opts, {:method => :put, :class => label.to_s.parameterize, :data => opts}).html_safe
   end
 
   def url_to_document(doc)
-    catalog_path(doc[:id])
+    if doc.is_a? ActiveFedora::Base
+      catalog_path(doc.pid)
+    else
+      catalog_path(doc[:id])
+    end
   end
   def onclick_to_document(document, formdata = {})
     data = {:counter => nil, :results_view => true}.merge(formdata)
