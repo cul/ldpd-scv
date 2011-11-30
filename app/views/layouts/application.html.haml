@@ -18,7 +18,7 @@
       %div#hd
         %div.yui-g
           %div.yui-u.first
-            %h1.site_banner
+            %h1.site_title
               - _link = url_for root_path
               %a{:href=>_link}
                 = "Columbia University Libraries Staff Collection Viewer"
@@ -40,5 +40,5 @@
               = yield
         - if sidebar_items.length > 0
           %div.yui-b.sidebar
-            = sidebar_items.join('')
+            != sidebar_items.join('')
       %div#ft= @footer

@@ -38,26 +38,10 @@ a:hover {color: #029;}
 .sidebar p {padding-top: 2em;}
 
 /* Top Banner */
-h1.site_banner {
- background: transparent url('../images/logo.gif') no-repeat top left;
- margin: 2em 0px 0px 1em;
- height: 35px;
- /* width: 480px; */
- width: 100%;
- position: relative;
-}
+h1.site_title {background: transparent url('../images/logo.gif') no-repeat top left; margin: 2em 0px 0px 1em; height: 35px; width: 100%;position:relative;}
 .first h1 {margin: 0px; padding: 0px;}
-h1.site_banner a {
- position: absolute;
- line-height: 35px;
- display:block;
- left:50px;
- width:auto;
- font-size:10px;
- text-decoration: none;
- border: solid thin black;
-}
-h1.site_banner a:link, h1.site_banner a:visited, h1.site_banner a:hover, h1.site_banner a:active {border: 0px;}
+h1.site_title a {display:block; position:absolute; left:50px; height: 35px; width:auto; font-size: 10px; overflow: hidden; text-decoration: none; border: 0px;}
+h1.site_title a:link, h1.site_title a:visited, h1.site_title a:hover, h1.site_title a:active {border: 0px;}
 h2.search {margin:0; display:inline;}
 
 /* Search Box */
@@ -223,8 +207,8 @@ font-weight:bold;
   text-align: center;
 }
 
+#startOverLink{display:block; position:absolute; top:50%; right:0.66em; margin-top:-12px; padding:0 7px 3px 12px; line-height:22px; text-decoration:none; color:#fff; background:url(../images/start_over.gif) no-repeat center center; border-bottom: none;}
 
-#backToSearchLink{display:block; position:absolute; top:50%; left:0.66em; margin-top:-12px; padding:0 0px 3px 0px; line-height:22px; text-decoration:none; color:#fff; background:url(../images/start_over.gif) no-repeat center center; border-bottom: none;font-size:80%;}
 
 #sortAndPerPage {
   background-color: #F0F0F0;
@@ -245,17 +229,11 @@ font-weight:bold;
   border-radius: 0 0 4px 4px;
   -webkit-border-radius: 0 0 4px 4px;
   margin-bottom: 1.5em;
-  overflow: hidden;
+  overflow: auto; /* to make it expand to hold floated children */
 }
 
-#previousNextDocument div {
-  margin-bottom: 0em;
-  padding: 0em;
-}
-#previousNextDocument .back {
-  text-align: center;
-}
 #previousNextDocument .next {
+  float: right;
 }
 
 /* Search Results */
@@ -267,12 +245,15 @@ font-weight:bold;
 #documents .per_page {padding-right: 5px;}
 
 /* Result List (http://www.quirksmode.org/css/clearing.html) */
-h3.index_title {clear: both; margin: 0px; padding: 0px; width: 100%;}
-img.thumbnail {width: 90%;}
-img.gallery {width: 80%;}
+h3.index_title {clear: both; margin: 0px; padding: 0px; width: 460px;}
+
+dl {margin: 0px; padding: 0px;}
+dl.defList {overflow: auto; padding: 0.5em 0;}
+dl.defList dt {float:left; text-align: right; width: 20%; clear: both; color: #888; margin: 0; padding: 2px 1em 2px 0px;}
+dl.defList dd {float: left; text-align: left; margin: 0; padding: 2px 0; width: 450px;}
 
 /* Individual Result Listing */
-#document h1 {margin: 0px; padding: 0px 0px 0px 0px;}
+#document h1 {margin: 0px; padding: 0px 0px 1em 0px;}
 #document .deleteFolder, #document .addFolder {float:right;}
 #marc_view {padding:5px; text-align:left;}
 #marc_view .ind1, #marc_view .ind2 {padding:0 5px; display:inline;}
@@ -407,21 +388,6 @@ Search Parameters
   position: static;
   margin-top: 0;
 }
-
-#startOverLink{
-  display:block;
-  position:absolute;
-  font-weight:normal;
-  float:right;
-  margin-top:1em;
-  padding: 0 7px 3px 12px;
-  line-height:22px;
-  text-decoration:none;
-  color:#fff;
-  background:url(../images/start_over.gif) no-repeat center center;
-  border-bottom: none;
-}
-
 .show #appliedParams {
   /* it's the top, give it a top border with corners */
   border-top: 1px solid #AAAAAA;
@@ -477,4 +443,3 @@ Search Parameters
 
 
 .hide {display:none}
-

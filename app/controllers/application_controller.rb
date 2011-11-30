@@ -6,12 +6,14 @@ require "ruby-prof"
 
 class ApplicationController < ActionController::Base
   # Adds a few additional behaviors into the application controller 
-   include Blacklight::Controller
   # Please be sure to impelement current_user and user_session. Blacklight depends on 
   # these methods in order to perform user specific actions. 
 
   unloadable
   include Blacklight::Controller
+
+  layout "application"
+
   helper_method :user_session, :current_user, :fedora_config, :solr_config, :relative_root # share some methods w/ views via helpers
   helper :all # include all helpers, all the time
   before_filter :check_new_session
@@ -112,22 +114,11 @@ class ApplicationController < ActionController::Base
   def default_html_head
     stylesheet_links << ['yui', 'jquery/ui-lightness/jquery-ui-1.8.1.custom.css', 'application',{:plugin=>:blacklight, :media=>'all'}]
     stylesheet_links << ['zooming_image', 'accordion', {:media=>'all'}]
-    stylesheet_links << ['application']
     stylesheet_links << ['scv']
     javascript_includes << ['jquery-1.4.2.min.js', 'jquery-ui-1.8.1.custom.min.js', 'blacklight', { :plugin=>:blacklight } ]
     javascript_includes << ['accordion', 'zooming_image']
     extra_head_content << [stylesheet_tag(openlayers_css, :media=>'all'), javascript_tag(openlayers_js)]
   end
-
-#  def fedora_creds
-#    unless @fedora_creds
-#      uname = FEDORA_CREDENTIALS_CONFIG[:username]
-#      pwd = FEDORA_CREDENTIALS_CONFIG[:password]
-#      fc = "#{uname}:#{pwd}"
-#      @fedora_creds = [fc].pack('m').delete("\r\n")
-#    end
-#    @fedora_creds
-#  end
 
   def http_client
     unless @http_client
@@ -135,14 +126,5 @@ class ApplicationController < ActionController::Base
     end
     @http_client
   end
-
-#  def set_fedora_credentials(hc,target)
-#    uname = FEDORA_CREDENTIALS_CONFIG[:username]
-#    pwd = FEDORA_CREDENTIALS_CONFIG[:password]
-#    domain = File.dirname(target) + '/'
-#    puts "credential set for user: #{uname} domain: #{domain}"
-#    hc.set_auth(domain, uname, pwd)
-#    hc
-#  end
 
 end
