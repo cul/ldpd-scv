@@ -1,0 +1,8 @@
+// default partial to display solr document fields in catalog show view
+= render :partial => "catalog/_show_partials/groups", :locals => {:document => document}
+- #metadata_list = get_metadata_list(document)
+.yui-g
+  .yui-u.first
+    = render :partial => "catalog/_show_partials/metadata_brief", :locals => {:document => document}
+  .yui-u
+    = render :partial => "catalog/_show_partials/image/display_derivatives", :locals => {:document => document}

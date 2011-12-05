@@ -11,7 +11,7 @@ gem 'builder'
 gem 'columnize'
 gem 'crack'
 gem 'cul_image_props'
-gem 'cul_scv_hydra' # , :path => "/opt/project_hydra/cul_om_scv"
+gem 'cul_scv_hydra' , :path => "/opt/project_hydra/cul_om_scv"
 gem 'curb'
 gem 'database_cleaner'
 gem 'declarative_authorization'
@@ -36,7 +36,7 @@ gem 'rcov'
 gem 'rsolr', '1.0.2' # Default to using the version required by Blacklight
 gem 'rsolr-ext' # Default to using the version required by Blacklight
 gem 'ruby-prof'
-gem 'rubydora'
+gem 'rubydora' #, :path => "/opt/project_hydra/rubydora"
 gem 'RedCloth', '=4.2.3'
 gem 'sass'
 gem 'solr-ruby' 

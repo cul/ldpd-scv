@@ -4,7 +4,7 @@
       = render_document_partial(document, "thumbnail") unless document.nil?
     %div.yui-u
       - if !document.nil?
-        %p.index_title=link_to_clio(document)
+        %p.index_title!=link_to_clio(document)
       = render :partial => "catalog/_show_partials/metadata_brief", :locals => {:document => document, :link => true} unless document.nil?
       %div.detail
         .yui-gf.items

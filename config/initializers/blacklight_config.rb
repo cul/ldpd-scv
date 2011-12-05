@@ -99,7 +99,6 @@ Blacklight.configure(:shared) do |config|
       "lib_format_facet"     => 10,
       "lib_collection_facet" => 10,
       "lib_repo_facet"       => 10,
-      "format_h"             => 10,
       "collection_h"         => 10,
       "date_created_h"       => 10,
       "subject_topic_facet"  => 10,
@@ -114,18 +113,17 @@ Blacklight.configure(:shared) do |config|
       "lib_repo_facet"       => "index"
     },
     :hierarchy => {
-      "format_h" => true,
       "date_created_h" => true,
       "collection_h" => true
     }
   }
   if !RAILS_ENV.eql?"passenger_prod"
-    config[:facet][:field_names].concat(["collection_h","format_h","descriptor"])
+    config[:facet][:field_names].concat(["collection_h","format","descriptor"])
     config[:facet][:labels]["collection_h"] = "In Hierarchy"
-    config[:facet][:labels]["format_h"] = "Routed As"
+    config[:facet][:labels]["format"] = "Routed As"
     config[:facet][:labels]["descriptor"] = "Metadata Type"
     config[:facet][:limits]["collection_h"] = 10
-    config[:facet][:limits]["format_h"] = 10
+    config[:facet][:limits]["format"] = 10
     config[:facet][:limits]["descriptor"] = 10
   end
 

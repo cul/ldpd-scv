@@ -11,9 +11,9 @@
         %td=resource[:mime_type]
         %td=resource[:dimensions]
         %td=resource[:size] 
-        - if permitted_to? :fedora_content, Cul::Fedora::MimeDummy.new(resource[:mime_type]), {:context => :download}
+        - if permitted_to? :fedora_content, Cul::Fedora::MimeDummy.new(resource), {:context => :download}
           %td
-            - if resource[:mime_type].match(/tiff$/)
+            - if resource[:mime_type].match(/tiff$/) or resource[:mime_type].match(/wav$/)
               = link_to "[Download]", resource[:download_path] if resource[:download_path]
             - else
               = link_to "[Show]", resource[:show_path] if resource[:show_path]

@@ -1,7 +1,9 @@
 class ThumbnailsController < ApplicationController
   # some thumbnail urls
-  NO_THUMB = Rails.root.join("public/images/wikimedia/200px-ImageNA.svg.png")
+  NO_THUMB = Rails.root.join("public/images/crystal/file.png")
+  BROKEN_THUMB = Rails.root.join("public/images/crystal/file_broken.png")
   COLLECTION_THUMB = Rails.root.join("public/images/crystal/kmultiple.png")
+  AUDIO_THUMB = Rails.root.join("public/images/crystal/mp3.png")
   # some rel predicates
   FORMAT = "http://purl.org/dc/elements/1.1/format"
   MEMBER_OF = "http://purl.oclc.org/NET/CUL/memberOf"
@@ -53,21 +55,24 @@ class ThumbnailsController < ApplicationController
       end
     elsif triples[HAS_MODEL].include?("info:fedora/ldpd:StaticImageAggregator")
       url = image_thumbnail(pid)
+    elsif triples[HAS_MODEL].include?("info:fedora/ldpd:StaticAudioAggregator")
+      url = {:url=>AUDIO_THUMB,:mime=>'image/png'}
     else
       url = {:url=>COLLECTION_THUMB,:mime=>'image/png'}
     end
+    puts "thumb url: #{url[:url]}"
     filename = pid + '.' + url[:mime].split('/')[1].downcase
     h_cd = "filename=""#{CGI.escapeHTML(filename)}"""
     headers.delete "Cache-Control"
     headers["Content-Disposition"] = h_cd
     headers["Content-Type"] = url[:mime]
    
-    if url[:url].eql?(NO_THUMB) || url[:url].eql?(COLLECTION_THUMB)
-      render :status => 200, :text => File.read(url[:url])
-      return
-    else
+    if url[:url] =~ /^https?:/
       cl = http_client
       render :status => 200, :text => cl.get_content(url[:url])
+      return
+    else
+      render :status => 200, :text => File.read(url[:url])
       return
     end 
   end
@@ -118,9 +123,9 @@ class ThumbnailsController < ApplicationController
       end
     end
     if base_id.nil?
-      {:url=>NO_THUMB, :mime=>'image/png'}
+      {:url=>BROKEN_THUMB, :mime=>'image/png'}
     else
-      {:url=>Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + base_id + "/CONTENT",:mime=>base_type}
+      {:url=>Cul::Fedora::ResourceIndex.config[:riurl] + "/objects/" + base_id + "/datastreams/CONTENT/content",:mime=>base_type}
     end
   end
 

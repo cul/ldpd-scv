@@ -70,10 +70,8 @@ module ScvHelper
 
   def get_resources(document)
     members = get_members(document)
-    logger.debug "found #{members.length} members of #{document["id"]}"
     members = members.delete_if {|x| not x[:has_model_s].include? "info:fedora/ldpd:Resource" }
-    logger.debug "found #{members.length} resources of #{document["id"]}"
-    obj_display = (document["object_display"] || []).first
+    return members if members.length == 0
     results = []
     format = document["format"]
     format = format.first if format.is_a? Array
@@ -84,21 +82,47 @@ module ScvHelper
       head_req = http_client.head(url)
       # raise head_req.inspect
       file_size = head_req.header["Content-Length"].first.to_i
-      results << {:dimensions => "Original", :mime_type => "image/jp2", :show_path => fedora_content_path("show", base_id, "SOURCE", base_id + "_source.jp2"), :download_path => fedora_content_path("download", base_id , "SOURCE", base_id + "_source.jp2")}  
+      results << {:dimensions => "Original", :mime_type => "image/jp2", :show_path => fedora_content_path("show", base_id, "SOURCE", base_id + "_source.jp2"), :download_path => fedora_content_path("download", base_id , "SOURCE", base_id + "_source.jp2"), :content_models=>[]}  
+    when "audio"
+      members.each do |member|
+        res = {}
+        res[:mime_type] = member["dc_format_t"].first
+        res[:content_models] = member["has_model_s"]
+        res[:file_size] = member["extent_s"].first.to_i
+        res[:size] = (member["extent_s"].first.to_i / 1024).to_s + " Kb"
+        base_id = member["id"]
+        base_filename = base_id.gsub(/\:/,"")
+        if res[:mime_type] =~ /wav/
+          ext = 'wav'
+        elsif res[:mime_type] =~ /mpeg/
+          ext = 'mp3'
+        else
+          ext = 'bin'
+        end
+        filename = base_filename + "." + ext
+        dc_filename = base_filename + "_dc.xml"
+
+        #res[:show_path] = fedora_content_path("show", base_id, "CONTENT", filename)
+        #res[:cache_path] = cache_path("show", base_id, "CONTENT", filename)
+        res[:download_path] = fedora_content_path("download", base_id, "CONTENT", filename)
+        res[:dc_path] = fedora_content_path('show_pretty', base_id, "DC", dc_filename)
+        results << res
+      end
     when "image"
         #images = parse_image_resources!(document)
-      members.each do |image|
+      members.each do |member|
         res = {}
-        res[:dimensions] = image["image_width_s"].first + " x " + image["image_length_s"].first
-        res[:width] = image["image_width_s"].first
-        res[:height] = image["image_length_s"].first
-        res[:mime_type] = image["dc_format_t"].first
-        res[:file_size] = image["extent_s"].first.to_i
-        res[:size] = (image["extent_s"].first.to_i / 1024).to_s + " Kb"
+        res[:dimensions] = member["image_width_s"].first + " x " + member["image_length_s"].first
+        res[:width] = member["image_width_s"].first
+        res[:height] = member["image_length_s"].first
+        res[:mime_type] = member["dc_format_t"].first
+        res[:content_models] = member["has_model_s"]
+        res[:file_size] = member["extent_s"].first.to_i
+        res[:size] = (member["extent_s"].first.to_i / 1024).to_s + " Kb"
 
         base_id = image["id"]
         base_filename = base_id.gsub(/\:/,"")
-        img_filename = base_filename + "." + image["dc_type_t"].first.gsub(/^[^\/]+\//,"")
+        img_filename = base_filename + "." + member["dc_type_t"].first.gsub(/^[^\/]+\//,"")
         dc_filename = base_filename + "_dc.xml"
 
         res[:show_path] = fedora_content_path("show", base_id, "CONTENT", img_filename)
@@ -147,18 +171,19 @@ module ScvHelper
 
   def get_index_type_label(document)
     unless document["index_type_label_s"]
-      docs = get_members(document)
-      if docs.length == 0
-        label = "EMPTY"
-      elsif docs.length == 1
-        label = "SINGLE PART"
-      else
-        label = "MULTIPART"
-      end
-      update_doc(document[:id],{:index_type_label_s => label})
-      document[:index_type_label_s] = label
+      logger.warn "did not expect #{document[:id]} to lack index_type_label_s"
+      #docs = get_members(document)
+      #if docs.length == 0
+      #  label = "EMPTY"
+      #elsif docs.length == 1
+      #  label = "SINGLE PART"
+      #else
+      #  label = "MULTIPART"
+      #end
+      #update_doc(document[:id],{:index_type_label_s => label})
+      #document[:index_type_label_s] = label
     end
-    document[:index_type_label_s]
+    document["index_type_label_s"]
   end
   def update_doc(id, fields={})
       _solr = RSolr.connect :url => Blacklight.solr_config[:url]

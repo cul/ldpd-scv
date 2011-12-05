@@ -3,7 +3,7 @@ passenger_prod: &PROD
     riquery: "select $member from <#ri> where walk ($obj <cul:memberOf> <fedora:%s> and $member <cul:memberOf> $obj)"
     collections: "ldpd:91652;ldpd:91654;ldpd:91651;ldpd:91656"
 passenger_test: &TEST
-    riurl: https://repository2.cul.columbia.edu:8443/fedora
+    riurl: https://alcott.cul.columbia.edu:8443/fedora
     riquery: "select $member from <#ri> where walk ($obj <cul:memberOf> <fedora:%s> and $member <cul:memberOf> $obj)"
     collections: "ldpd:91652;ldpd:91654;ldpd:91651;ldpd:91655"
 passenger_dev: *TEST

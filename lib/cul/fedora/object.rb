@@ -6,10 +6,10 @@ select $predicate $object from <#ri>
 where <info:fedora/$PID> $predicate $object
 hd
   class MimeDummy
-    attr_reader :mime_type, :models
-    def initialize(mime_type, models=[])
-      @mime_type=mime_type
-      @models=models
+    attr_reader :mime_type, :content_models
+    def initialize(opts={})
+      @content_models=opts[:content_models]
+      @mime_type=opts[:mime_type]
     end
   end
   module Aggregator

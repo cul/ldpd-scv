@@ -1,4 +1,5 @@
 require 'net/http'
+require 'cul_scv_hydra'
 class DownloadController < ApplicationController
   before_filter :require_staff
   filter_access_to :fedora_content, :attribute_check => true,
@@ -11,45 +12,35 @@ class DownloadController < ApplicationController
   def download_headers(pid, dsid)
     h_cd = "filename=""#{CGI.escapeHTML(params[:filename].to_s)}"""
     h_ct = Cul::Fedora.repository.datastream_dissemination({:pid => pid, :dsid => dsid, :method => :head})["Content-Type"].to_s
+    if h_ct.empty? and ["DC", "RELS-EXT", "AUDIT", "descMetadata", "rightsMetadata"].include? dsid #figure out why head isn't always returning type for DC
+      h_ct = "text/xml"
+    end
     {"Content-Disposition" => h_cd, "Content-Type" => h_ct}
   end
 
   def cachecontent
-    #url = Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + params[:uri]+ "/" + params[:block]
-
-    #cl = http_client
-    #h_cd = "filename=""#{CGI.escapeHTML(params[:filename].to_s)}"""
-    #h_ct = Cul::Fedora.repository.datastream_dissemination({:pid => params[:uri], :dsid => params[:block], :method => :head})["Content-Type"].to_s
-    #h_ct = cl.head(url).header["Content-Type"].to_s
     headers.delete "Cache-Control"
     headers.merge! download_headers(params[:uri], params[:block])
-    
-    render :status => 200, :text => cl.get_content(url)
+    ds_parms = {:pid => params[:uri], :dsid => params[:block]}
+    self.response_body =  Cul::Fedora::Streamer.new(Cul::Fedora.repository, ds_parms)
   end
   def download_from_params
     unless defined?(@download)
       pid = params[:uri]
       ds = params[:block]
-      r_obj = Cul::Fedora::Objects::BaseObject.new({:pid_s => pid},http_client)
-      triples = r_obj.triples
+      r_obj = Cul::Scv::Hydra::ActiveFedora::Model::DcDocument.load_instance(pid)
       @download = DownloadObject.new
-      triples.each { |triple|
-        predicate = triple["predicate"]
-        if predicate.eql? "http://purl.org/dc/elements/1.1/format"
-          @download.mime_type=triple["object"]
-        elsif predicate.eql? "info:fedora/fedora-system:def/model#hasModel"
-          @download.content_models.push(triple["object"])
-        end
+      r_obj.ids_for_outbound(:has_model).each { |triple|
+        @download.content_models << "info:fedora/#{triple}"
       }
+      dc_format = r_obj.dc.term_values(:format)
+      if dc_format and dc_format.length > 0
+        @download.mime_type=dc_format.first
+      end
     end
     params[:object] = @download
   end
   def fedora_content
-    #url = Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + params[:uri]+ "/" + params[:block]
-    #cl = http_client
-    #h_cd = "filename=""#{CGI.escapeHTML(params[:filename].to_s)}"""
-    #h_ct = cl.head(url).header["Content-Type"].to_s
-    #h_ct = Cul::Fedora.repository.datastream_dissemination({:pid => params[:uri], :dsid => params[:block], :method => :head})["Content-Type"].to_s
     dl_hdrs = download_headers(params[:uri], params[:block])
     text_result = nil
 
@@ -60,15 +51,17 @@ class DownloadController < ApplicationController
       if dl_hdrs["Content-Type"].include?("xml") || params[:print_binary_octet]
         
         xsl = Nokogiri::XSLT(File.read(Rails.root.join("app/stylesheets/pretty-print.xsl")))
-        xml = Nokogiri::XML.parse(Cul::Fedora.repository.datastream_dissemination(:pid => params[:uri], :dsid => params[:block]))
+        xml = Nokogiri::XML.parse(Cul::Fedora.repository.datastream_dissemination(:pid => params[:uri], :dsid => params[:block]), nil, 'UTF-8')
         text_result = xsl.apply_to(xml).to_s
+      elsif dl_hdrs["Content-Type"].include?("txt")
+        text_result = xml
       else
-        text_result = "Non-xml content streams cannot be pretty printed."
+        text_result = "Non-xml content streams cannot be pretty printed. (#{dl_hdrs.inspect})"
       end
     end
     headers.merge! dl_hdrs
     if text_result
-      headers["Content-Type"] = "text/plain"
+      headers["Content-Type"] = "text/plain; charset=utf-8"
       render :text => text_result
     else
       ds_parms = {:pid => params[:uri], :dsid => params[:block]}

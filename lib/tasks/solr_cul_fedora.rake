@@ -337,10 +337,8 @@ namespace :solr do
        url_array.each do |pid|
          base_obj = ActiveFedora::Base.load_instance("info:fedora/#{pid}")
          ActiveFedora::ContentModel.known_models_for(base_obj).each do |model|
-           puts "Found model #{model.to_s}"
            begin
              model_obj = model.load_instance("info:fedora/#{pid}")
-             puts model_obj.to_solr
              model_obj.update_index
              successes += 1
            rescue Exception => e

@@ -98,6 +98,8 @@ div.metadata {
 div.metadata div.yui-gc {
   width: 100%;
 }
+img.thumbnail {width: 90%;}
+img.gallery {width: 80%;}
 table.imageMembers {
   border-collapse:collapse;
   border-width:1px;

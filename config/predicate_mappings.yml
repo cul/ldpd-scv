@@ -16,6 +16,7 @@
 :predicate_mapping:
   http://purl.oclc.org/NET/CUL/:
     :cul_member_of: memberOf
+    :cul_metadata_for: metadataFor
   info:fedora/fedora-system:def/relations-external#: 
     :conforms_to: conformsTo
     :has_annotation: hasAnnotation
