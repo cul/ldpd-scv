@@ -11,7 +11,7 @@ gem 'builder'
 gem 'columnize'
 gem 'crack'
 gem 'cul_image_props'
-gem 'cul_scv_hydra' , :path => "/opt/project_hydra/cul_om_scv"
+gem 'cul_scv_hydra' , '>=0.2.0'
 gem 'curb'
 gem 'database_cleaner'
 gem 'declarative_authorization'
