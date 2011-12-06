@@ -5,7 +5,6 @@ class CatalogController < ApplicationController
   include Blacklight::Catalog
   include Blacklight::SolrHelper
 
-  before_filter :fedora_init
   before_filter :require_staff
   before_filter :search_session, :history_session
   before_filter :delete_or_assign_search_session_params,  :only=>:index
@@ -22,10 +21,6 @@ class CatalogController < ApplicationController
   # The index action will more than likely throw this one.
   # Example, when the standard query parser is used, and a user submits a "bad" query.
   rescue_from RSolr::Error::Http, :with => :rsolr_request_error
-
-  def fedora_init
-    ActiveFedora.init
-  end
 
   def solr_search_params(extra_controller_params={})
     super.merge :per_page => (params[:per_page] || "10")
