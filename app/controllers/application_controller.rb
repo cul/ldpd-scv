@@ -25,15 +25,15 @@ class ApplicationController < ActionController::Base
   def current_user
     return @current_user if defined?(@current_user)
     
-    if user_session
-      @current_user = user_session.user
+    if current_user_session
+      @current_user = current_user_session.user
     else
       @current_user = false
     end
     @current_user
   end
 
-  def user_session
+  def current_user_session
     return @user_session if defined?(@user_session)
     @user_session = UserSession.find
   end

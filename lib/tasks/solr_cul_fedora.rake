@@ -233,7 +233,8 @@ namespace :solr do
        if ENV['UNIS']
          unis = ENV['UNIS'].split(/\s/)
          unis.each { |uni|
-           User.delete(:login=>uni)
+           u = User.find_by_login(uni)
+           u.delete
          }
        end
      end
