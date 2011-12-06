@@ -1,0 +1,5 @@
+- counter ||= nil
+%div.yui-gf
+  %div.yui-u.first
+    = render_document_partial_with_locals document, :thumbnail, {:document=>document,:label=>true,:counter=>counter}
+  %div.yui-u
