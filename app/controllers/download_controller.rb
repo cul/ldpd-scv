@@ -51,7 +51,16 @@ class DownloadController < ApplicationController
       if dl_hdrs["Content-Type"].include?("xml") || params[:print_binary_octet]
         
         xsl = Nokogiri::XSLT(File.read(Rails.root.join("app/stylesheets/pretty-print.xsl")))
-        xml = Nokogiri::XML.parse(Cul::Fedora.repository.datastream_dissemination(:pid => params[:uri], :dsid => params[:block]), nil, 'UTF-8')
+        xml = Cul::Fedora.repository.datastream_dissemination(:pid => params[:uri], :dsid => params[:block])
+        puts xml.class.name
+        if xml.respond_to? :read_body
+          body = ""
+          xml.read_body do |segment|
+            body += segment
+          end
+          xml = body
+        end
+        xml = Nokogiri::XML.parse(xml, nil, 'UTF-8')
         text_result = xsl.apply_to(xml).to_s
       elsif dl_hdrs["Content-Type"].include?("txt")
         text_result = xml

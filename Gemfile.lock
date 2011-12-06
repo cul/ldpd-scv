@@ -6,23 +6,6 @@ GIT
       activerecord (>= 3.0.7)
       activerecord (>= 3.0.7)
 
-PATH
-  remote: /opt/project_hydra/cul_om_scv
-  specs:
-    cul_scv_hydra (0.2)
-      active-fedora (~> 3.1.4)
-      activemodel (~> 3.0.10)
-      activeresource (~> 3.0.10)
-      activesupport (~> 3.0.10)
-      cul_image_props
-      cul_image_props
-      hydra-head
-      nokogiri (>= 1.4.2)
-      om (>= 1.2.4)
-      rails (~> 3.0.10)
-      rubydora (>= 0.2.6)
-      solrizer (>= 1.1.2)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -109,6 +92,19 @@ GEM
       cucumber (>= 1.1.1)
       nokogiri (>= 1.5.0)
     cul_image_props (0.1)
+    cul_scv_hydra (0.2.0)
+      active-fedora (~> 3.1.4)
+      activemodel (~> 3.0.10)
+      activeresource (~> 3.0.10)
+      activesupport (~> 3.0.10)
+      cul_image_props
+      cul_image_props
+      hydra-head
+      nokogiri (>= 1.4.2)
+      om (>= 1.2.4)
+      rails (~> 3.0.10)
+      rubydora (>= 0.2.6)
+      solrizer (>= 1.1.2)
     curb (0.7.15)
     daemons (1.1.4)
     database_cleaner (0.7.0)
@@ -330,7 +326,7 @@ DEPENDENCIES
   cucumber (>= 0.8.5)
   cucumber-rails (>= 1.0.0)
   cul_image_props
-  cul_scv_hydra!
+  cul_scv_hydra (>= 0.2.0)
   curb
   database_cleaner
   declarative_authorization

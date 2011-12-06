@@ -120,9 +120,9 @@ module ScvHelper
         res[:file_size] = member["extent_s"].first.to_i
         res[:size] = (member["extent_s"].first.to_i / 1024).to_s + " Kb"
 
-        base_id = image["id"]
+        base_id = member["id"]
         base_filename = base_id.gsub(/\:/,"")
-        img_filename = base_filename + "." + member["dc_type_t"].first.gsub(/^[^\/]+\//,"")
+        img_filename = base_filename + "." + member["dc_format_t"].first.gsub(/^[^\/]+\//,"")
         dc_filename = base_filename + "_dc.xml"
 
         res[:show_path] = fedora_content_path("show", base_id, "CONTENT", img_filename)
