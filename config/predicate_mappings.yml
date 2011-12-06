@@ -17,6 +17,8 @@
   http://purl.oclc.org/NET/CUL/:
     :cul_member_of: memberOf
     :cul_metadata_for: metadataFor
+  http://creativecommons.org/ns#:
+    :cc_license: license
   info:fedora/fedora-system:def/relations-external#: 
     :conforms_to: conformsTo
     :has_annotation: hasAnnotation

@@ -112,9 +112,15 @@ module ScvHelper
         #images = parse_image_resources!(document)
       members.each do |member|
         res = {}
-        res[:dimensions] = member["image_width_s"].first + " x " + member["image_length_s"].first
-        res[:width] = member["image_width_s"].first
-        res[:height] = member["image_length_s"].first
+        if member["image_width_s"]
+          res[:dimensions] = member["image_width_s"].first + " x " + member["image_length_s"].first
+          res[:width] = member["image_width_s"].first
+          res[:height] = member["image_length_s"].first
+        else
+          res[:dimensions] = "? x ?"
+          res[:width] = "0"
+          res[:height] = "0"
+        end
         res[:mime_type] = member["dc_format_t"].first
         res[:content_models] = member["has_model_s"]
         res[:file_size] = member["extent_s"].first.to_i

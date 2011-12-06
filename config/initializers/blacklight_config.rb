@@ -117,7 +117,7 @@ Blacklight.configure(:shared) do |config|
       "collection_h" => true
     }
   }
-  if !RAILS_ENV.eql?"passenger_prod"
+  if !Rails.env.eql?"passenger_prod"
     config[:facet][:field_names].concat(["collection_h","format","descriptor"])
     config[:facet][:labels]["collection_h"] = "In Hierarchy"
     config[:facet][:labels]["format"] = "Routed As"
