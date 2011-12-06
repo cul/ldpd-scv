@@ -76,7 +76,7 @@ module ScvHelper
     format = document["format"]
     format = format.first if format.is_a? Array
     case format
-    when "image/zooming"
+    when "zoomingimage"
       base_id = base_id_for(document)
       url = Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + base_id + "/SOURCE"
       head_req = http_client.head(url)
