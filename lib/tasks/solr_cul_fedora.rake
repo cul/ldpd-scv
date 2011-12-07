@@ -241,7 +241,8 @@ namespace :solr do
 
      desc "index objects from a CUL fedora repository"
      task :optimize => :configure do
-       puts "optimizing #{SOLR_CONFIG[:url]}"
+       solr_config = YAML::load('config/solr.yml')
+       puts "optimizing #{solr_config[:url]}"
        Blacklight.solr.optimize
        puts "optimized..."
        Blacklight.solr.commit
