@@ -9,10 +9,11 @@ class DownloadController < ApplicationController
       c.params
     }
 
-  def download_headers(pid, dsid)
+  def download_headers(opts)
+    opts = opts.merge({:method => :head})
     h_cd = "filename=""#{CGI.escapeHTML(params[:filename].to_s)}"""
-    h_ct = Cul::Fedora.repository.datastream_dissemination({:pid => pid, :dsid => dsid, :method => :head})["Content-Type"].to_s
-    if h_ct.empty? and ["DC", "RELS-EXT", "AUDIT", "descMetadata", "rightsMetadata"].include? dsid #figure out why head isn't always returning type for DC
+    h_ct = Cul::Fedora.repository.datastream_dissemination(opts)["Content-Type"].to_s
+    if h_ct.empty? and ["DC", "RELS-EXT", "AUDIT", "descMetadata", "rightsMetadata"].include? opts[:dsid] #figure out why head isn't always returning type for DC
       h_ct = "text/xml"
     end
     {"Content-Disposition" => h_cd, "Content-Type" => h_ct}
@@ -20,7 +21,7 @@ class DownloadController < ApplicationController
 
   def cachecontent
     headers.delete "Cache-Control"
-    headers.merge! download_headers(params[:uri], params[:block])
+    headers.merge! download_headers({:pid=>params[:uri], :dsid=>params[:block]})
     ds_parms = {:pid => params[:uri], :dsid => params[:block]}
     self.response_body =  Cul::Fedora::Streamer.new(Cul::Fedora.repository, ds_parms)
   end
@@ -41,7 +42,8 @@ class DownloadController < ApplicationController
     params[:object] = @download
   end
   def fedora_content
-    dl_hdrs = download_headers(params[:uri], params[:block])
+    dl_opts = {:pid=>params[:uri], :dsid=>params[:block]}
+    dl_hdrs = download_headers(dl_opts)
     text_result = nil
 
     case params[:download_method]
@@ -51,7 +53,7 @@ class DownloadController < ApplicationController
       if dl_hdrs["Content-Type"].include?("xml") || params[:print_binary_octet]
         
         xsl = Nokogiri::XSLT(File.read(Rails.root.join("app/stylesheets/pretty-print.xsl")))
-        xml = Cul::Fedora.repository.datastream_dissemination(:pid => params[:uri], :dsid => params[:block])
+        xml = Cul::Fedora.repository.datastream_dissemination(dl_opts)
         puts xml.class.name
         if xml.respond_to? :read_body
           body = ""

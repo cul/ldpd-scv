@@ -8,18 +8,22 @@ authorization do
       if_attribute :content_models => does_not_contain {"info:fedora/ldpd:RestrictedResource"}
     end
   end
+  role :download_all do
+    has_permission_on :download do
+      to :fedora_content
+      if_attribute :content_models => contains {"info:fedora/ldpd:RestrictedResource"}
+    end
+  end
   role :download_wav do
     has_permission_on :download do
       to :fedora_content
       if_attribute :mime_type => is {"audio/x-wav"}
-      # if_attribute :content_models => contains {"info:fedora/ldpd:RestrictedResource"}
     end
   end
   role :download_tiff do
     has_permission_on :download do
       to :fedora_content
       if_attribute :mime_type => is {"image/tiff"}
-      # if_attribute :content_models => contains {"info:fedora/ldpd:RestrictedResource"}
     end
   end
   # role extensions
@@ -27,6 +31,9 @@ authorization do
     includes :download_tiff
   end
   # user permissions
+  role :"ba2213:users.scv.cul.columbia.edu" do
+    includes :download_all
+  end
   role :"dortiz0:users.scv.cul.columbia.edu" do
     includes :download_tiff
   end
@@ -44,5 +51,8 @@ authorization do
   end
   role :"la2272:users.scv.cul.columbia.edu" do
     includes :download_tiff
+  end
+  role :"spd1:users.scv.cul.columbia.edu" do
+    includes :download_all
   end
 end
