@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 #gem 'devise'
-gem 'authlogic', :git => 'http://github.com/binarylogic/authlogic.git'
+gem 'authlogic', '~>3.1.0'
 gem 'authlogic_wind'
 gem 'hydra-head', '3.1.0'
 gem "rails", '~> 3.0.10'
