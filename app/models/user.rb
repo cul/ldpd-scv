@@ -1,3 +1,4 @@
+require 'securerandom'
 class User < ActiveRecord::Base
 # Connects this user object to Blacklights Bookmarks and Folders. 
   include Blacklight::User
@@ -48,7 +49,7 @@ class User < ActiveRecord::Base
       if (u = User.find_by_login(uni))
         u.update_attributes(:email => uni + "@columbia.edu", :cul_staff => true)
       else
-        User.create!(:login => uni, :wind_login => uni, :email => uni + "@columbia.edu", :cul_staff => true, :password => ActiveSupport::SecureRandom.base64(8)) 
+        User.create!(:login => uni, :wind_login => uni, :email => uni + "@columbia.edu", :cul_staff => true, :password => SecureRandom.base64(8)) 
       end
     end
   end
@@ -57,7 +58,7 @@ class User < ActiveRecord::Base
       if (u = User.find_by_login(uni))
         u.update_attributes(:email => uni + "@columbia.edu", :cul_staff => false)
       else
-        User.create!(:login => uni, :wind_login => uni, :email => uni + "@columbia.edu", :cul_staff => false, :password => ActiveSupport::SecureRandom.base64(8)) 
+        User.create!(:login => uni, :wind_login => uni, :email => uni + "@columbia.edu", :cul_staff => false, :password => SecureRandom.base64(8)) 
       end
     end
   end

@@ -203,7 +203,7 @@ module ScvHelper
   end
   def get_first_member(document, imageOnly=True)
     docs = get_members(document)
-    for doc in docs:
+    docs.each do |doc|
       logger.info "#{doc["id"]}  #{doc["format"]}"
       if imageOnly
         if doc["format"] ==  "image"

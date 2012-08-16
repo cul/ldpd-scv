@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -16,8 +17,8 @@ ActiveRecord::Schema.define(:version => 20111116222354) do
     t.integer  "user_id",     :null => false
     t.string   "document_id"
     t.string   "title"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.string   "user_type"
   end
 
@@ -25,8 +26,8 @@ ActiveRecord::Schema.define(:version => 20111116222354) do
     t.string   "title",      :null => false
     t.integer  "user_id",    :null => false
     t.text     "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "content_blocks", ["title"], :name => "index_content_blocks_on_title"
@@ -38,16 +39,16 @@ ActiveRecord::Schema.define(:version => 20111116222354) do
     t.integer  "user_id"
     t.text     "options"
     t.text     "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   add_index "reports", ["category"], :name => "index_reports_on_category"
 
   create_table "roles", :force => true do |t|
     t.string   "role_sym",   :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "roles", ["role_sym"], :name => "index_roles_on_role_sym", :unique => true
@@ -63,8 +64,8 @@ ActiveRecord::Schema.define(:version => 20111116222354) do
   create_table "searches", :force => true do |t|
     t.text     "query_params"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.string   "user_type"
   end
 
@@ -73,8 +74,8 @@ ActiveRecord::Schema.define(:version => 20111116222354) do
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
     t.text     "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
@@ -110,8 +111,8 @@ ActiveRecord::Schema.define(:version => 20111116222354) do
     t.datetime "current_login_at"
     t.string   "last_login_ip"
     t.string   "current_login_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.boolean  "cul_staff",         :default => false
   end
 

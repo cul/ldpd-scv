@@ -8,7 +8,7 @@
     
     = render_head_content
     = javascript_include_tag "application"
-    -  javascript_tag.each do
+    -  javascript_tag do
       = yield(:jstemplates)
   - bparms = {}
   - if params[:q].to_s.empty? and params[:f].to_s.empty? and params[:id].nil?

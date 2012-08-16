@@ -22,7 +22,7 @@ class UserSession < Authlogic::Session::Base
       self.attempted_record = record
 
       if !attempted_record
-        errors.add_to_base("Could not find user in our database.")
+        errors.add(:base,"Could not find user in our database.")
       end
     else
       wind_data = generate_verified_login
@@ -68,7 +68,7 @@ class UserSession < Authlogic::Session::Base
         wind_user.roles=roles 
         wind_user.save!
       else
-        errors.add_to_base("WIND Ticket did not verify properly.")
+        errors.add(:base,"WIND Ticket did not verify properly.")
       end  
     end
   end

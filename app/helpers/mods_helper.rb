@@ -120,7 +120,7 @@ module ModsHelper
 
 
   def get_mods_title_label(node)
-    if node.attributes["type"]:
+    if node.attributes["type"]
       "Title / #{node.attributes["type"]}:"
     elsif node.attributes["displayLabel"]
       "Title / #{node.attributes["displayLabel"]}:"

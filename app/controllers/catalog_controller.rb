@@ -4,6 +4,10 @@ class CatalogController < ApplicationController
   unloadable
   include Blacklight::Catalog
   include Blacklight::SolrHelper
+  
+  configure_blacklight do |config|
+    Scv::BlacklightConfiguration.configure(config)
+  end
 
   before_filter :require_staff
   before_filter :search_session, :history_session
@@ -21,6 +25,12 @@ class CatalogController < ApplicationController
   # The index action will more than likely throw this one.
   # Example, when the standard query parser is used, and a user submits a "bad" query.
   rescue_from RSolr::Error::Http, :with => :rsolr_request_error
+  
+  def index
+    super
+    #response.body = blacklight_config.inspect
+    #return
+  end
 
   def solr_search_params(extra_controller_params={})
     super.merge :per_page => (params[:per_page] || "10")

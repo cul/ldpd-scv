@@ -6,12 +6,12 @@ require "ruby-prof"
 
 class ApplicationController < ActionController::Base
   # Adds a few additional behaviors into the application controller 
-  # Please be sure to impelement current_user and user_session. Blacklight depends on 
+  # Please be sure to implement current_user and user_session. Blacklight depends on 
   # these methods in order to perform user specific actions. 
 
   unloadable
   include Blacklight::Controller
-
+  
   layout "application"
 
   helper_method :user_session, :current_user, :fedora_config, :solr_config, :relative_root # share some methods w/ views via helpers
@@ -89,7 +89,7 @@ class ApplicationController < ActionController::Base
   end
 
   def store_location
-    session[:return_to] = request.request_uri
+    session[:return_to] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}"
   end
 
   def redirect_back_or_default(default)

@@ -189,7 +189,7 @@ class Gatekeeper
       facet_counts = facets['facet_counts']['facet_fields']['internal_h']
       facet_counts.flatten!
       facet_counts.each_with_index { |val, index|
-        if (val.to_s.index('path-')==0):
+        if (val.to_s.index('path-')==0)
           results << facet_counts[index + 1] 
         end
       }

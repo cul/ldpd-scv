@@ -9,7 +9,6 @@ config.cache_store = :file_store, '/var/tmp/'
 # Full error reports are disabled and caching is turned on
 config.action_controller.consider_all_requests_local = false
 config.action_controller.perform_caching             = true
-config.action_view.debug_rjs                         = false
 
 # This line tells passenger we are serving under http://<server>/<app_name>/
 config.action_controller.relative_url_root = "/scv_dev"
