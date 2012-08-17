@@ -4,5 +4,5 @@
   - counter = (counter.to_i + 1 + @response.params[:start].to_i)
 %div.item_type
   %span.item_type="#{label} ITEM"
-%a{:href=>url_to_document(document), :onclick=>onclick_to_document(document,{:counter=>counter})}
+%a{:href=>url_to_document(document)}
   %img{:src=>thumbnail_path(document[:id]),:style=>"width:100px"}

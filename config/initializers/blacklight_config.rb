@@ -27,7 +27,26 @@ class BlacklightConfiguration
   #   SolrDocument.use_extension( Blacklight::Solr::Document::Marc) do |document|
   #    document.key?( :marc_display  )
   #  end
-
+    config.default_solr_params = {
+          :qt => 'search',
+          :defType          => "edismax",
+          :facet            => true,
+          :'facet.mincount' => 1,
+          :'q.alt'          => "*:*",
+          :qf               => [
+                                'lib_project_facet^1',
+                                'lib_name_facet^1',
+                                'lib_date_facet^1',
+                                'lib_format_facet^1',
+                                'lib_collection_facet^1',
+                                'lib_repo_facet^1',
+                                'subject_topic_facet^1',
+                                'language_facet^1',
+                                'subject_geo_facet^1',
+                                'subject_era_facet^1',
+                                'format^1',
+                                ]
+        }
 
 
 
@@ -36,151 +55,65 @@ class BlacklightConfiguration
     ##############################
 
     config[:unique_key] = :id
-    config[:default_qt] = "search"
-
 
     # solr field values given special treatment in the show (single result) view
-    config[:show] = {
-      :html_title => "title_display",
-      :heading => "title_display",
-      :display_type => "format"
-    }
+    config.show.html_title = 'title_display'
+    config.show.heading = 'title_display'
+    config.show.display_type = :format
 
     # solr fld values given special treatment in the index (search results) view
-    config[:index] = {
-      :show_link => "title_display",
-      :num_per_page => 10,
-      :record_display_type => "format"
-    }
+    config.index.show_link = 'title_display'
+    config.index.record_display_type = :format
+    config.index.num_per_page = 10
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
     # TODO: Reorganize facet data structures supplied in config to make simpler
     # for human reading/writing, kind of like search_fields. Eg,
     # config[:facet] << {:field_name => "format", :label => "Format", :limit => 10}
-    config[:facet] = {
-      :field_names => (facet_fields = [
-        "lib_project_facet",
-        "lib_name_facet",
-        "lib_date_facet",
-        "lib_format_facet",
-        "lib_collection_facet",
-        "lib_repo_facet",
-        "date_created_h",
-        "pub_date",
-        "subject_topic_facet",
-        "language_facet",
-        "lc_1letter_facet",
-        "subject_geo_facet",
-        "subject_era_facet"
-      ]),
-      :labels => {
-        "lib_project_facet"              => "Projects",
-        "lib_name_facet"            => "Names",
-        "lib_date_facet"            => "Dates",
-        "lib_format_facet"              => "Formats",
-        "lib_collection_facet"              => "Collections",
-        "lib_repo_facet"            => "Repositories",
-        "date_created_h"              => "Date (Experimental)",
-        "subject_topic_facet" => "Topics",
-        "language_facet"      => "Languages",
-        "lc_1letter_facet"    => "Call Numbers",
-        "subject_era_facet"   => "Eras",
-        "subject_geo_facet"   => "Regions"
-      },
-      # Setting a limit will trigger Blacklight's 'more' facet values link.
-      # If left unset, then all facet values returned by solr will be displayed.
-      # nil key can be used for a default limit applying to all facets otherwise
-      # unspecified. 
-      # limit value is the actual number of items you want _displayed_,
-      # #solr_search_params will do the "add one" itself, if neccesary.
-      :limits => {
-        "lib_project_facet"    => 10,
-        "lib_name_facet"       => 10,
-        "lib_date_facet"       => 10,
-        "lib_format_facet"     => 10,
-        "lib_collection_facet" => 10,
-        "lib_repo_facet"       => 10,
-        "collection_h"         => 10,
-        "date_created_h"       => 10,
-        "subject_topic_facet"  => 10,
-        "subject_era_facet"    => 10,
-        "subject_geo_facet"    => 10
-      },
-      # sorts should be true/false prior to Solr 1.4, "count"/"index" after
-      :sorts => {
-        "lib_collection_facet" => "index",
-        "lib_name_facet"       => "index",
-        "lib_project_facet"    => "index",
-        "lib_repo_facet"       => "index"
-      },
-      :hierarchy => {
-        "date_created_h" => true,
-        "collection_h" => true
-      }
-    }
+    config.add_facet_field "lib_project_facet", :label => "Projects", :limit => 10 #, :sort => "index"
+    config.add_facet_field "lib_name_facet", :label => "Names", :limit => 10, :sort => "index"
+    config.add_facet_field "lib_date_facet", :label => "Dates", :limit => 10, :sort => "count"
+    config.add_facet_field "lib_format_facet", :label => "Formats", :limit => 10 #, :sort => "count"
+    config.add_facet_field "lib_collection_facet", :label => "Collections" #, :limit => 10, :sort => "index"
+    config.add_facet_field "lib_repo_facet", :label => "Repositories", :limit => 10 #, :sort => "index"
+    config.add_facet_field "date_created_h", :label => "Date (Experimental)", :limit => 10, :sort => "count"
+    config.add_facet_field "subject_topic_facet", :label => "Topics", :limit => 10, :sort => "count"
+    config.add_facet_field "language_facet", :label => "Languages", :limit => 10, :sort => "count"
+    config.add_facet_field "subject_geo_facet", :label => "Regions", :limit => 10, :sort => "count"
+    config.add_facet_field "subject_era_facet", :label => "Eras", :limit => 10, :sort => "count"
+
     if !Rails.env.eql?"passenger_prod"
-      config[:facet][:field_names].concat(["collection_h","format","descriptor"])
-      config[:facet][:labels]["collection_h"] = "In Hierarchy"
-      config[:facet][:labels]["format"] = "Routed As"
-      config[:facet][:labels]["descriptor"] = "Metadata Type"
-      config[:facet][:limits]["collection_h"] = 10
-      config[:facet][:limits]["format"] = 10
-      config[:facet][:limits]["descriptor"] = 10
+      config.add_facet_field "collection_h", :label => "In Hierarchy", :limit => 10
+      config.add_facet_field "format", :label => "Routed As", :limit => 10
+      config.add_facet_field "descriptor", :label => "Metadata Type", :limit => 10
     end
 
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
     # handler defaults, or have no facets.
-    config[:default_solr_params] ||= {}
-    config[:default_solr_params][:"facet.field"] = facet_fields
-    facet_fields.each { |ff|
-      config[:default_solr_params][:"f.#{ff}.facet.sort"] = config[:facet][:sorts][ff] || "count"
-    }
+    #config.default_solr_params[:'facet.field'] = config.facet_fields.keys
 
+    config.add_index_field "title_display", :label => "Title:"
+    config.add_index_field "title_vern_display", :label => "Title:"
+    config.add_index_field "lib_name_facet", :label => "Names:"
+    config.add_index_field "lib_repo_facet", :label => "Repository:"
+    config.add_index_field "lib_collection_facet", :label => "Collection:"
+    config.add_index_field "author_display", :label => "Author:"
+    config.add_index_field "author_vern_display", :label => "Author:"
+    config.add_index_field "lib_format_facet", :label => "Format:"
+    config.add_index_field "format", :label => "Routing:"
+    config.add_index_field "clio_s", :label => "CLIO Id:"
+    config.add_index_field "extent_t", :label => "Extent:"
+    config.add_index_field "lib_project_facet", :label => "Project:"
+    config.add_index_field "language_facet", :label => "Language:"
+    config.add_index_field "published_display", :label => "Published:"
+    config.add_index_field "object_display", :label => "In Fedora:"
+    config.add_index_field "index_type_label_s"
+    config.add_index_field "resource_json"
 
     # solr fields to be displayed in the index (search results) view
     #   The ordering of the field names is the order of the display 
-    config[:index_fields] = {
-      :field_names => [
-        "title_display",
-        "lib_name_facet",
-        "lib_repo_facet",
-        "lib_collection_facet",
-        "title_vern_display",
-        "author_display",
-        "author_vern_display",
-        "lib_format_facet",
-        "format",
-        "clio_s",
-        "extent_t",
-        "lib_project_facet",
-        "language_facet",
-        "published_display",
-        "object_display",
-        "lc_callnum_display",
-        "index_type_label_s",
-        "resource_json"
-      ],
-      :labels => {
-        "title_display"           => "Title:",
-        "title_vern_display"      => "Title:",
-        "author_display"          => "Author:",
-        "author_vern_display"     => "Author:",
-        "lib_format_facet"                  => "Format:",
-        "format"                  => "Routing:",
-        "clio_s"                  => "CLIO Id:",
-        "lib_collection_facet"  => "Collection:",
-        "lib_project_facet"  => "Project:",
-        "lib_name_facet"  => "Names:",
-        "lib_repo_facet"  => "Repository:",
-        "extent_t"  => "Extent:",
-        "language_facet"          => "Language:",
-        "published_display"       => "Published:",
-        "object_display"          => "In Fedora:",
-        "lc_callnum_display"      => "Call number:"
-      }
-    }
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display 

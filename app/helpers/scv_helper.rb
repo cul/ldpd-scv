@@ -16,16 +16,6 @@ module ScvHelper
     @http_client
   end
 
-  def render_document_partial_with_locals(doc, action_name, locals={})
-    format = document_partial_name(doc)
-    locals = locals.merge({:document=>doc})
-    begin
-      render :partial=>"catalog/_#{action_name}_partials/#{format}", :locals=>locals
-    rescue ActionView::MissingTemplate
-      render :partial=>"catalog/_#{action_name}_partials/default", :locals=>locals
-    end
-  end
-
   def parse_image_resources!(document)
     if document[:parsed_resources]
       images = document[:parsed_resources]
@@ -379,7 +369,7 @@ module ScvHelper
   end
 
   def link_to_object(object, opts={:label=>nil, :counter => nil, :results_view => true})
-    label ||= Blacklight.config[:index][:show_link].to_sym
+    label ||= blacklight_config[:index][:show_link].to_sym
     label = render_object_index_label object, opts
     link_to label, {:controller => :catalog, :id=>object.pid}, :'data-counter' => opts[:counter]
   end

@@ -12,10 +12,10 @@ class ThumbnailsController < ApplicationController
   IMAGE_LENGTH = "http://purl.oclc.org/NET/CUL/RESOURCE/STILLIMAGE/BASIC/imageLength"
 
   before_filter :require_staff
-  caches_action :show, :expires_in => 7.days,
-    :cache_path => proc { |c|
-      c.params
-    }
+  #caches_action :show, :expires_in => 7.days,
+  #  :cache_path => proc { |c|
+  #    c.params
+  #  }
   def show
     pid = params[:id].split(/@/)[0]
     get_by_pid(pid)
@@ -49,12 +49,12 @@ class ThumbnailsController < ApplicationController
     elsif triples[HAS_MODEL].include?("info:fedora/ldpd:ContentAggregator")
       url = content_thumbnail(pid)
     elsif triples[HAS_MODEL].include?("info:fedora/ldpd:JP2ImageAggregator")
-      url = image_thumbnail(pid)
+      url = image_thumbnail_from_pid(pid)
       if url[:url].eql?(NO_THUMB)
         url = jp2_thumbnail(pid)
       end
     elsif triples[HAS_MODEL].include?("info:fedora/ldpd:StaticImageAggregator")
-      url = image_thumbnail(pid)
+      url = image_thumbnail_from_pid(pid)
     elsif triples[HAS_MODEL].include?("info:fedora/ldpd:StaticAudioAggregator")
       url = {:url=>AUDIO_THUMB,:mime=>'image/png'}
     else
@@ -67,7 +67,7 @@ class ThumbnailsController < ApplicationController
     headers["Content-Disposition"] = h_cd
     headers["Content-Type"] = url[:mime]
    
-    if url[:url] =~ /^https?:/
+    if url[:url].to_s =~ /^https?:/
       cl = http_client
       render :status => 200, :text => cl.get_content(url[:url])
       return
@@ -102,7 +102,7 @@ class ThumbnailsController < ApplicationController
     return {:url=>NO_THUMB,:mime=>'image/png'}
   end
 
-  def image_thumbnail(pid)
+  def image_thumbnail_from_pid(pid)
     images = Cul::Fedora::Objects::ImageObject.new({:pid_s=>pid},http_client).getmembers["results"]
     base_id = nil
     base_type = nil

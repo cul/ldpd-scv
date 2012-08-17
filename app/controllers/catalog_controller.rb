@@ -7,6 +7,7 @@ class CatalogController < ApplicationController
   
   configure_blacklight do |config|
     Scv::BlacklightConfiguration.configure(config)
+    puts config.inspect
   end
 
   before_filter :require_staff
@@ -27,6 +28,8 @@ class CatalogController < ApplicationController
   rescue_from RSolr::Error::Http, :with => :rsolr_request_error
   
   def index
+    puts Blacklight.solr_config.inspect
+    puts self.solr_search_params({}).merge({}).inspect
     super
     #response.body = blacklight_config.inspect
     #return

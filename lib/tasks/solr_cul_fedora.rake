@@ -140,7 +140,9 @@ end
 class Gatekeeper
   attr_reader :pids, :patterns
   def initialize(arg1)
-    @pids = arg1
+    @pids = arg1.map do |id|
+      BagAggregator.find_by_identifier(id).pid
+    end
     @patterns = arg1.collect { |pid|
       Regexp.new('\b' + pid + '\b(\/)?')
     }
@@ -209,7 +211,7 @@ namespace :solr do
        yaml = YAML::load(File.open("config/fedora_ri.yml"))[env]
        ENV['RI_URL'] ||= yaml['riurl'] 
        ENV['RI_QUERY'] ||= yaml['riquery'] 
-       ALLOWED = Gatekeeper.new(yaml['collections'].split(';'))
+       @allowed = Gatekeeper.new(yaml['collections'].split(';'))
      end
 
      desc "add unis to SCV by setting cul_staff to TRUE"
@@ -268,7 +270,7 @@ namespace :solr do
          collection = SolrCollection.new(ENV['COLLECTION_PID'],solr_url)
          p collection.paths
          facet_vals = collection.paths.find_all { |val|
-           ALLOWED.allowed?val
+           @allowed.allowed?val
          }
          p facet_vals
          facet_vals = facet_vals.reject{|val|
@@ -297,10 +299,10 @@ namespace :solr do
          solr_url = ENV['SOLR'] || Blacklight.solr_config[:url]
          collection = SolrCollection.new(ENV['PID'],solr_url)
          facet_vals = collection.paths.find_all { |val|
-           ALLOWED.allowed?val
+           @allowed.allowed?val
          }
          facet_vals = collection.paths.find_all { |val|
-           ALLOWED.allowed?val
+           @allowed.allowed?val
          }
          facet_vals = facet_vals.reject{|val|
            facet_vals.any?{|compare|
@@ -337,15 +339,12 @@ namespace :solr do
        end
        ActiveFedora::SolrService.instance.conn.commit
        url_array.each do |pid|
-         base_obj = ActiveFedora::Base.load_instance("info:fedora/#{pid}")
-         ActiveFedora::ContentModel.known_models_for(base_obj).each do |model|
-           begin
-             model_obj = model.load_instance("info:fedora/#{pid}")
-             model_obj.update_index
-             successes += 1
-           rescue Exception => e
-              puts "#{update_uri} threw error #{e.message}"
-           end
+         begin
+           base_obj = ActiveFedora::Base.find(pid, :cast=>true)
+           base_obj.send :update_index
+           successes += 1
+         rescue Exception => e
+            puts "#{update_uri} threw error #{e.message}"
          end
        end
 

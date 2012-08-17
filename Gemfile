@@ -4,9 +4,9 @@ gem 'authlogic', '~>3.1.0'
 gem 'authlogic_wind'
 gem 'arel'
 gem 'actionmailer'
-gem "hydra-head", :git=>'git://github.com/barmintor/hydra-head.git', :branch=>'solrdoc'
 gem "rails", '~> 3.2.6'
 gem "blacklight"
+gem "hydra-head", :git=>'git://github.com/barmintor/hydra-head.git', :branch=>'solrdoc'
 gem "active-fedora", '~>4.5.0'
 gem "active_fedora_finders"
 gem "active_fedora_relsint"
