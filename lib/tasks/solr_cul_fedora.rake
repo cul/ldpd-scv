@@ -265,9 +265,10 @@ namespace :solr do
          url_list.finish
          urls
        when ENV['COLLECTION_PID']
-         p "indexing collection #{ENV['COLLECTION_PID']}"
          solr_url = ENV['SOLR'] || Blacklight.solr_config[:url]
-         collection = SolrCollection.new(ENV['COLLECTION_PID'],solr_url)
+         collection_pid = BagAggregator.find_by_identifier(ENV['COLLECTION_PID']).pid
+         p "indexing collection #{collection_pid} from ID #{ENV['COLLECTION_PID']}"
+         collection = SolrCollection.new(collection_pid,solr_url)
          p collection.paths
          facet_vals = collection.paths.find_all { |val|
            @allowed.allowed?val
@@ -282,7 +283,7 @@ namespace :solr do
          collection.paths=facet_vals
          collection.members
          delete_array = collection.ids
-         query = sprintf(ENV['RI_QUERY'],ENV['COLLECTION_PID'])
+         query = sprintf(ENV['RI_QUERY'],collection_pid)
          opts = {:format => 'json', :lang => 'itql'}
          members = Cul::Fedora.repository.itql query, opts
          members = JSON::parse(members)['results']
