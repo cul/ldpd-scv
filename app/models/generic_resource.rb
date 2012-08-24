@@ -11,7 +11,6 @@ class GenericResource < ::ActiveFedora::Base
   include ::Hydra::ModelMethods
   include Cul::Scv::Hydra::ActiveFedora::Model::Common
   include ::ActiveFedora::RelsInt
-  include Cul::Scv::Solr4Queries
   alias :file_objects :resources
   
   IMAGE_EXT = {"image/bmp" => 'bmp', "image/gif" => 'gif', "imag/jpeg" => 'jpg', "image/png" => 'png', "image/tiff" => 'tif', "image/x-windows-bmp" => 'bmp'}
@@ -42,12 +41,12 @@ class GenericResource < ::ActiveFedora::Base
   end
   
   def thumbnail_info
-    thumb = relsint.relationships(datastreams['content'],:foaf_thumb).first
+    thumb = rels_int.relationships(datastreams['content'],:foaf_thumbnail).first
     if thumb
       t_dsid = thumb.object.to_s.split('/')[-1]
-      return {:url=>"#{ActiveFedora.fedora_config[:url]}/objects/#{pid}/datastreams/#{t_dsid}/content",:mime=>datastreams[t_dsid].mimeType}
+      return {:url=>"#{ActiveFedora.fedora_config.credentials[:url]}/objects/#{pid}/datastreams/#{t_dsid}/content",:mime=>datastreams[t_dsid].mimeType}
     else
-      return {:url=>image_url("cul_scv_hydra/crystal/file.png"),:mime=>'image/png'}
+      return {:asset=>"cul_scv_hydra/crystal/file.png",:mime=>'image/png'}
     end
   end
         

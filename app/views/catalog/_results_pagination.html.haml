@@ -1,1 +1,4 @@
-= paginate_rsolr_response @response
+- if paginate_params(@response).num_pages > 1
+  .pagination
+    %h2=t('blacklight.search.pagination.title')
+    = paginate_rsolr_response @response, :outer_window => 2, :theme => 'blacklight'

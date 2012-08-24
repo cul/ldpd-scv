@@ -7,7 +7,8 @@ gem 'actionmailer'
 gem "rails", '~> 3.2.6'
 gem "blacklight"
 gem "hydra-head", :git=>'git://github.com/barmintor/hydra-head.git', :branch=>'solrdoc'
-gem "active-fedora", '~>4.5.0'
+# gem "active-fedora", '~>4.5.0'
+gem 'active-fedora', :git=>'git://github.com/barmintor/active_fedora.git', :branch=>'hydra-839'
 gem "active_fedora_finders"
 gem "active_fedora_relsint"
 gem 'columnize'

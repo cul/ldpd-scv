@@ -54,7 +54,6 @@ class DownloadController < ApplicationController
         
         xsl = Nokogiri::XSLT(File.read(Rails.root.join("app/stylesheets/pretty-print.xsl")))
         xml = Cul::Fedora.repository.datastream_dissemination(dl_opts)
-        puts xml.class.name
         if xml.respond_to? :read_body
           body = ""
           xml.read_body do |segment|

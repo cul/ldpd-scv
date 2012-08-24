@@ -1,6 +1,5 @@
 require "active-fedora"
-require "active_fedora_finders"
-class BagAggregator < ::ActiveFedora::Base
+class GenericAggregator < ::ActiveFedora::Base
   extend ActiveModel::Callbacks
   include ::ActiveFedora::Finders
   include ::ActiveFedora::DatastreamCollections
@@ -11,6 +10,6 @@ class BagAggregator < ::ActiveFedora::Base
   alias :file_objects :resources
 
   def route_as
-    "collection"
+    "multipartitem"
   end
 end

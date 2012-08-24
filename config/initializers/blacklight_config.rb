@@ -32,6 +32,7 @@ class BlacklightConfiguration
           :defType          => "edismax",
           :facet            => true,
           :'facet.mincount' => 1,
+          :rows         => 10,
           :'q.alt'          => "*:*",
           :qf               => [
                                 'lib_project_facet^1',
@@ -64,7 +65,6 @@ class BlacklightConfiguration
     # solr fld values given special treatment in the index (search results) view
     config.index.show_link = 'title_display'
     config.index.record_display_type = :format
-    config.index.num_per_page = 10
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display

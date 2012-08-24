@@ -2,24 +2,42 @@ module Cul
   module Scv
     module Solr4Queries
       extend ActiveSupport::Concern
-      included do
-      end
       
+      def load_inbound_relationship(name, predicate, opts={})
+        puts "name: #{name} predicate: #{predicate} opts: #{opts.inspect}"
+        super
+      end
+
       module ClassMethods
-        def escaped_uri(pid)
-          "info\\:fedora\\/#{escaped_pid(pid)}"
+        
+        def quote_for_solr2(value)
+          '"' + value.gsub(/(:)/, '\\:').gsub(/(\/)/, '\\/').gsub(/"/, '\\"') + '"'
         end
         
-        def escaped_pid(pid)
-          pid.gsub(/(:)/,'\\:')
+        def relationship_query2(predicate, target_uri)
+          "#{ActiveFedora::SolrService.solr_name(predicate, :symbol)}:#{escaped_uri(target_uri)}"
+        end
+        
+        def search_model_clause2
+          unless self == ActiveFedora::Base
+            return relationship_query(:has_model, self.to_class_uri)
+          end
+        end
+        
+        def escaped_uri2(uri)
+          uri.gsub(/(:)/, '\\:').gsub(/(\/)/, '\\/')
+        end
+
+        def escaped_pid2(pid)
+          pid.gsub(/(([^\\]):)/,'\2\:')
         end
            
-        def inbound_relationship_query(pid,relationship_name)
+        def inbound_relationship_query2(pid,relationship_name)
           query = ""
           subject = :inbound
           if relationships_desc.has_key?(subject) && relationships_desc[subject].has_key?(relationship_name)
             predicate = relationships_desc[subject][relationship_name][:predicate]
-            query = "#{predicate}_s:#{escaped_uri(pid)}" 
+            query = relationship_query(predicate, "info:fedora/#{pid}")
             if relationships_desc.has_key?(subject) && relationships_desc[subject].has_key?(relationship_name) && relationships_desc[subject][relationship_name].has_key?(:solr_fq)
               solr_fq = relationships_desc[subject][relationship_name][:solr_fq]
               query << " AND " unless query.empty?
@@ -29,7 +47,7 @@ module Cul
           query
         end
         
-        def outbound_relationship_query(relationship_name,outbound_pids)
+        def outbound_relationship_query2(relationship_name,outbound_pids)
           query = construct_query_for_pids(outbound_pids)
           subject = :self
           if relationships_desc.has_key?(subject) && relationships_desc[subject].has_key?(relationship_name) && relationships_desc[subject][relationship_name].has_key?(:solr_fq)
@@ -50,7 +68,7 @@ module Cul
           query
         end
         
-        def construct_query_for_pids(pid_array)
+        def construct_query_for_pids2(pid_array)
           query = ""
           pid_array.each_index do |i|
             query << "#{SOLR_DOCUMENT_ID}:#{escaped_pid(pid_array[i])}"

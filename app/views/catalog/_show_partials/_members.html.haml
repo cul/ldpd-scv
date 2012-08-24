@@ -2,7 +2,7 @@
 - counter ||= session[:search][:counter]
 - display_members = session[:search][:display_members]
 - display_members = "list" unless not (display_members.nil? || "".eql?(display_members))
-- display_params = {:label=>Blacklight.config[:index][:show_link].to_sym, :counter => counter, :results_view => nil}
+- display_params = {:label=>controller.blacklight_config[:index][:show_link].to_sym, :counter => counter, :results_view => nil}
 - html_opts = {:method=>:put,:class=>"uiButton"}
 - if members_list.length > 1
   %h3="#{members_list.length} Member Items"
@@ -10,7 +10,7 @@
     %div.left
       - if display_members == "grid"
         - display_params.merge!(:display_members=>:list)
-        = link_to_with_data("List",catalog_path(document[:id]),html_opts.merge(:data=>display_params))
+        = link_to("List",catalog_path(document[:id]),html_opts.merge(:data=>display_params))
       - else
         %em="List"
     %div.right
@@ -18,7 +18,7 @@
         %em="Images Only"
       - else
         - display_params.merge!(:display_members=>:grid)
-        = link_to_with_data("Images Only",catalog_path(document[:id]),html_opts.merge(:data=>display_params))
+        = link_to("Images Only",catalog_path(document[:id]),html_opts.merge(:data=>display_params))
   = render :partial => "catalog/_show_partials/members_#{display_members}", :locals => {:members => members_list}
 - else
   = render :partial => "catalog/_show_partials/member",:locals => {:document=>members_list.first}

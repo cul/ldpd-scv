@@ -4,4 +4,4 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
-CulScv::Application.load_tasks
+Scv::Application.load_tasks

@@ -108,6 +108,11 @@ module ScvHelper
   end
 
   def get_resources(document)
+    klass = false
+    document[:has_model_s].each do |model|
+      klass ||= ActiveFedora::Model.from_class_uri(model)
+    end
+    obj = klass.load_instance_from_solr(document[:id],document)
     members = get_members(document)
     members = members.delete_if {|x| not x[:has_model_s].include? "info:fedora/ldpd:Resource" }
     return members if members.length == 0
@@ -128,6 +133,7 @@ module ScvHelper
     when "image"
         #images = parse_image_resources!(document)
       results = members.collect {|doc| image_resource(doc)}
+      
     else
       raise "Unknown format #{format}"
     end
@@ -207,28 +213,17 @@ module ScvHelper
   end
 
   def get_members(document, format=:solr)
-    agg = GenericAggregator.load_instance_from_solr(document[:id],document)
-    
-    agg.parts(:response_format => format).hits.collect {|hit| SolrDocument.new(hit) }
-
-    #idquery = document["id"]
-    #if document["internal_h"]
-    #  facet_prefix = document["internal_h"][0]
-    #else
-    #  resp, docs = get_independent_solr_response_for_field_values("id",document["id"])
-    #  facet_prefix = docs[0]["internal_h"][0]
-    #end
-    #logger.info idquery
-    #logger.info facet_prefix
-    #search_field_def = Blacklight.search_field_def_for_key(:"internal_h")
-    #_params = get_solr_params_for_field_values("internal_h",facet_prefix)
-    #_params[:qt] = search_field_def[:qt] if search_field_def
-    #_params[:per_page] = 100
-    #resp = Blacklight.solr.find(_params)
-    #docs = resp.docs
-    #docs.delete_if {|doc| doc["id"].eql? idquery}
-    #logger.info "got #{docs.length} docs"
-    #docs
+    klass = false
+    document[:has_model_s].each do |model|
+      klass ||= ActiveFedora::Model.from_class_uri(model)
+    end
+    klass ||= GenericAggregator
+    agg = klass.load_instance_from_solr(document[:id],document)
+    r = agg.parts(:response_format => format)
+    return [] if r.blank?
+    r["response"]["docs"].collect {|hit|
+      SolrDocument.new(hit)
+    }
   end
 
   def get_solr_params_for_field_values(field, values, extra_controller_params={})

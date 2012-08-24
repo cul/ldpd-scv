@@ -7,7 +7,6 @@ class StaticImageAggregator < ::ActiveFedora::Base
   include ::Hydra::ModelMethods
   include Cul::Scv::Hydra::ActiveFedora::Model::Common
   include Cul::Scv::Hydra::ActiveFedora::Model::Aggregator
-  include Cul::Scv::Solr4Queries
   alias :file_objects :resources
   
   CUL_WIDTH = "http://purl.oclc.org/NET/CUL/RESOURCE/STILLIMAGE/BASIC/imageWidth"
@@ -24,7 +23,7 @@ class StaticImageAggregator < ::ActiveFedora::Base
   def thumbnail_info
     candidate = nil
     max_dim = 251
-    resources.each do |pid|
+    resources(:response_format=>:id_array).each do |pid|
       resource = Resource.find(pid)
       width = resource.object_relations[CUL_WIDTH].first.to_i
       length = resource.object_relations[CUL_LENGTH].first.to_i
@@ -35,9 +34,9 @@ class StaticImageAggregator < ::ActiveFedora::Base
       end
     end
     if candidate.nil?
-      return {:url=>image_url("cul_scv_hydra/crystal/file_broken.png"),:mime=>'image/png'}
+      return {:asset=>"cul_scv_hydra/crystal/file_broken.png",:mime=>'image/png'}
     else
-      return {:url=>"#{ActiveFedora.fedora_config[:url]}/objects/#{candidate.pid}/datastreams/CONTENT/content",:mime=>candidate.datastreams['CONENT'].mimeType}
+      return {:url=>"#{ActiveFedora.fedora_config.credentials[:url]}/objects/#{candidate.pid}/datastreams/CONTENT/content",:mime=>candidate.datastreams['CONENT'].mimeType}
     end
   end
 end

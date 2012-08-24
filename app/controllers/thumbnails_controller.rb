@@ -21,46 +21,16 @@ class ThumbnailsController < ApplicationController
     get_by_pid(pid)
   end
   def get_by_pid(pid)
-    r_obj = Cul::Fedora::Objects::BaseObject.new({:pid_s => pid},http_client)
-    tuples = r_obj.triples
-    triples = {}
-    tuples.each { |tuple|
-      if triples.has_key?(tuple["predicate"])
-        triples[tuple["predicate"]].push(tuple["object"])
-      else
-        triples[tuple["predicate"]]=[tuple["object"]]
-      end
-    }
+    r_obj = ActiveFedora::Base.find(pid, :cast=>true)
     
-    url = COLLECTION_THUMB
-    if triples[HAS_MODEL].include?("info:fedora/ldpd:Resource")
-      # do the triples indicate this is a thumb? fetch
-      if thumb_triples?(triples)
-        mime = triples[FORMAT].first
-        url = {:url=>Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + pid + "/CONTENT", :mime=>mime}
-      else
-        if triples[MEMBER_OF].nil?
-          url = {:url=>NO_THUMB,:mime=>'image/png'}
-        else
-          url = content_thumbnail(pid_from_uri(triples[MEMBER_OF].first))
-        end
-      end
-      # else get thumb_url for first parent
-    elsif triples[HAS_MODEL].include?("info:fedora/ldpd:ContentAggregator")
-      url = content_thumbnail(pid)
-    elsif triples[HAS_MODEL].include?("info:fedora/ldpd:JP2ImageAggregator")
-      url = image_thumbnail_from_pid(pid)
-      if url[:url].eql?(NO_THUMB)
-        url = jp2_thumbnail(pid)
-      end
-    elsif triples[HAS_MODEL].include?("info:fedora/ldpd:StaticImageAggregator")
-      url = image_thumbnail_from_pid(pid)
-    elsif triples[HAS_MODEL].include?("info:fedora/ldpd:StaticAudioAggregator")
-      url = {:url=>AUDIO_THUMB,:mime=>'image/png'}
+    if r_obj.respond_to? :thumbnail_info
+      url = r_obj.thumbnail_info
     else
-      url = {:url=>COLLECTION_THUMB,:mime=>'image/png'}
+      url = {:url=>image_url(COLLECTION_THUMB),:mime=>'image/png'}
     end
-    puts "thumb url: #{url[:url]}"
+    if url[:asset]
+      url[:url] = Rails.configuration.assets.enabled ? Rails.application.assets.find_asset(url[:asset]).pathname : asset_path_from_config(url[:asset])
+    end
     filename = pid + '.' + url[:mime].split('/')[1].downcase
     h_cd = "filename=""#{CGI.escapeHTML(filename)}"""
     headers.delete "Cache-Control"
@@ -77,63 +47,19 @@ class ThumbnailsController < ApplicationController
     end 
   end
 
-  def thumb_triples?(triples)
-    result = false
-    if triples[IMAGE_WIDTH] && triples[IMAGE_LENGTH]
-      width = triples[IMAGE_WIDTH].first.to_i
-      length = triples[IMAGE_LENGTH].first.to_i
-      result = 251 > width && 251 > length
-    end
-    return result
-  end
-
-  def content_thumbnail(pid)
-    members = Cul::Fedora::Objects::ContentObject.new({:pid_s=>pid},http_client).getmembers["results"]
-    if members.length > 1
-      return {:url=>COLLECTION_THUMB,:mime=>'image/png'}
-    elsif members.length == 0
-      return {:url=>NO_THUMB,:mime=>'image/png'}
-    else
-      if members[0]["dctype"].downcase.eql?('image')
-        pid = pid_from_uri(members[0]["member"])
-        return image_thumbnail(pid)
-      end
-    end
-    return {:url=>NO_THUMB,:mime=>'image/png'}
-  end
-
-  def image_thumbnail_from_pid(pid)
-    images = Cul::Fedora::Objects::ImageObject.new({:pid_s=>pid},http_client).getmembers["results"]
-    base_id = nil
-    base_type = nil
-    max_dim = 251
-    images.each do |image|
-      _w = image["imageWidth"].to_i
-      _h = image["imageHeight"].to_i
-      if _w < _h
-        _max = _h
-      else
-        _max = _w
-      end
-      puts "width: #{_w} height: #{_h} limit: #{max_dim} rejected: #{(max_dim >= _max).to_s}"
-      if _max < max_dim
-        base_id = pid_from_uri(image["member"])
-        base_type = image["type"]
-        max_dim = _max
-      end
-    end
-    if base_id.nil?
-      {:url=>BROKEN_THUMB, :mime=>'image/png'}
-    else
-      {:url=>Cul::Fedora::ResourceIndex.config[:riurl] + "/objects/" + base_id + "/datastreams/CONTENT/content",:mime=>base_type}
-    end
-  end
-
   def jp2_thumbnail(pid)
-    {:url => Cul::Fedora::ResourceIndex.config[:riurl] + '/objects/' + pid + '/methods/ldpd:sdef.Image/getView?max=250', :mime => 'image/jpeg'}
+    {:url => ActiveFedora.fedora_config.credentials[:url] + '/objects/' + pid + '/methods/ldpd:sdef.Image/getView?max=250', :mime => 'image/jpeg'}
   end
 
   def pid_from_uri(uri)
     return uri.sub(/info:fedora\//,'')
+  end
+  
+  def asset_path_from_config(asset)
+    Rails.configuration.assets.paths.each do |dir|
+      result = "#{dir}/#{asset}"
+      return result if File.exists?(result)
+    end
+    return nil
   end
 end
