@@ -12,7 +12,6 @@ Scv::Application.routes.draw do
     :to => 'download#fedora_content',
     :as => :fedora_content,
     :constraints => {
-      :block => /(DC|CONTENT|SOURCE|descMetadata)/,
       :uri => /.+/,
       :filename => /.+/,
       :download_method => /(download|show|show_pretty)/
@@ -21,7 +20,6 @@ Scv::Application.routes.draw do
     :to => 'download#cachecontent',
     :as => :cache,
     :constraints => {
-      :block => /(DC|CONTENT|SOURCE|descMetadata)/,
       :uri => /.+/,
       :filename => /.+/,
       :download_method => /(download|show|show_pretty)/

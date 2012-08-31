@@ -16,129 +16,14 @@ module ScvHelper
     @http_client
   end
 
-  def parse_image_resources!(document)
-    if document[:parsed_resources]
-      images = document[:parsed_resources]
-    else
-      if document[:resource_json]
-        document[:parsed_resources] = document[:resource_json].collect {|rj| JSON.parse(rj)}
-      else
-        document[:parsed_resources] = Cul::Fedora::Objects::ImageObject.new(document,http_client).getmembers["results"]
-      end
-      images = document[:parsed_resources]
-    end
-    images
-  end
-
-  def image_thumbnail(document)
-    images = parse_image_resources!(document)
-    base_id = nil
-    base_type = nil
-    max_dim = 251
-    images.each do |image|
-      res = {}
-      _w = image["imageWidth"].to_i
-      _h = image["imageHeight"].to_i
-      if _w < _h
-        _max = _h
-      else
-        _max = _w
-      end
-      if _max < max_dim
-        base_id = trim_fedora_uri_to_pid(image["member"])
-        base_type = image["type"]
-        max_dim = _max
-      end
-    end
-    if base_id.nil?
-      "http://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/ImageNA.svg/200px-ImageNA.svg.png"
-    else
-      base_filename = base_id.gsub(/\:/,"") + '.' +  base_type.gsub(/^[^\/]+\//,"")
-      cache_path("show", base_id, "CONTENT", base_filename)
-    end
-  end
-
-  def basic_resource(document)
-    res = {}
-    res[:mime_type] = document["dc_format_t"].first
-    res[:content_models] = document["has_model_s"]
-    res[:file_size] = document["extent_s"].first.to_i
-    res[:size] = (document["extent_s"].first.to_i / 1024).to_s + " Kb"
-    res
-  end
-
-  def image_resource(document)
-    res = basic_resource(document)
-    if document["image_width_s"]
-      res[:dimensions] = document["image_width_s"].first + " x " + document["image_length_s"].first
-      res[:width] = document["image_width_s"].first
-      res[:height] = document["image_length_s"].first
-    else
-      res[:dimensions] = "? x ?"
-      res[:width] = "0"
-      res[:height] = "0"
-    end
-    base_id = document["id"]
-    base_filename = base_id.gsub(/\:/,"")
-    img_filename = base_filename + "." + document["dc_format_t"].first.gsub(/^[^\/]+\//,"")
-    dc_filename = base_filename + "_dc.xml"
-    res[:show_path] = fedora_content_path("show", base_id, "CONTENT", img_filename)
-    res[:cache_path] = cache_path("show", base_id, "CONTENT", img_filename)
-    res[:download_path] = fedora_content_path("download", base_id, "CONTENT", img_filename)
-    res[:dc_path] = fedora_content_path('show_pretty', base_id, "DC", dc_filename)
-    res
-  end
-
-  def audio_resource(document)
-    res = basic_resource(document)
-    base_id = document["id"]
-    base_filename = base_id.gsub(/\:/,"")
-    if res[:mime_type] =~ /wav/
-      ext = 'wav'
-    elsif res[:mime_type] =~ /mpeg/
-      ext = 'mp3'
-    else
-      ext = 'bin'
-    end
-    filename = base_filename + "." + ext
-    dc_filename = base_filename + "_dc.xml"
-    res[:download_path] = fedora_content_path("download", base_id, "CONTENT", filename)
-    res[:dc_path] = fedora_content_path('show_pretty', base_id, "DC", dc_filename)
-    res
-  end
-
   def get_resources(document)
-    klass = false
-    document[:has_model_s].each do |model|
-      klass ||= ActiveFedora::Model.from_class_uri(model)
-    end
+    klass = ActiveFedora::SolrService.class_from_solr_document(document)
     obj = klass.load_instance_from_solr(document[:id],document)
-    members = get_members(document)
-    members = members.delete_if {|x| not x[:has_model_s].include? "info:fedora/ldpd:Resource" }
-    return members if members.length == 0
-    results = []
-    format = document["format"]
-    format = format.first if format.is_a? Array
-    case format
-    when "zoomingimage"
-      results = members.collect {|doc| image_resource(doc)}
-      base_id = base_id_for(document)
-      url = Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + base_id + "/SOURCE"
-      head_req = http_client.head(url)
-      # raise head_req.inspect
-      file_size = head_req.header["Content-Length"].first.to_i
-      results << {:dimensions => "Original", :mime_type => "image/jp2", :show_path => fedora_content_path("show", base_id, "SOURCE", base_id + "_source.jp2"), :download_path => fedora_content_path("download", base_id , "SOURCE", base_id + "_source.jp2"), :content_models=>[]}  
-    when "audio"
-      results = members.collect {|doc| audio_resource(doc)}
-    when "image"
-        #images = parse_image_resources!(document)
-      results = members.collect {|doc| image_resource(doc)}
-      
+    if (obj.respond_to? :linkable_resources)
+      return obj.linkable_resources
     else
-      raise "Unknown format #{format}"
+      return []
     end
-    logger.debug "returning #{results.length} resources of #{document["id"]}"
-    return results
   end
 
   def base_id_for(doc)
@@ -175,16 +60,6 @@ module ScvHelper
   def get_index_type_label(document)
     unless document["index_type_label_s"]
       logger.warn "did not expect #{document[:id]} to lack index_type_label_s"
-      #docs = get_members(document)
-      #if docs.length == 0
-      #  label = "EMPTY"
-      #elsif docs.length == 1
-      #  label = "SINGLE PART"
-      #else
-      #  label = "MULTIPART"
-      #end
-      #update_doc(document[:id],{:index_type_label_s => label})
-      #document[:index_type_label_s] = label
     end
     document["index_type_label_s"]
   end
@@ -197,7 +72,7 @@ module ScvHelper
       _solr.add(_doc)
       _solr.commit
   end
-  def get_first_member(document, imageOnly=True)
+  def get_first_member(document, imageOnly=true)
     docs = get_members(document)
     docs.each do |doc|
       logger.info "#{doc["id"]}  #{doc["format"]}"
@@ -218,12 +93,15 @@ module ScvHelper
       klass ||= ActiveFedora::Model.from_class_uri(model)
     end
     klass ||= GenericAggregator
-    agg = klass.load_instance_from_solr(document[:id],document)
-    r = agg.parts(:response_format => format)
-    return [] if r.blank?
-    r["response"]["docs"].collect {|hit|
-      SolrDocument.new(hit)
-    }
+    if klass.include? Cul::Scv::Hydra::ActiveFedora::Model::Aggregator
+      agg = klass.load_instance_from_solr(document[:id],document)
+      r = agg.parts(:response_format => format)
+      return [] if r.blank?
+      return r["response"]["docs"].collect {|hit|
+        SolrDocument.new(hit)
+      }
+    end
+    return []
   end
 
   def get_solr_params_for_field_values(field, values, extra_controller_params={})

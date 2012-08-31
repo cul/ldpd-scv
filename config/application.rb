@@ -5,7 +5,7 @@ require 'rails/all'
 Bundler.require(:default, Rails.env) if defined?(Bundler)
 require 'active_fedora'
 require 'cul_scv_hydra/engine'
-
+ActiveFedora::Datastream.send :include, ActiveFedora::Streamable::Datastreams
 module Scv
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
@@ -43,5 +43,7 @@ module Scv
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
     config.consider_all_requests_local = true
+    
+    config.assets.enabled = true
   end
 end

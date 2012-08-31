@@ -8,6 +8,7 @@ class StaticAudioAggregator < ::ActiveFedora::Base
   include Cul::Scv::Hydra::ActiveFedora::Model::Common
   include Cul::Scv::Hydra::ActiveFedora::Model::Aggregator
   include Cul::Scv::Solr4Queries
+  include Cul::Scv::LinkableResources
   alias :file_objects :resources
 
   def route_as

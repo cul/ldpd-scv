@@ -1,5 +1,6 @@
 require 'blacklight'
 require 'active-fedora'
+require 'declarative_authorization'
 class CatalogController < ApplicationController
   unloadable
   include Blacklight::Catalog
@@ -8,7 +9,7 @@ class CatalogController < ApplicationController
   configure_blacklight do |config|
     Scv::BlacklightConfiguration.configure(config)
   end
-
+  
   before_filter :require_staff
   before_filter :search_session, :history_session
   before_filter :delete_or_assign_search_session_params,  :only=>:index
