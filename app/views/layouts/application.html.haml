@@ -1,44 +1,35 @@
 !!!
-%html{:xmlns=>"http://www.w3.org/1999/xhtml"}
+%html{:xmlns=>"http://www.w3.org/1999/xhtml", :lang=>'en'}
 
   %head
     %meta{"http-equiv"=>"Content-Type","content"=>"text/html; charset=utf-8"}
     %title=(@page_title || application_name)
     %link{:href=>url_for(:controller=>'catalog',:action => 'opensearch', :format => 'xml', :only_path => false), :title=>application_name, :type=>"application/opensearchdescription+xml", :rel=>"search"}
     
-    = render_head_content
+    = stylesheet_link_tag "application"
     = javascript_include_tag "application"
+    = csrf_meta_tags
     -  javascript_tag do
       = yield(:jstemplates)
+    = raw(render_head_content)
   - bparms = {}
   - if params[:q].to_s.empty? and params[:f].to_s.empty? and params[:id].nil?
     - bparms[:onload]="$('input#q').focus();"
-  %body{bparms}
-    %div#doc4.yui-t2
-      %div#hd
-        %div.yui-g
-          %div.yui-u.first
-            %h1.site_title
-              - _link = url_for root_path
-              %a{:href=>_link}
-                = "Columbia University Libraries Staff Collection Viewer"
-              - # link_to application_name, root_path
-              - if (params[:controller] == "catalog" and !params[:id])
-                %span#results_text="Search Results"
-          %div.yui-u#user_util_links
-            = render :partial=>'/user_util_links'
-  
-      %div#bd
-        %div#yui-main
-          - if params[:action] == 'show'
-            %div
-              = render :partial=>'/flash_msg'
-              = yield
-          - else
-            %div.yui-b
-              = render :partial=>'/flash_msg'
-              = yield
-        - if sidebar_items.length > 0
-          %div.yui-b.sidebar
-            != sidebar_items.join('')
-      %div#ft= @footer
+  %body#doc{bparms}
+    #ajax-modal.modal.hide.fade{:tabindex => -1}
+    #page.container-fluid
+    %div#hd.row-fluid
+      %div.span9
+        %h1
+          = image_tag('logo.gif')
+          = link_to "Columbia University Libraries Staff Collection Viewer", root_url
+      %div#user_util_links.span3
+        = render :partial=>'/user_util_links'
+
+    %div#bd.row-fluid
+      #sidebar.hidden-phone.span2= sidebar_items.join('').html_safe
+      #main.span10
+        %div.row-fluid
+          = render :partial=>'/flash_msg'
+          = yield
+    %div#ft= @footer

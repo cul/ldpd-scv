@@ -1,23 +1,23 @@
-.yui-g
+.row-fluid
   - if current_user
-    .yui-u.first
+    .span6
       = link_to("Log Out", wind_logout_path) + " [" + current_user.login + "]"
     - if current_user.admin?
-      .yui-u
+      .span6
         = link_to("Admin", :controller => :admin)
     - else
-      .yui-u!="&nbsp;"
+      .span6!=raw("&nbsp;")
   - else
-    .yui-u.first= link_to 'Login', login_path
-    .yui-u="&nbsp;"
-  .yui-g
-    .yui-u.first
-      = link_to "Saved Searches", saved_searches_path
-    .yui-u
-      = link_to "Search History", search_history_path
-      - if current_user and current_user.last_search_url
-        = link_to('View your last search', catalog_index_path(current_user.last_search_url))
-  .yui-g
-    .yui-u.first= link_to('Saved Items', bookmarks_path)
-    .yui-u
-      %span#folder_number= ""
+    .span6= link_to 'Login', login_path
+    .span6=raw("&nbsp;")
+.row-fluid
+  .span6
+    = link_to "Saved Searches", saved_searches_path
+  .span6
+    = link_to "Search History", search_history_path
+    - if current_user and current_user.last_search_url
+      = link_to('View your last search', catalog_index_path(current_user.last_search_url))
+.row-fluid
+  .span6= link_to('Saved Items', bookmarks_path)
+  .span6
+    %span#folder_number= ""

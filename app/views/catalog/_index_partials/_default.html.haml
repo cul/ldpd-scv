@@ -1,5 +1,5 @@
 - counter ||= nil
-%div.yui-gf
-  %div.yui-u.first
+%div.container-fluid
+  %div.span8
     = render_document_partial(document,"thumbnail", :locals=>{:document=>document,:label=>true,:counter=>counter})
-  %div.yui-u
+  %div.span4

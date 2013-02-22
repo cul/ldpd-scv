@@ -7,7 +7,7 @@ config.cache_classes = true
 config.cache_store = :file_store, '/var/tmp/'
 
 # Full error reports are disabled and caching is turned on
-config.action_controller.consider_all_requests_local = false
+#config.action_controller.consider_all_requests_local = false
 config.action_controller.perform_caching             = true
 
 # This line tells passenger we are serving under http://<server>/<app_name>/

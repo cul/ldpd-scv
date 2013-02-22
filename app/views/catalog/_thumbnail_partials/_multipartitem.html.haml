@@ -1,7 +1,4 @@
 - label = get_index_type_label(document)
-- counter ||= nil
-- if !(counter.nil?)
-  - counter = (counter.to_i + 1 + @response.params[:start].to_i)
 %div.item_type
   %span.item_type="#{label} ITEM"
 %a{:href=>url_to_document(document)}

@@ -5,13 +5,26 @@ gem 'authlogic_wind'
 gem 'arel'
 gem 'actionmailer'
 gem "rails", '~> 3.2.6'
-gem "blacklight"
-gem "hydra-head", :git=>'git://github.com/barmintor/hydra-head.git', :branch=>'solrdoc'
+gem 'compass-rails'
+gem 'jquery-rails'
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+  gem 'sass-rails',   '~> 3.2.3'
+  gem 'coffee-rails', '~> 3.2.1'
+  gem 'uglifier', '>= 1.0.3'
+  gem 'bootstrap-sass'
+  gem 'compass-rails'
+end
+gem "blacklight", '~> 4.0.0'
+gem "unicode", :platforms => [:mri_18, :mri_19]
+gem "bootstrap-sass"
+gem "hydra-head" #, :git=>'git://github.com/barmintor/hydra-head.git', :branch=>'solrdoc'
 # gem "active-fedora", '~>4.5.0'
-gem 'active-fedora', :git=>'git://github.com/barmintor/active_fedora.git', :branch=>'master'
-gem "active_fedora_finders"
-gem "active_fedora_relsint", :path => '/Users/ba2213/Github/barmintor/active_fedora_relsint'
-gem 'active_fedora_streamable'
+gem 'active-fedora', '~>5.0' #:git=>'git://github.com/barmintor/active_fedora.git', :branch=>'master'
+gem 'active_fedora_finders', :path => '/Users/ba2213/Github/barmintor/active_fedora_finders'
+gem "active_fedora_relsint", :path => '/Users/ba2213/Github/cul/active_fedora_relsint'
+gem 'active_fedora_streamable', :path => '/Users/ba2213/Github/barmintor/active_fedora_streamable'
 gem 'columnize'
 gem 'crack'
 gem 'cul_image_props'
@@ -42,8 +55,7 @@ gem 'rubydora' #, :path => "/opt/project_hydra/rubydora"
 gem 'RedCloth', '>=4.2.3'
 gem 'sass'
 gem 'solr-ruby' 
-gem 'solrizer', '>=1.1.0'
-gem 'solrizer-fedora', '>=1.1.0'
+gem 'sprockets'
 gem 'term-ansicolor'
 gem 'xml-simple'
 gem 'block_helpers'
