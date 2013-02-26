@@ -72,11 +72,9 @@ module ModsHelper
       end
     end
     details << ["Note:", notes.join(" -- ")] unless notes.empty?
-    # external link icon
-    ext_link = image_tag(("wikimedia/Icon_External_Link.png"))
     # URL (external)
     xml.xpath("/mods:mods/mods:location/mods:url",ns).each do |node|
-      details << ["Item in Context:", link_to("#{abbreviate_url(node.content.to_s)}", node.content, :target => "blank") + ext_link]
+      details << ["Item in Context:", ext_link("#{abbreviate_url(node.content.to_s)}", node.content, true)]
     end
     # physicalLocation
     nodes = xml.xpath("/mods:mods/mods:location/mods:physicalLocation",ns) - xml.xpath("/mods:mods/mods:location/mods:physicalLocation[@authority='marcorg']",ns)
@@ -89,7 +87,7 @@ module ModsHelper
         label += ":"
         value = parse_mods_title(node)
         if node.xpath("../mods:location/mods:url",ns).first
-          value = link_to("#{value}",node.xpath("../mods:location/mods:url",ns).first.text, :target=>"blank") + ext_link
+          value = ext_link(value.to_s, node.xpath("../mods:location/mods:url",ns).first.text, true)
         end
         details << [label, value]
       end
@@ -105,7 +103,7 @@ module ModsHelper
         when "local"
           details << ["Record ID:" ,node.text] unless node == ""
         when "CLIO"
-          details << ["CLIO ID:" , link_to_clio({'clio_s'=>[node.text]},"#{node.text} #{ext_link}")] unless node == ""
+          details << ["CLIO ID:" , ext_link(node.text, url_to_clio({'clio_s'=>[node.text]})), true] unless node == ""
         else
           details << ["Identifier:", node.text]
       end
@@ -116,6 +114,12 @@ module ModsHelper
 
     return metadata
 
+  end
+
+  def ext_link(text, url, blank=true)
+    link_opts = blank ? {:target=>"_blank"} : {}
+    # external link icon
+    (link_to(text, url, link_opts) + " " + link_to("<i class=\"icon-globe\" style=\"border:none;\"></i>".html_safe, url, link_opts.merge({:class=>"btn"}))).html_safe
   end
 
 

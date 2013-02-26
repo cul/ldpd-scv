@@ -90,9 +90,6 @@ class GenericResource < ::ActiveFedora::Base
     res[:dimensions] = "#{res[:width]} x #{res[:height]}"
     base_filename = pid.gsub(/\:/,"")
     res[:image_file_name] = base_filename + "." + dsid + "." + ds.mimeType.gsub(/^[^\/]+\//,"")
-    #res[:show_path] = fedora_content_path("show", pid, dsid, img_filename)
-    #res[:cache_path] = cache_path("show", pid, dsid, img_filename)
-    #res[:download_path] = fedora_content_path("download", pid, dsid, img_filename)
     res
   end
         

@@ -3,3 +3,5 @@ en:
     search:
       pagination:
         title: 'Search Results'
+      facets:
+        title: 'Browse / Limit By:'

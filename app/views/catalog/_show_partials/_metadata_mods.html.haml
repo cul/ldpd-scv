@@ -1,6 +1,6 @@
 .md-items
   - metadata[:details].each do |name, value|
-    .yui-gf
-      .label.yui-u.first= name
-      .value.yui-u
+    .container-fluid
+      .label.span3= name
+      .value.span9
         != value

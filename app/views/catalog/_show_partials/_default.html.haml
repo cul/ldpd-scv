@@ -1,7 +1,9 @@
 = render :partial => "catalog/_show_partials/groups", :locals => {:document => document}
 - #metadata_list = get_metadata_list(document)
-.yui-g
-  .yui-u.first
+.container-fluid
+  .span8
     = render :partial => "catalog/_show_partials/metadata_brief", :locals => {:document => document}
-  .yui-u
+  .span4
+    != "This is the default display."
+    != document.inspect
 

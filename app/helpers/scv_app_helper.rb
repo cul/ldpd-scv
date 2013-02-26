@@ -1,3 +1,4 @@
+# coding: utf-8
 module ScvAppHelper
   include ApplicationHelper
   def application_name
@@ -26,40 +27,16 @@ module ScvAppHelper
   # facet param helpers ->
   #
 
-  # Standard display of a facet value in a list. Used in both _facets sidebar
-  # partial and catalog/facet expanded list. Will output facet value name as
-  # a link to add that to your restrictions, with count in parens.
-  # first arg item is a facet value item from rsolr-ext.
-  # options consist of:
-  # :suppress_link => true # do not make it a link, used for an already selected value for instance
-  def render_facet_value(facet_solr_field, item, options ={})
-    link_to_unless(options[:suppress_link], item.label, add_facet_params_and_redirect(facet_solr_field, item.value), :class=>"facet_select") + " (" + format_num(item.hits) + ")" + render_subfacets(facet_solr_field, item, options)
-  end
-
   # Standard display of a SELECTED facet value, no link, special span
   # with class, and 'remove' button.
-  def render_selected_facet_value(facet_solr_field, item)
-    '<span class="selected">' +
-    link_to_unless(true, item.label, add_facet_params_and_redirect(facet_solr_field, item.value), :class=>"facet_select") + " (" + format_num(item.hits) + ")" +
-    '</span>' +
-    ' [' + link_to("remove", remove_facet_params(facet_solr_field, item.value, params), :class=>"remove") + ']' +
-    render_subfacets(facet_solr_field, item)
-  end
-  def render_subfacets(facet_solr_field, item, options ={})
-    render = ''
-    if (item.instance_variables.include? "@subfacets")
-      render = '<span class="toggle">[+/-]</span><ul>'
-      item.subfacets.each do |subfacet|
-        if facet_in_params?(facet_solr_field, subfacet.value)
-          render += '<li>' + render_selected_facet_value(facet_solr_field, subfacet) + '</li>'
-        else
-          render += '<li>' + render_facet_value(facet_solr_field, subfacet,options) + '</li>'
-        end
-      end
-      render += '</ul>'
+  def render_selected_facet_value(facet_solr_field, item, removeable=false)
+    result = super(facet_solr_field, item)
+    if removeable
+      result = result + ' [' + link_to("remove", remove_facet_params(facet_solr_field, item.value, params), :class=>"remove") + ']'
     end
-    render
+    result.html_safe
   end
+
   def render_document_partial_with_locals(doc, action_name, locals={})
     if doc[document_show_link_field].nil?
        doc[document_show_link_field] = "#{doc['dc_title']} (from DC)"
@@ -137,14 +114,14 @@ module ScvAppHelper
     return catalog_index_path(query_params)
   end
 def link_to_previous_document(doc)
-    return if doc == nil
     label="\xe3\x80\x8a Previous"
-    link_to_with_data label, catalog_path(doc[:id]), {:method=>:put, :class=>"previous", :data=>{:label=>label, :counter => session[:search][:counter].to_i - 1, :display_members =>session[:search][:display_members]}}
+    return "<a href=\"\" class=\"prev\" rel=\"prev\">#{label}</a>" if doc == nil
+    link_to label, doc, :class=>"prev", :rel=>'prev', :'data-counter' => session[:search][:counter].to_i - 1
   end
 
   def link_to_next_document(doc)
-    return if doc == nil
     label="Next \xe3\x80\x8b"
-    link_to_with_data label, catalog_path(doc[:id]), {:method=>:put, :class=>"next", :data=>{:label=>label, :counter => session[:search][:counter].to_i + 1, :display_members =>session[:search][:display_members]}}
+    return "<a href=\"\" class=\"next\" rel=\"next\">#{label}</a>" if doc == nil
+    link_to label, doc, :class=>"next", :rel=>'next', :'data-counter' => session[:search][:counter].to_i + 1
   end
 end

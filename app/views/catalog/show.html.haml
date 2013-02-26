@@ -1,3 +1,4 @@
+-# encoding: utf-8
 - @page_title = "#{document_show_html_title} - #{application_name}"
 - extra_head_content << render_link_rel_alternates
 - _searched = !(session[:search][:q].to_s.empty? and session[:search][:f].to_s.empty?)
@@ -8,15 +9,11 @@
     %div.pageEntriesInfo
       - if (session[:search][:counter].to_i != 0)
         = item_page_entry_info
-        - # link_to "Start&nbsp;over&thinsp;", catalog_index_path, :class=>"startOverButton uiButton"
     = render 'previous_next_doc'
 
 
-- # sidebar_items << capture do
-- #  %p= link_back_to_catalog
-- # this should be in a partial
 %div#document
-  %div(:id="doc_#{@document[:id]}")
+  %div(:id="doc_#{@document[:id].to_s.encode('UTF-8')}")
     %div#show_bookmark_control
       = render :partial=>'bookmark_control', :locals=>{:document=>@document}
     = render_document_heading

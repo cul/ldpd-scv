@@ -1,5 +1,10 @@
+-# coding: utf-8
 - label = get_index_type_label(document)
-%div.item_type
-  %span.item_type="#{label} ITEM"
-%a{:href=>url_to_document(document)}
-  %img{:src=>thumbnail_path(document[:id]),:style=>"width:100px"}
+%div.span2
+	.thumbnail
+		%a{:href=>url_to_document(document)}
+			%img{:"data-src"=>thumbnail_path(document[:id]),:src=>thumbnail_path(document[:id]), :alt=>""}
+	- if label
+		.label.label-info
+			="#{label} ITEM"
+

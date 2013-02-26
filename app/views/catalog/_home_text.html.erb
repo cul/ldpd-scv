@@ -1,9 +1,10 @@
+<% # coding: utf-8 %>
 <% if block = ContentBlock.find_by_title("Home Page") -%>
   <%= sanitize block.data %>
 <% else -%>
     
 
-  <h3>Fedora Staff Collection Viewer 1.0</h3>
+  <h3>Fedora Staff Collection Viewer 1.1</h3>
 
   <p><em>You may browse via the facets on the left or enter keywords above to search the entire repository.</em></p>
   <p>The Fedora Staff Collection Viewer (SCV) provides an administrative window into CUL's digital library and preservation assets.  Its primary purpose is to allow technical and curatorial staff to identify and view preserved content.</p><p> The SCV serves up content from our Fedora Digital Repository using the <a href="http://projectblacklight.org/">Blacklight</a> open source software product, which has been configured to accommodate searching of <a href="http://www.loc.gov/standards/mods/userguide/">MODS</a>-formatted metadata and the display of single and multipart digital items.</p>

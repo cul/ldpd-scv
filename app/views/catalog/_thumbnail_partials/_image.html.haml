@@ -6,8 +6,9 @@
   - counter = nil
 - href ||= url_to_document(document)
 - # onclick ||= onclick_to_document(document,{:counter=>counter,:results_view=>nil,:_method=>:put})
-- if label
-  %div.item_type
-    %span.item_type="PART"
-%a{:href=>href}
-  %img{:src=>"#{thumbnail_path(document[:id])}",:class=>"thumbnail"} 
+%div.span2
+  .thumbnail
+    %a{:href=>href}
+		%img{:"data-src"=>thumbnail_path(document[:id]),:src=>thumbnail_path(document[:id]), :alt=>""}
+  - if label
+    .label="PART"

@@ -1,7 +1,8 @@
-%div.yui-gf
-  %div.yui-u.first
+-# coding: utf-8
+%div.container-fluid
+  %div.span3
     = render_document_partial(document, :thumbnail)
-  %div.yui-u
+  %div.span9
     %dl.defList
       - index_field_names.select { |f| document[f] }.each do |solr_fname|
         %dt= index_field_labels[solr_fname]

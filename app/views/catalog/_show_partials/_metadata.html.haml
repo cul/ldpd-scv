@@ -1,9 +1,10 @@
+-# coding: utf-8
 - display ||= false
 - metadata ||= {}
-.metadata.yui-gc
-  .yui-u.first
+.metadata.container-fluid
+  .span8
     %span.title_data="#{metadata[:title]} (#{metadata[:type]})"
-  .yui-u{:style=>"margin-left:0px;"}
+  .span4{:style=>"margin-left:0px;"}
     = link_to "Show formatted #{metadata[:type]}", metadata[:show_url] 
     = "--"
     = link_to "Raw XML", metadata[:download_url] 

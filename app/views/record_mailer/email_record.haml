@@ -1,3 +1,4 @@
+-# coding: utf-8
 - @documents.each do |document|
   - if document.respond_to?(:to_marc) and ! document.to_marc['245'].nil?
     = "Title: #{document.to_marc['245']['a']}" unless document.to_marc['245']['a'].nil?

@@ -215,8 +215,9 @@ module ScvHelper
   def resolve_fedora_uri(uri)
     Cul::Fedora::ResourceIndex.config[:riurl] + "/get" + uri.gsub(/info\:fedora/,"")
   end
-  def link_to_clio(document,link_text="More information in CLIO")
-     if document.is_a? ActiveFedora::Base
+
+  def url_to_clio(document)
+    if document.is_a? ActiveFedora::Base
       clio_id = document.datastreams['descMetadata'].term_values(:clio)
       clio_id = clio_id.first unless clio_id.nil?
     else
@@ -224,9 +225,14 @@ module ScvHelper
         clio_id = document["clio_s"][0]
       end
     end
+    clio_id ? "http://clio.cul.columbia.edu:7018/vwebv/holdingsInfo?bibId=#{clio_id}" : false
+  end
+     
 
-    if clio_id
-      "<a href=\"http://clio.cul.columbia.edu:7018/vwebv/holdingsInfo?bibId=#{clio_id}\" target=\"_blank\">#{link_text}</a>"
+  def link_to_clio(document,link_text="More information in CLIO")
+    clio_url = url_to_clio(document)
+    if clio_url
+      link_to link_text + image_tag("", :class=>"icon-globe", :style=>"border:none;"), clio_url, :class=>"btn", :target=>"_blank"
     else
       ""
     end

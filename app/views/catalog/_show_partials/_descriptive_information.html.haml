@@ -1,3 +1,4 @@
+-# coding: utf-8
 - thumbnail ||= false
 - title ||= false
 - groups ||= false
@@ -21,15 +22,12 @@
     %img(src="#{thumbnail_url(document["id"])}")
 
 .metadata-list
-  .metadata.yui-gc
+  .metadata.container-fluid
     - metadata_list.each do |metadata|
       = render :partial => "catalog/_show_partials/metadata_#{metadata[:type].underscore}", :locals => {:metadata => metadata, :document=>document}
-    %div.detail
-      %div.items.yui-gf
-        %div.yui-u.first
-          %span.title_data="XML Metadata:"
-        .yui-u{:style=>"margin-left:0px;"}
-          != metadata_list.collect {|x| link_to "#{x[:type]}", x[:show_url]}.join(", ")
+  .well.container-fluid
+    ="Downloadable XML Metadata:"
+    != metadata_list.collect {|x| link_to "#{x[:type]}", x[:show_url]}.join(", ")
 
 - if groups
   = render :partial => "catalog/_show_partials/groups", :locals => {:document => document}
