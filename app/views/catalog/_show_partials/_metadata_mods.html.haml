@@ -1,6 +1,4 @@
-.md-items
+%dl.dl-horizontal
   - metadata[:details].each do |name, value|
-    .container-fluid
-      .label.span3= name
-      .value.span9
-        != value
+    %dt= name
+    %dd!= value

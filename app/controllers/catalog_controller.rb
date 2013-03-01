@@ -13,8 +13,10 @@ class CatalogController < ApplicationController
   before_filter :require_staff
   before_filter :search_session, :history_session
   before_filter :delete_or_assign_search_session_params,  :only=>:index
+  before_filter :cache_docs,  :only=>[:index, :show]
   before_filter :adjust_for_results_view, :only=>:update
   after_filter :set_additional_search_session_values, :only=>:index
+  after_filter :uncache_docs, :only=>[:index, :show]
   
   # Whenever an action raises SolrHelper::InvalidSolrID, this block gets executed.
   # Hint: the SolrHelper #get_solr_response_for_doc_id method raises this error,
@@ -26,14 +28,7 @@ class CatalogController < ApplicationController
   # The index action will more than likely throw this one.
   # Example, when the standard query parser is used, and a user submits a "bad" query.
   rescue_from RSolr::Error::Http, :with => :rsolr_request_error
-  
-  # updates the search counter (allows the show view to paginate)
-  def update
-    session[:search][:counter] = params[:counter] unless session[:search][:counter] == params[:counter]
-    session[:search][:display_members] = params[:display_members] unless session[:search][:display_members] == params[:display_members]
-    redirect_to :action => "show"
-  end
-  
+    
   # single document image resource
   def image
   end
@@ -48,6 +43,15 @@ class CatalogController < ApplicationController
   
   # collection/search UI via Google maps
   def map
+  end
+
+  def cache_docs
+    Thread.current[:doc_cache] = {}
+  end
+
+  def uncache_docs
+    Thread.current[:doc_cache].clear
+    Thread.current[:doc_cache] = nil
   end
   
 end

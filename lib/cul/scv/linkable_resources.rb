@@ -30,7 +30,7 @@ module Cul
         res = {}
         res[:pid] = document["id"]
         res[:dsid] = "CONTENT"
-        res[:mime_type] = document["dc_format_t"].first
+        res[:mime_type] = document["dc_format_t"] ? document["dc_format_t"].first : "application/octect-stream"
         res[:content_models] = document["has_model_s"]
         res[:file_size] = document["extent_s"].first.to_i
         res[:size] = (document["extent_s"].first.to_i / 1024).to_s + " Kb"

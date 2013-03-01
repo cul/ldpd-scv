@@ -24,11 +24,26 @@ class UserSessionsController < ApplicationController
         return
       end  
     end
-    
   end
   
   def destroy
     current_user_session.destroy
     redirect_to wind_logout_url
+  end
+
+  # updates the search counter (allows the show view to paginate)
+  def update
+    if params[:counter]
+      session[:search][:counter] = params[:counter] unless session[:search][:counter] == params[:counter]
+    end
+    if params[:display_members]
+      session[:search][:display_members] = params[:display_members] unless session[:search][:display_members] == params[:display_members]
+    end
+
+    if params[:id]
+      redirect_to :action => "show", :controller => :catalog, :id=>params[:id]
+    else
+      redirect_to :action => "index", :controller => :catalog
+    end      
   end
 end

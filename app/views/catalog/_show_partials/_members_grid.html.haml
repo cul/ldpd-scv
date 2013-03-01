@@ -4,10 +4,10 @@
   %div#member-items
     - rows = get_rows(members,3)
     - rows.each do |row|
-      %div{:class=>["container-fluid", "row", (row==rows.first)? "first" : false]}
+      %div.row
         - row.each do |index|
           - if index != nil
-            %div{:class=>["span4", "cell", (index==row.first)? "first" : false]}
+            %div.span4
               = render_document_partial(members[index], :thumbnail)
 - else
   - if members.length == 1

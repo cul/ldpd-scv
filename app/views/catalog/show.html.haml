@@ -1,18 +1,16 @@
 -# encoding: utf-8
 - @page_title = "#{document_show_html_title} - #{application_name}"
 - extra_head_content << render_link_rel_alternates
-- _searched = !(session[:search][:q].to_s.empty? and session[:search][:f].to_s.empty?)
-%div.show
-  - if _searched
+%div.show.span12
+  - if has_search_parameters?
     = render 'constraints', :localized_params=>session[:search]
-  - if (_searched)
     %div.pageEntriesInfo
       - if (session[:search][:counter].to_i != 0)
         = item_page_entry_info
     = render 'previous_next_doc'
 
 
-%div#document
+%div.span12#document
   %div(:id="doc_#{@document[:id].to_s.encode('UTF-8')}")
     %div#show_bookmark_control
       = render :partial=>'bookmark_control', :locals=>{:document=>@document}

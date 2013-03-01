@@ -12,24 +12,21 @@
     -  javascript_tag do
       = yield(:jstemplates)
     = raw(render_head_content)
-  - bparms = {}
+  - bparms = {:class=>render_body_class}
   - if params[:q].to_s.empty? and params[:f].to_s.empty? and params[:id].nil?
     - bparms[:onload]="$('input#q').focus();"
   %body#doc{bparms}
-    #ajax-modal.modal.hide.fade{:tabindex => -1}
-    #page.container-fluid
-    %div#hd.row-fluid
-      %div.span9
-        %h1
-          = image_tag('logo.gif')
-          = link_to "Columbia University Libraries Staff Collection Viewer", root_url
-      %div#user_util_links.span3
-        = render :partial=>'/user_util_links'
+    = render :partial => 'shared/header_navbar'
 
-    %div#bd.row-fluid
-      #sidebar.hidden-phone.span2= sidebar_items.join('').html_safe
-      #main.span10
-        %div.row-fluid
-          = render :partial=>'/flash_msg'
-          = yield
+    #ajax-modal.modal.hide.fade{:tabindex => -1}
+
+    #main-container.container-fluid
+      #search-found.row.hidden-phone
+        =topbar_items.join("").html_safe
+      .row
+        .span12
+          #main-flashes
+            = render :partial=>'/flash_msg'
+      .row
+        = yield
     %div#ft= @footer

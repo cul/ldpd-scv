@@ -1,6 +1,8 @@
 require 'net/http'
 require 'cul_scv_hydra'
-class DownloadController < ApplicationController
+class DownloadController  < ActionController::Base
+  include Cul::Scv::Controller
+  
   before_filter :require_staff
   filter_access_to :fedora_content, :attribute_check => true,
                    :model => nil, :load_method => :download_from_params

@@ -114,13 +114,13 @@ module ScvAppHelper
     return catalog_index_path(query_params)
   end
 def link_to_previous_document(doc)
-    label="\xe3\x80\x8a Previous"
+    label="<i class=\"icon-chevron-left\"></i> Previous".html_safe
     return "<a href=\"\" class=\"prev\" rel=\"prev\">#{label}</a>" if doc == nil
     link_to label, doc, :class=>"prev", :rel=>'prev', :'data-counter' => session[:search][:counter].to_i - 1
   end
 
   def link_to_next_document(doc)
-    label="Next \xe3\x80\x8b"
+    label="Next <i class=\"icon-chevron-right\"></i>".html_safe
     return "<a href=\"\" class=\"next\" rel=\"next\">#{label}</a>" if doc == nil
     link_to label, doc, :class=>"next", :rel=>'next', :'data-counter' => session[:search][:counter].to_i + 1
   end

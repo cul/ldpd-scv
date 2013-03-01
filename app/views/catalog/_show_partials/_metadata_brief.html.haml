@@ -1,27 +1,22 @@
 -# coding: utf-8
 - link ||= false
-%div.md-items
-  .container-fluid
-    .label.span3="Title:"
-    .value.span9= (link)? (link_to_mash document) : document["title_display"]
-  .container-fluid
+%div
+  %dl.dl-horizontal
+    %dt="Title:"
+    %dd= (link)? (link_to_mash document) : document["title_display"]
+    %dt="ID:"
     - if document[:identifier_s]
       - if document[:identifier_s].is_a? Array
         - document[:identifier_s].each do |value|
-          .label.span3= "ID:"
-          .value.span9= value
+          %dd= value
       - else
-        .label.span3= "ID:"
-        .value.span9= document[:identifier_s]
+        %dd= document[:identifier_s]
     - else
-      .label.span3= "ID:"
-      .value.span9= document["id"]
-  - if document[:access_condition_s]
-    .container-fluid
+      %dd= document["id"]
+    - if document[:access_condition_s]
+      %dt.label.label-info="Access:"
       - if document[:access_condition_s].is_a? Array
         - document[:access_condition_s].each do |value|
-          .label.span3= "Access:"
-          .value.span9= value
+          %dd= value
       - else
-        .label.span3= "Access:"
-        .value.span9= document[:access_condition_s]
+        %dd= document[:access_condition_s]

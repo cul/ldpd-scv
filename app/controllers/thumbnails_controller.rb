@@ -1,4 +1,4 @@
-class ThumbnailsController < ApplicationController
+class ThumbnailsController < ActionController::Base
   # some thumbnail urls
   NO_THUMB = Rails.root.join("public/images/crystal/file.png")
   BROKEN_THUMB = Rails.root.join("public/images/crystal/file_broken.png")
@@ -11,15 +11,19 @@ class ThumbnailsController < ApplicationController
   IMAGE_WIDTH = "http://purl.oclc.org/NET/CUL/RESOURCE/STILLIMAGE/BASIC/imageWidth"
   IMAGE_LENGTH = "http://purl.oclc.org/NET/CUL/RESOURCE/STILLIMAGE/BASIC/imageLength"
 
+  include Cul::Scv::Controller
+  
   before_filter :require_staff
-  #caches_action :show, :expires_in => 7.days,
-  #  :cache_path => proc { |c|
-  #    c.params
-  #  }
+  caches_action :show, :expires_in => 7.days,
+    :cache_path => proc { |c|
+      c.params
+  }
+  
   def show
     pid = params[:id].split(/@/)[0]
     get_by_pid(pid)
   end
+  
   def get_by_pid(pid)
     r_obj = ActiveFedora::Base.find(pid, :cast=>true)
     

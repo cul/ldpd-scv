@@ -133,18 +133,21 @@ module ScvHelper
   end
   def get_groups_for_mash(document)
     if document.is_a? SolrDocument
-      groups = document.get(:cul_member_of_s)
+      groups = document.get(:cul_member_of_s) or document.get("cul_member_of_s")
     else
-      groups = document["cul_member_of_s"]
+      groups = document["cul_member_of_s"] or document[:cul_member_of_s]
     end
-    groups ||= []
+    return [] if groups.blank?
+    cache = Thread.current[:doc_cache]
     groups = [groups] if groups.is_a? String 
-    groups.collect! {|x| x.split(/\//,-1)}
-    resp, docs = get_independent_solr_response_for_field_values("id",groups)
-    docs.collect {|g| SolrDocument.new(g)}
-    #search_params = get_solr_params_for_field_values("pid_s",groups)
-    #resp = Blacklight.solr.find(search_params)
-    #return resp.docs
+    groups.collect! {|x| x.split(/\//,-1)[-1]}
+    adds = groups.find_all{|x| not cache.include? x}
+    unless adds.blank?
+      resp, docs = get_independent_solr_response_for_field_values("id",adds)
+      adds = docs.collect {|g| SolrDocument.new(g)}
+      adds.each {|x| cache[x.get(:id)] = x unless x.nil? }
+    end
+    (groups.collect {|x| cache[x]}).compact
   end
 
   def get_rows(member_list, row_length)
@@ -232,7 +235,7 @@ module ScvHelper
   def link_to_clio(document,link_text="More information in CLIO")
     clio_url = url_to_clio(document)
     if clio_url
-      link_to link_text + image_tag("", :class=>"icon-globe", :style=>"border:none;"), clio_url, :class=>"btn", :target=>"_blank"
+      link_to link_text + "<i class=\"icon-globe\"></i>".html_safe, clio_url, :target=>"_blank"
     else
       ""
     end

@@ -119,7 +119,7 @@ module ModsHelper
   def ext_link(text, url, blank=true)
     link_opts = blank ? {:target=>"_blank"} : {}
     # external link icon
-    (link_to(text, url, link_opts) + " " + link_to("<i class=\"icon-globe\" style=\"border:none;\"></i>".html_safe, url, link_opts.merge({:class=>"btn"}))).html_safe
+    (link_to(text, url, link_opts) + " " + link_to("<i class=\"icon-globe\"></i>".html_safe, url, link_opts)).html_safe
   end
 
 

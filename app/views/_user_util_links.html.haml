@@ -1,24 +1,24 @@
 -# coding: utf-8
 .row-fluid
   - if current_user
-    .span6
+    .span4
       = link_to("Log Out", wind_logout_path) + " [" + current_user.login + "]"
     - if current_user.admin?
-      .span6
+      .span4
         = link_to("Admin", :controller => :admin)
     - else
-      .span6!=raw("&nbsp;")
+      .span4!=raw("&nbsp;")
   - else
-    .span6= link_to 'Login', login_path
-    .span6=raw("&nbsp;")
-.row-fluid
-  .span6
-    = link_to "Saved Searches", saved_searches_path
-  .span6
-    = link_to "Search History", search_history_path
+    .span4= link_to 'Login', login_path
+    .span4!=raw("&nbsp;")
+  .span4
     - if current_user and current_user.last_search_url
-      = link_to('View your last search', catalog_index_path(current_user.last_search_url))
+      .span4= link_to('View your last search', catalog_index_path(current_user.last_search_url))
+    - else
+      .span4!=raw("&nbsp;")
 .row-fluid
-  .span6= link_to('Saved Items', bookmarks_path)
-  .span6
-    %span#folder_number= ""
+  .span4
+    = link_to "Saved Searches", saved_searches_path
+  .span4
+    = link_to "Search History", search_history_path
+  .span4= link_to('Saved Items', bookmarks_path)

@@ -7,9 +7,9 @@
 - if index_data
   %h3 Descriptive Information
 
-  %dl.defList
+  %dl.dl-horizontal
     - if document['clio_s']
-      %dt="In CLIO"
+      %dt="In CLIO:"
       %dd=link_to_clio(document)
     - document_show_fields.select { |f| document[f] && (title || !f.include?("title") || f == 'clio_s') }.each do |solr_fname|
       %dt= document_show_field_labels[solr_fname]

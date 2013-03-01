@@ -266,7 +266,9 @@ namespace :solr do
          urls
        when ENV['COLLECTION_PID']
          solr_url = ENV['SOLR'] || Blacklight.solr_config[:url]
-         collection_pid = BagAggregator.find_by_identifier(ENV['COLLECTION_PID']).pid
+         collection = BagAggregator.find_by_identifier(ENV['COLLECTION_PID'])
+         raise "Could not find #{ENV['COLLECTION_PID']}" if collection.nil?
+         collection_pid = collection.pid
          p "indexing collection #{collection_pid} from ID #{ENV['COLLECTION_PID']}"
          collection = SolrCollection.new(collection_pid,solr_url)
          p collection.paths
@@ -295,10 +297,13 @@ namespace :solr do
        when ENV['PID']
          p "indexing pid #{ENV['PID']}"
          pid = ENV['PID']
+         obj = BagAggregator.find_by_identifier(pid)
+         raise "could not find object #{pid}" if obj.nil?
+         pid = obj.pid
          fedora_uri = URI.parse(ENV['RI_URL'])
          # < adding collections
          solr_url = ENV['SOLR'] || Blacklight.solr_config[:url]
-         collection = SolrCollection.new(ENV['PID'],solr_url)
+         collection = SolrCollection.new(pid,solr_url)
          facet_vals = collection.paths.find_all { |val|
            @allowed.allowed?val
          }
@@ -345,7 +350,9 @@ namespace :solr do
            base_obj.send :update_index
            successes += 1
          rescue Exception => e
-            puts "#{update_uri} threw error #{e.message}"
+            puts "indexing into #{update_uri} threw error #{e.message}"
+            puts e.backtrace
+            exit(1)
          end
        end
 

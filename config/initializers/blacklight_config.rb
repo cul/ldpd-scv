@@ -46,6 +46,7 @@ class BlacklightConfiguration
                                 'subject_geo_facet^1',
                                 'subject_era_facet^1',
                                 'format^1',
+                                'text^1'
                                 ]
         }
 
@@ -104,11 +105,12 @@ class BlacklightConfiguration
     config.add_index_field "lib_format_facet", :label => "Format:"
     config.add_index_field "format", :label => "Routing:"
     config.add_index_field "clio_s", :label => "CLIO Id:"
-    config.add_index_field "extent_t", :label => "Extent:"
+    config.add_index_field "extent_display", :label => "Extent:"
     config.add_index_field "lib_project_facet", :label => "Project:"
     config.add_index_field "language_facet", :label => "Language:"
     config.add_index_field "published_display", :label => "Published:"
     config.add_index_field "object_display", :label => "In Fedora:"
+    config.add_index_field "cul_member_of_s"
     config.add_index_field "index_type_label_s"
     config.add_index_field "resource_json"
 
@@ -117,78 +119,60 @@ class BlacklightConfiguration
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display 
-    config[:show_fields] = {
-      :field_names => [
-        "title_display",
-        "title_vern_display",
-        "subtitle_display",
-        "subtitle_vern_display",
-        "author_display",
-        "author_vern_display",
-        "lib_format_display",
-        "format",
-        "lib_collection_display",
-        "lib_repo_display",
-        "url_fulltext_display",
-        "url_suppl_display",
-        "material_type_display",
-        "language_facet",
-        "published_display",
-        "published_vern_display",
-        "lc_callnum_display",
-        "object_display",
-        "isbn_t",
-        "resource_json"
-      ],
-      :labels => {
-        "title_display"           => "Title:",
-        "title_vern_display"      => "Title:",
-        "subtitle_display"        => "Subtitle:",
-        "subtitle_vern_display"   => "Subtitle:",
-        "author_display"          => "Author:",
-        "author_vern_display"     => "Author:",
-        "lib_format_display"                  => "Format:",
-        "format"                  => "Routing:",
-        "lib_collection_display"  => "Collection:",
-        "lib_repo_display"  => "Repository:",
-        "url_fulltext_display"    => "URL:",
-        "url_suppl_display"       => "More Information:",
-        "material_type_display"   => "Physical description:",
-        "language_facet"          => "Language:",
-        "published_display"       => "Published:",
-        "published_vern_display"  => "Published:",
-        "lc_callnum_display"      => "Call number:",
-        "object_display"          => "In Fedora:",
-        "isbn_t"                  => "ISBN:"
-      }
-    }
+    config.add_show_field "title_display", :label=>"Title:"
+    config.add_show_field "title_vern_display", :label=>"Title:"
+    config.add_show_field "subtitle_display", :label=>"Subtitle:"
+    config.add_show_field "subtitle_vern_display", :label=>"Subtitle:"
+    config.add_show_field "author_display", :label=>"Author:"
+    config.add_show_field "author_vern_display", :label=>"Author:"
+    config.add_show_field "lib_format_display", :label=>"Format:"
+    config.add_show_field "format", :label=>"Routing:"
+    config.add_show_field "lib_collection_display", :label=>"Collection:"
+    config.add_show_field "lib_repo_display", :label=>"Repository:"
+    config.add_show_field "url_fulltext_display", :label=>"URL:"
+    config.add_show_field "url_suppl_display", :label=>"More Information:"
+    config.add_show_field "material_type_display", :label=>"Physical Description:"
+    config.add_show_field "language_facet", :label=>"Language:"
+    config.add_show_field "published_display", :label=> "Published:"
+    config.add_show_field "published_vern_display", :label=> "Published:"
+    config.add_show_field "lc_callnum_display", :label=> "Call number:"
+    config.add_show_field "object_display", :label=> "In Fedora:"
+    config.add_show_field "isbn_t", :label=> "ISBN:"
 
   # "fielded" search configuration. Used by pulldown among other places.
-    config.add_search_field "all_fields", :label => 'All Fields'
+    config.add_search_field("text") do |field|
+      field.label = 'All Fields'
+      field.solr_parameters = {
+        :qt=>"search"
+      }
+    end
 
-    # Now we see how to over-ride Solr request handler defaults, in this
-    # case for a BL "search field", which is really a dismax aggregate
-    # of Solr search fields.
-    config.add_search_field "title", :qt => 'title_search',
-     :solr_parameters => {
-       :"spellcheck.dictionary" => "title"
-      },
-     :solr_local_parameters => {
-       #  removing :qf => "$title_qf",
-       #  removing :pf => "$title_pf"
+    config.add_search_field("title") do |field|
+      field.label = 'Title'
+      field.solr_parameters = {
+        :qt=>"title_search",
+        :qf=>[],
+        :"spellcheck.dictionary" => "title"
       }
-    config.add_search_field "name", :qt => 'name_search',
-     :solr_parameters => {
-       :"spellcheck.dictionary" => "name"
-      },
-     :solr_local_parameters => {
+    end
+
+    config.add_search_field("name") do |field|
+      field.label = 'Name'
+      field.solr_parameters = {
+        :qt=>"name_search",
+        :qf=>[],
+        :"spellcheck.dictionary" => "name"
       }
-    config.add_search_field "clio", :label => 'CLIO ID', :qt => 'clio_search',
-     :solr_parameters => {
-       :"spellcheck.dictionary" => "clio"
-      },
-     :solr_local_parameters => {
+    end
+
+    config.add_search_field("clio") do |field|
+      field.label = 'CLIO ID'
+      field.solr_parameters = {
+        :qt=>"clio_search",
+        :qf=>[],
+        :"spellcheck.dictionary" => "clio"
       }
+    end
 
 
     # "sort results by" select (pulldown)

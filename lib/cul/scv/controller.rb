@@ -1,0 +1,79 @@
+module Cul
+  module Scv
+    module Controller
+    	  def current_user
+    return @current_user if defined?(@current_user)
+    
+    if current_user_session
+      @current_user = current_user_session.user
+    else
+      @current_user = false
+    end
+    @current_user
+  end
+
+  def current_user_session
+    return @user_session if defined?(@user_session)
+    @user_session = UserSession.find
+  end
+
+  protected
+
+  def check_new_session
+    if(params[:new_session])
+      current_user.set_personal_info_via_ldap
+      current_user.save
+    end
+  end
+
+  def require_user
+    unless current_user
+      store_location
+      redirect_to new_user_session_path
+      return false
+    end
+  end
+
+  def require_staff
+    if current_user
+      unless current_user.cul_staff
+        redirect_to access_denied_url  
+      end
+    else
+      store_location
+      redirect_to new_user_session_path
+      return false
+    end
+  end
+  
+  def require_admin
+    if current_user
+      unless current_user.admin
+        redirect_to access_denied_url  
+      end
+    else
+      store_location
+      redirect_to new_user_session_path
+      return false
+    end
+  end
+
+  def require_no_user
+    if current_user
+      store_location
+      flash[:notice] = "You must be logged out to access this page"
+      redirect_to root_url
+      return false
+    end
+  end
+  
+  def http_client
+    unless @http_client
+      @http_client ||= HTTPClient.new
+    end
+    @http_client
+  end
+
+end
+end
+end

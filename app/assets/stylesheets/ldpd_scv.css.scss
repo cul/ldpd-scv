@@ -1,6 +1,7 @@
 body {
 	color: #000;
 	background-color: #fff;
+	padding-top:0.5em;
 }
 
 h1.site_title {
@@ -13,4 +14,14 @@ h1.site_title {
 
 #facets H3 {
 	font-size: 1.2em;
+}
+
+div.constraint-widget {
+	position:relative;
+	display: inline-block;
+	margin: -5px 0 0 0;
+}
+
+div.constraint-widget .btn {
+	padding: 5px 10px;
 }

@@ -1,6 +1,7 @@
 -# coding: utf-8
 - counter ||= nil
 %div.container-fluid
-  %div.span8
+  %div.span2
     = render_document_partial_with_locals document, :thumbnail, {:document=>document,:label=>true,:counter=>counter}
+  %div.span6
   %div.span4

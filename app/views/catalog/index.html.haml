@@ -1,23 +1,26 @@
 -# coding: utf-8
-- if params[:q].blank? and params[:f].blank?
-  = render 'home'
-- else
-  - @page_title = application_name + " Search Results"
-  = render :partial => 'search_form'
-  = render :partial => 'did_you_mean'
-  = render 'constraints', :localized_params=> params
-  %div.pageEntriesInfo
+#sidebar.span3
+  = render :partial=>'facets'
+#content.span9  
+  - unless has_search_parameters?
+    = render 'home'
+  - else
+    %h2.hide-text.top-content-title=t('blacklight.search.search_results_header')
+    - @page_title = t('blacklight.search.title', :application_name => application_name)
+    - extra_head_content << render_opensearch_response_metadata.html_safe
+
+    = render 'constraints', :localized_params=> params
     -# render_pagination_info @response, :entry_name=>'item'
 
-  = render 'sort_and_per_page'
+    = render :partial => 'did_you_mean'
 
-  = render 'results_pagination'
+    = render 'results_pagination'
 
-  = render :partial=>'document_list'
-  - sidebar_items << capture do
-    = render :partial=>'facets'
+    = render :partial=>'document_list'
+    - sidebar_items << capture do
+      = render :partial=>'facets'
 
-  %div.pageEntriesInfo
-  = render 'results_pagination'
-  - unless Rails.env == 'passenger_prod'
-    = render :partial=>'solr_request'
+    %div.pageEntriesInfo
+    = render 'results_pagination'
+    - unless Rails.env == 'passenger_prod'
+      = render :partial=>'solr_request'

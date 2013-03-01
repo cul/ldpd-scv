@@ -5,3 +5,7 @@ en:
         title: 'Search Results'
       facets:
         title: 'Browse / Limit By:'
+  views:
+    pagination:
+      next: 'Next <i class="icon-chevron-right"></i>'
+      previous: '<i class="icon-chevron-left"></i> Previous'

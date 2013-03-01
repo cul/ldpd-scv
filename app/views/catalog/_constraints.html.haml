@@ -1,6 +1,8 @@
 -# coding: utf-8
-%div#appliedParams
-  = link_to "Start over", catalog_index_path, :class=>"uiButton startOverButton"
-  %h3.label
-    ="You searched for:"
-  = render_constraints(localized_params)  
+- if query_has_constraints?
+  %div#appliedParams.constraints-container
+    %span.constraints-label=t('blacklight.search.filters.title')
+    = render :partial => 'sort_widget'
+    = render :partial => 'per_page_widget'
+    = render :partial => 'start_over_widget'
+    = render_constraints(params)
