@@ -19,16 +19,16 @@ end
 gem "blacklight", '~> 4.0.0'
 gem "unicode", :platforms => [:mri_18, :mri_19]
 gem "bootstrap-sass"
-gem "hydra-head" #, :git=>'git://github.com/barmintor/hydra-head.git', :branch=>'solrdoc'
+gem "hydra-head"
 # gem "active-fedora", '~>4.5.0'
-gem 'active-fedora', '~>5.0' #:git=>'git://github.com/barmintor/active_fedora.git', :branch=>'master'
-gem 'active_fedora_finders', :path => '/Users/ba2213/Github/barmintor/active_fedora_finders'
-gem "active_fedora_relsint", :path => '/Users/ba2213/Github/cul/active_fedora_relsint'
-gem 'active_fedora_streamable', :path => '/Users/ba2213/Github/barmintor/active_fedora_streamable'
+gem 'active-fedora', '~>5.0'
+gem 'active_fedora_finders', '~>0.3.0'
+gem "active_fedora_relsint"
+gem 'active_fedora_streamable', '~>0.3.0'
 gem 'columnize'
 gem 'crack'
 gem 'cul_image_props'
-gem 'cul_scv_hydra' , :path => '/Users/ba2213/Github/cul_scv_hydra'
+gem 'cul_scv_hydra' , '~>0.7.0'
 gem 'curb'
 gem 'database_cleaner'
 gem 'declarative_authorization', '0.5.3'

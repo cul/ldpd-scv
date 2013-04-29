@@ -297,7 +297,7 @@ namespace :solr do
        when ENV['PID']
          p "indexing pid #{ENV['PID']}"
          pid = ENV['PID']
-         obj = BagAggregator.find_by_identifier(pid)
+         obj = BagAggregator.find_by_identifier(pid) || BagAggregator.find(pid)
          raise "could not find object #{pid}" if obj.nil?
          pid = obj.pid
          fedora_uri = URI.parse(ENV['RI_URL'])

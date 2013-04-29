@@ -4,8 +4,8 @@ class DownloadController  < ActionController::Base
   include Cul::Scv::Controller
   
   before_filter :require_staff
-  filter_access_to :fedora_content, :attribute_check => true,
-                   :model => nil, :load_method => :download_from_params
+  #filter_access_to :fedora_content, :attribute_check => true,
+  #                 :model => nil, :load_method => :download_from_params
   caches_action :cachecontent, :expires_in => 7.days,
     :cache_path => proc { |c|
       c.params
@@ -30,22 +30,25 @@ class DownloadController  < ActionController::Base
     dl_hdrs["Content-Disposition"] = "inline; filename=""#{CGI.escapeHTML(params[:filename].to_s)}"""
     response.headers.merge! dl_hdrs
     ds_parms = {:pid => params[:uri], :dsid => params[:block]}
+    response.headers["Last-Modified"] = Time.now.to_s
     obj.datastreams[params[:block]].stream(self)
   end
+
   def download_from_params
     unless defined?(@download)
       pid = params[:uri]
       dsid = params[:block]
-      r_obj = GenericResource.find(pid)
+      @resource = GenericResource.find(pid)
       @download = DownloadObject.new
-      r_obj.ids_for_outbound(:has_model).each { |triple|
+      @resource.ids_for_outbound(:has_model).each { |triple|
         @download.content_models << "info:fedora/#{triple}"
       }
-      dc_format = r_obj.dc.term_values(:format)
+      dc_format = @resource.dc.term_values(:dc_format)
       if dc_format and dc_format.length > 0
         @download.mime_type=dc_format.first
       end
     end
+    puts @download.inspect
     params[:object] = @download
   end
   def fedora_content
@@ -53,9 +56,9 @@ class DownloadController  < ActionController::Base
     text_result = nil
     pid = params[:uri]
     dsid = params[:block]
-    r_obj = GenericResource.find(pid)
+    @resource = GenericResource.find(pid) unless defined?(@resource)
     dl_hdrs = {}
-    dl_hdrs["Content-Type"] = r_obj.datastreams[dsid].mimeType || 'binary/octet-stream'
+    dl_hdrs["Content-Type"] = @resource.datastreams[dsid].mimeType || 'binary/octet-stream'
 
     case params[:download_method]
     when "download"
@@ -64,15 +67,15 @@ class DownloadController  < ActionController::Base
       if dl_hdrs["Content-Type"].include?("xml") || params[:print_binary_octet]
         
         xsl = Nokogiri::XSLT(File.read(Rails.root.join("app/stylesheets/pretty-print.xsl")))
-        xml = r_obj.datastreams[dsid].content
+        xml = @resource.datastreams[dsid].content
         xml = Nokogiri::XML.parse(xml, nil, 'UTF-8')
         text_result = xsl.apply_to(xml).to_s
       elsif dl_hdrs["Content-Type"].include?("txt")
-        text_result = r_obj.datastreams[dsid].content
+        text_result = @resource.datastreams[dsid].content
       else
         text_result = "Non-xml content streams cannot be pretty printed. (#{dl_hdrs.inspect})"
       end
-    else
+    else # "show"
       dl_hdrs["Content-Disposition"] = "inline; filename=""#{CGI.escapeHTML(params[:filename].to_s)}""" 
     end
     response.headers.merge! dl_hdrs
@@ -81,8 +84,8 @@ class DownloadController  < ActionController::Base
       render :text => text_result
     else
       ds_parms = {:pid => params[:uri], :dsid => dsid}
-      logger.info "rubydora_params = #{ds_parms.inspect}"
-      r_obj.datastreams[dsid].stream(self)
+      response.headers["Last-Modified"] = Time.now.to_s
+      @resource.datastreams[dsid].stream(self)
     end
   end
 

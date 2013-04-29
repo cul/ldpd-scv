@@ -2,16 +2,15 @@ authorization do
   role :"staff:scv.cul.columbia.edu" do
     has_permission_on :download do
       to :fedora_content
-      #if_attribute :mime_type => is_not {"image/tiff"}
+      if_attribute :mime_type => is_not {"image/tiff"}
       #if_attribute :mime_type => is_not {"audio/x-wav"}
       #if_attribute :mime_type => is_not {nil}
-      if_attribute :content_models => does_not_contain {"info:fedora/ldpd:RestrictedResource"}
+      #if_attribute :content_models => does_not_contain {"info:fedora/ldpd:RestrictedResource"}
     end
   end
   role :download_all do
     has_permission_on :download do
       to :fedora_content
-      if_attribute :content_models => contains {"info:fedora/ldpd:RestrictedResource"}
     end
   end
   role :download_wav do
