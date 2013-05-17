@@ -14,11 +14,11 @@ group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.0.3'
+  gem "bootstrap-sass", "~>2.1"
   gem 'compass-rails'
 end
 gem "blacklight", '~> 4.0.0'
 gem "unicode", :platforms => [:mri_18, :mri_19]
-gem "bootstrap-sass"
 gem "hydra-head"
 # gem "active-fedora", '~>4.5.0'
 gem 'active-fedora', '~>5.0'
