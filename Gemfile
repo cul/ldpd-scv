@@ -1,5 +1,6 @@
 source 'http://rubygems.org'
 gem 'sqlite3'
+gem 'mysql2'
 gem 'authlogic', '~>3.1.0'
 gem 'authlogic_wind'
 gem 'arel'
