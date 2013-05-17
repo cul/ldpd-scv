@@ -348,7 +348,7 @@ DEPENDENCIES
   authlogic_wind
   blacklight (~> 4.0.0)
   block_helpers
-  bootstrap-sass
+  bootstrap-sass (~> 2.1)
   coffee-rails (~> 3.2.1)
   columnize
   compass-rails
