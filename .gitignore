@@ -4,6 +4,7 @@ config/fedora_credentials.yml
 config/solr.yml
 config/*.sphinx.conf
 config/s3_credentials.yml
+secret_token.rb
 *~
 *.cache
 *.log

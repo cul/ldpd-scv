@@ -17,8 +17,16 @@ module ScvHelper
   end
 
   def get_resources(document)
+    if (document.nil?)
+      puts "document was nil?"
+      return []
+    end
+    puts document[:id]
     klass = ActiveFedora::SolrService.class_from_solr_document(document)
-    obj = klass.load_instance_from_solr(document[:id],document)
+    puts klass.name
+    obj = klass.find(document[:id])
+    # obj = klass.load_instance_from_solr(document[:id],document)
+    puts obj.inspect
     if (obj.respond_to? :linkable_resources)
       return obj.linkable_resources
     else
@@ -97,7 +105,7 @@ module ScvHelper
       agg = klass.load_instance_from_solr(document[:id],document)
       r = agg.parts(:response_format => format)
       return [] if r.blank?
-      return r["response"]["docs"].collect {|hit|
+      return r.collect {|hit|
         SolrDocument.new(hit)
       }
     end

@@ -1,43 +1,3 @@
-PATH
-  remote: /Users/ba2213/Github/barmintor/active_fedora_finders
-  specs:
-    active_fedora_finders (0.2.0)
-      active-fedora (>= 4.2.0)
-      activerecord (~> 3.2.0)
-      activesupport (~> 3.2.0)
-      nokogiri
-      rubydora (< 2.0)
-
-PATH
-  remote: /Users/ba2213/Github/barmintor/active_fedora_streamable
-  specs:
-    active_fedora_streamable (0.2.1)
-      active-fedora (>= 4.2.0)
-      activesupport (~> 3.2.0)
-      rubydora (< 2.0)
-
-PATH
-  remote: /Users/ba2213/Github/cul/active_fedora_relsint
-  specs:
-    active_fedora_relsint (0.2.0)
-      active-fedora (~> 5.0)
-      activesupport (~> 3.2.0)
-      rubydora (~> 1.2.0)
-
-PATH
-  remote: /Users/ba2213/Github/cul_scv_hydra
-  specs:
-    cul_scv_hydra (0.6.4)
-      active-fedora (~> 5.0)
-      active_fedora_finders (>= 0.1.3)
-      active_fedora_relsint
-      blacklight (~> 4.0.0)
-      cul_image_props
-      hydra-head (~> 5.2)
-      om (~> 1.8)
-      rails (~> 3.2.5)
-      solrizer (~> 2.0.0)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -67,6 +27,20 @@ GEM
       rsolr
       rubydora (~> 1.2)
       solrizer (~> 2.0.0)
+    active_fedora_finders (0.3.0)
+      active-fedora (>= 4.2.0)
+      activerecord (~> 3.2.0)
+      activesupport (~> 3.2.0)
+      nokogiri
+      rubydora (< 2.0)
+    active_fedora_relsint (0.2.0)
+      active-fedora (~> 5.0)
+      activesupport (~> 3.2.0)
+      rubydora (~> 1.2.0)
+    active_fedora_streamable (0.3.0)
+      active-fedora (>= 4.2.0)
+      activesupport (~> 3.2.0)
+      rubydora (< 2.0)
     activemodel (3.2.12)
       activesupport (= 3.2.12)
       builder (~> 3.0.0)
@@ -140,6 +114,16 @@ GEM
       nokogiri (>= 1.5.0)
     cul_image_props (0.3.4)
       nokogiri
+    cul_scv_hydra (0.7.0)
+      active-fedora (~> 5.0)
+      active_fedora_finders (>= 0.1.3)
+      active_fedora_relsint
+      blacklight (~> 4.0.0)
+      cul_image_props
+      hydra-head (~> 5.2)
+      om (~> 1.8)
+      rails (~> 3.2.5)
+      solrizer (~> 2.0.0)
     curb (0.8.3)
     daemons (1.1.9)
     database_cleaner (0.9.1)
@@ -355,9 +339,9 @@ DEPENDENCIES
   RedCloth (>= 4.2.3)
   actionmailer
   active-fedora (~> 5.0)
-  active_fedora_finders!
-  active_fedora_relsint!
-  active_fedora_streamable!
+  active_fedora_finders (~> 0.3.0)
+  active_fedora_relsint
+  active_fedora_streamable (~> 0.3.0)
   arel
   authlogic (~> 3.1.0)
   authlogic_wind
@@ -371,7 +355,7 @@ DEPENDENCIES
   cucumber (>= 0.8.5)
   cucumber-rails (>= 1.0.0)
   cul_image_props
-  cul_scv_hydra!
+  cul_scv_hydra (~> 0.7.0)
   curb
   database_cleaner
   declarative_authorization (= 0.5.3)

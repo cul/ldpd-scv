@@ -20,6 +20,7 @@ class GenericResource < ::ActiveFedora::Base
   LENGTH_PREDICATE = ActiveFedora::RelsExtDatastream.short_predicate("http://www.w3.org/2003/12/exif/ns#imageLength").to_s
   EXTENT_PREDICATE = ActiveFedora::RelsExtDatastream.short_predicate("http://purl.org/dc/terms/extent").to_s
   FORMAT_OF_PREDICATE = ActiveFedora::RelsExtDatastream.short_predicate("http://purl.org/dc/terms/isFormatOf").to_s
+  FORMAT_URI = RDF::URI("http://purl.org/dc/terms/format")
   
   has_datastream :name => "content", :type=>::ActiveFedora::Datastream, :versionable => true
   
@@ -67,7 +68,28 @@ class GenericResource < ::ActiveFedora::Base
         end
       end
     else
+      content_uri = RDF::URI("info:fedora/#{self.pid}/content")
+      dsuris = [content_uri]
+      results = []
       # read the graph
+      puts rels_int.relationships.inspect
+      datastreams.each do |k, v|
+        rels = rels_int.relationships(v, :format_of, content_uri)
+        dsuris << rels[0].subject unless rels.blank?
+      end
+
+      dsuris.each do |dsuri|
+        puts dsuri
+        dsid = dsuri.to_s.split('/')[-1]
+        width_rel = rels_int.relationships(dsuri, :exif_image_width)[0]
+        length_rel = rels_int.relationships(dsuri, :exif_image_length)[0]
+        extent_rel = rels_int.relationships(dsuri, :extent)[0]
+        props = {EXTENT_PREDICATE => [], WIDTH_PREDICATE => [], LENGTH_PREDICATE => []}
+        props[EXTENT_PREDICATE] << extent_rel.object.to_s unless extent_rel.blank?
+        props[WIDTH_PREDICATE] << width_rel.object.to_s unless width_rel.blank?
+        props[LENGTH_PREDICATE] << length_rel.object.to_s unless length_rel.blank?
+        results << datastream_as_resource(dsid, props)
+      end
     end
     results
   end
