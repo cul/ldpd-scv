@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //
 // Required by Blacklight
+//= require bootstrap
 //= require blacklight/blacklight
 //= require_tree .
 

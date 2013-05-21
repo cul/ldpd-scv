@@ -1,11 +1,19 @@
 source 'http://rubygems.org'
+gem "rails", '~> 3.2.6'
 gem 'sqlite3'
-gem 'mysql2'
+group :passenger_dev, :passenger_test, :passenger_prod do
+  gem 'mysql2'
+end
+gem "blacklight", '~> 4.0.0'
+
 gem 'authlogic', '~>3.1.0'
 gem 'authlogic_wind'
 gem 'arel'
 gem 'actionmailer'
-gem "rails", '~> 3.2.6'
+gem 'sass'
+gem 'sass-rails',   '~> 3.2.3'
+gem "bootstrap-sass", "~>2.1"
+gem 'compass'
 gem 'compass-rails'
 gem 'jquery-rails'
 # Gems used only for assets and not required
@@ -17,7 +25,6 @@ group :assets do
   gem "bootstrap-sass", "~>2.1"
   gem 'compass-rails'
 end
-gem "blacklight", '~> 4.0.0'
 gem "unicode", :platforms => [:mri_18, :mri_19]
 gem "hydra-head"
 # gem "active-fedora", '~>4.5.0'
@@ -53,7 +60,6 @@ gem 'rsolr', '1.0.6' # Default to using the version required by Blacklight
 gem 'rsolr-ext' # Default to using the version required by Blacklight
 gem 'rubydora' #, :path => "/opt/project_hydra/rubydora"
 gem 'RedCloth', '>=4.2.3'
-gem 'sass'
 gem 'solr-ruby' 
 gem 'sprockets'
 gem 'term-ansicolor'

@@ -45,5 +45,6 @@ module Scv
     config.consider_all_requests_local = true
     
     config.assets.enabled = true
+    config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
   end
 end
