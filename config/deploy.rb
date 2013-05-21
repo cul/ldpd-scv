@@ -22,6 +22,7 @@ namespace :deploy do
   end
 
   task :symlink_shared do
+    run "ln -nfs #{deploy_to}shared/secret_token.rb #{release_path}/config/initializers/secret_token.rb"
     run "ln -nfs #{deploy_to}shared/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{deploy_to}shared/fedora_credentials.yml #{release_path}/config/fedora_credentials.yml"
     run "ln -nfs #{deploy_to}shared/fedora.yml #{release_path}/config/fedora.yml"
