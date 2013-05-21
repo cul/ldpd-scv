@@ -73,7 +73,6 @@ group :development do
 #  gem 'ruby-debug-base19'
   gem 'rspec', '>= 2.0.0'  
   gem 'rspec-rails', '>= 2.0.0' # rspec-rails 2.0.0 requires Rails 3.
-  gem 'ruby-prof'
   gem 'mocha'
   gem 'cucumber', '>=0.8.5'
   gem 'cucumber-rails', '>=1.0.0'

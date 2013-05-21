@@ -274,7 +274,6 @@ GEM
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
       rspec-mocks (~> 2.13.0)
-    ruby-prof (0.12.2)
     rubydora (1.2.1)
       activemodel
       activesupport
@@ -388,7 +387,6 @@ DEPENDENCIES
   rsolr-ext
   rspec (>= 2.0.0)
   rspec-rails (>= 2.0.0)
-  ruby-prof
   rubydora
   sanitize
   sass
