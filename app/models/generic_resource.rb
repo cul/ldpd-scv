@@ -72,14 +72,12 @@ class GenericResource < ::ActiveFedora::Base
       dsuris = [content_uri]
       results = []
       # read the graph
-      puts rels_int.relationships.inspect
       datastreams.each do |k, v|
         rels = rels_int.relationships(v, :format_of, content_uri)
         dsuris << rels[0].subject unless rels.blank?
       end
 
       dsuris.each do |dsuri|
-        puts dsuri
         dsid = dsuri.to_s.split('/')[-1]
         width_rel = rels_int.relationships(dsuri, :exif_image_width)[0]
         length_rel = rels_int.relationships(dsuri, :exif_image_length)[0]

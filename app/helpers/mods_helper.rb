@@ -8,7 +8,8 @@ module ModsHelper
     if metadata[:xml].nil?
       return metadata
     end
-    xml = metadata[:xml].at_css("mods")
+    xml = metadata[:xml].at_css("mods|mods", Namespace)
+    puts "xml found was #{xml}"
     return metadata unless xml
     ns = Namespace
     # names
@@ -136,25 +137,23 @@ module ModsHelper
   def parse_mods_title(node)
 
     value = ""
-
-    value += node.at_css("nonSort").content + " " if node.at_css("nonSort")
-    value += node.at_css("title").content if node.at_css("title")
-    value += " : " + node.at_css("subtitle").content if node.at_css("subtitle")
-    value += "  " + node.at_css("partNumber").content if node.at_css("partNumber")
-    value += "  " + node.at_css("partName").content if node.at_css("partName")
-    value += "  " + node.at_css("partName").content if node.at_css("partName")
+    ["nonSort", "title", "subtitle", "partNumber", "partName"].each do |p_tag|
+      if (p_node = node.css("mods|#{p_tag}", Namespace).first)
+        value += p_node.content + " "
+      end
+    end
 
     return value.strip
   end
 
   def parse_mods_name(name_node)
     name = ""
-    name_node.css("namePart").each  do |np|
+    name_node.css("mods|namePart", Namespace).each  do |np|
       name  += ", " if np.attributes["type"] && np.attributes["type"].value == "date"
       name += np.content
     end
 
-    name_node.css("description").each do |desc|
+    name_node.css("mods|description", Namespace).each do |desc|
       name += ", " + desc.content
     end
 
