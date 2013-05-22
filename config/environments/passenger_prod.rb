@@ -11,8 +11,10 @@ config.cache_store = :file_store, '/var/tmp/'
 config.action_controller.perform_caching             = true
 config.action_view.cache_template_loading            = true
 
+# This line tells passenger we are serving under http://<server>/<app_name>/
+# config.action_controller.relative_url_root = "/scv"
+
 # See everything in the log (default is :info)
-# config.log_level = :debug
 config.log_level = :warn
 
 # Use a different logger for distributed setups
@@ -29,6 +31,13 @@ config.log_level = :warn
 
 # Enable threaded mode
 # config.threadsafe!
+
+config.action_mailer.delivery_method = :smtp
+config.action_mailer.smtp_settings = {
+  :address => "localhost",
+  :domain => "rossini.cul.columbia.edu",
+   :port => 25
+}
 config.active_support.deprecation = :log
 Haml::Template::options[:ugly] = true
 end
