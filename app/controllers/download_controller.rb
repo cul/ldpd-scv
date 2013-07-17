@@ -48,7 +48,6 @@ class DownloadController  < ActionController::Base
         @download.mime_type=dc_format.first
       end
     end
-    puts @download.inspect
     params[:object] = @download
   end
   def fedora_content

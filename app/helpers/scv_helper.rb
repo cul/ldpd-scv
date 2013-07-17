@@ -21,12 +21,9 @@ module ScvHelper
       puts "document was nil?"
       return []
     end
-    puts document[:id]
     klass = ActiveFedora::SolrService.class_from_solr_document(document)
-    puts klass.name
     obj = klass.find(document[:id])
     # obj = klass.load_instance_from_solr(document[:id],document)
-    puts obj.inspect
     if (obj.respond_to? :linkable_resources)
       return obj.linkable_resources
     else
@@ -249,18 +246,9 @@ module ScvHelper
     end
   end
 
-  def render_object_index_label doc, opts
-    label = nil
-    label ||= doc.get(opts[:label]) if opts[:label].instance_of? Symbol and doc.is_a? SolrDocument
-    label ||= doc[opts[:label]] if opts[:label].instance_of? Symbol and doc.is_a? Mash
-    label ||= opts[:label].call(doc, opts) if opts[:label].instance_of? Proc
-    label ||= opts[:label] if opts[:label].is_a? String
-    label ||= doc.pid
-  end
-
   def link_to_object(object, opts={:label=>nil, :counter => nil, :results_view => true})
-    label ||= blacklight_config[:index][:show_link].to_sym
-    label = render_object_index_label object, opts
+    label ||= lambda { |doc, opts| doc[blacklight_config[:index][:show_link].to_s]}
+    label = render_document_index_label object, opts
     link_to label, {:controller => :catalog, :id=>object.pid}, :'data-counter' => opts[:counter]
   end
 

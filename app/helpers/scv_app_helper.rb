@@ -88,7 +88,7 @@ module ScvAppHelper
     label = render_document_index_label doc, opts
 # blacklight does not pass the correct arguments for Rails 3 url_for
     url_for_opts = {:controller => :catalog, :action => :show, :id => doc[:id]}
-    link_to label, opts, { :'data-counter' => opts[:counter] }.merge(opts.reject { |k,v| [:label, :counter, :results_view].include? k  })
+    link_to label, url_for_opts, { :'data-counter' => opts[:counter] }.merge(opts.reject { |k,v| [:label, :counter, :results_view].include? k  })
   end
 
   def url_to_document(doc)

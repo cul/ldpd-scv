@@ -29,25 +29,11 @@ class BlacklightConfiguration
   #  end
     config.default_solr_params = {
           :qt => 'search',
-          :defType          => "edismax",
+          :defType          => "dismax",
           :facet            => true,
           :'facet.mincount' => 1,
           :rows         => 10,
-          :'q.alt'          => "*:*",
-          :qf               => [
-                                'lib_project_facet^1',
-                                'lib_name_facet^1',
-                                'lib_date_facet^1',
-                                'lib_format_facet^1',
-                                'lib_collection_facet^1',
-                                'lib_repo_facet^1',
-                                'subject_topic_facet^1',
-                                'language_facet^1',
-                                'subject_geo_facet^1',
-                                'subject_era_facet^1',
-                                'format^1',
-                                'text^1'
-                                ]
+          :'q.alt'          => "*:*"
         }
 
 
@@ -78,14 +64,12 @@ class BlacklightConfiguration
     config.add_facet_field "lib_format_facet", :label => "Formats", :limit => 10 #, :sort => "count"
     config.add_facet_field "lib_collection_facet", :label => "Collections" #, :limit => 10, :sort => "index"
     config.add_facet_field "lib_repo_facet", :label => "Repositories", :limit => 10 #, :sort => "index"
-    config.add_facet_field "date_created_h", :label => "Date (Experimental)", :limit => 10, :sort => "count"
     config.add_facet_field "subject_topic_facet", :label => "Topics", :limit => 10, :sort => "count"
     config.add_facet_field "language_facet", :label => "Languages", :limit => 10, :sort => "count"
     config.add_facet_field "subject_geo_facet", :label => "Regions", :limit => 10, :sort => "count"
     config.add_facet_field "subject_era_facet", :label => "Eras", :limit => 10, :sort => "count"
 
     if !Rails.env.eql?"passenger_prod"
-      config.add_facet_field "collection_h", :label => "In Hierarchy", :limit => 10
       config.add_facet_field "format", :label => "Routed As", :limit => 10
       config.add_facet_field "descriptor", :label => "Metadata Type", :limit => 10
     end

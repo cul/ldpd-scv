@@ -9,7 +9,7 @@ module ModsHelper
       return metadata
     end
     xml = metadata[:xml].at_css("mods|mods", Namespace)
-    puts "xml found was #{xml}"
+    #puts "xml found was #{xml}"
     return metadata unless xml
     ns = Namespace
     # names
