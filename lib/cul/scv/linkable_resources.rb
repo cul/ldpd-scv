@@ -1,10 +1,12 @@
 module Cul
   module Scv
     module LinkableResources
-      def linkable_resources(format=:solr)
-        r = self.parts(:response_format => format)
+      def linkable_resources
+        r = self.parts(:response_format => :solr)
         return [] if r.blank?
-        members = r["response"]["docs"].collect {|hit|
+        puts "r: " + r.inspect
+        # puts "r[\"response\"]: " + r["response"]
+        members = r.collect {|hit|
           SolrDocument.new(hit)
         }
         members.delete_if { |sd| (sd[:has_model_s] & ["info:fedora/ldpd:Resource"]).blank? }

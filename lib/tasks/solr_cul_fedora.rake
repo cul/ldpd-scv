@@ -128,11 +128,10 @@ class SolrCollection
   end
   def members()
     if !(@members)
-      @members = []
-        _members = objects().collect{|id| id.split('@')[0] }
-        _members.compact!
-        _members.uniq!
-        @members |= _members
+      _members = objects().collect{|id| id.split('@')[0] }
+      _members.compact!
+      _members.uniq!
+      @members = _members
     end
     @members
   end
