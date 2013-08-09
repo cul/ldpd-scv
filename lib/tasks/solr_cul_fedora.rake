@@ -3,27 +3,59 @@ require 'nokogiri'
 require 'rsolr-ext'
 
 class Node
+  include Comparable
   attr_reader :pid
   def initialize(pid)
     @pid = pid
-    @children = {}
+    @parents = {}
+    @leaf = true
+  end
+  def add_parent(cnode)
+    @parents[cnode.pid] = cnode
+  end
+  def parents
+    @parents.values
   end
   def add_child(cnode)
-    @children[cnode.pid] = cnode
+    @leaf = false
   end
   def children
     @children.values
   end
-  def serialize
-    if @children.length > 0
-      @children.values.collect { |child|
-        child.serialize.collect { |path|
-          @pid + "/" + path
-        }
-      }.flatten
-    else
-      [@pid + "/"]
+  def parents?
+    @parents.length > 0
+  end
+  def children?
+    !@leaf
+  end
+  def root?
+    @parents.length == 0
+  end
+  def leaf?
+    @leaf
+  end
+  def <=>(that)
+    self.pid <=> that.pid
+  end
+  def serialize(force=false)
+    # memoize is only useful from the bottom up
+    @serial = nil if force
+    @serial ||=
+      begin
+        case @parents.length
+        when 0
+          [@pid + '/']
+      else
+        result = {}
+          @parents.each { |key, node|
+              node.serialize.each { |path|
+                  result[path + @pid + '/'] = true
+              }
+          }
+          result.keys
+      end
     end
+  @serial
   end
 end
 class SolrCollection
@@ -48,28 +80,36 @@ class SolrCollection
     ri_resp = Cul::Fedora.repository.itql query, opts
     puts ri_resp
     tuples = JSON::parse(ri_resp)['results']
-    _children = []
     _nodes = {}
+    len = 'info:fedora/'.length
     tuples.each { |tuple|
-      _p = tuple["parent"].sub("info:fedora/","")
-      _c = tuple["child"].sub("info:fedora/","")
-      _children << _c
-      if not _nodes.has_key?(_p)
-        _nodes[_p] = Node.new(_p)
+      _p = tuple['parent'][len..tuple['parent'].length]
+      _c = tuple['child'][len..tuple['child'].length]
+      _parent = begin
+        if not _nodes.has_key?(_p)
+          _nodes[_p] = Node.new(_p)
+        else
+          _nodes[_p]       
+        end      
       end
-      if not _nodes.has_key?(_c)
-        _nodes[_c] = Node.new(_c)
+      _child = begin
+        if not _nodes.has_key?(_c)
+          _nodes[_c] = Node.new(_c)
+        else
+          _nodes[_c]
+        end      
       end
-      _nodes[_p].add_child( _nodes[_c])
+      _child.add_parent( _parent)
+      _parent.add_child(_child)
     }
-    _nodes.reject! {|key,node| _children.include? node.pid }
     _paths = []
     _nodes.each { |key,node|
-      _paths.concat(node.serialize)
+      if node.leaf?
+        _paths.concat(node.serialize)
+      end
     }
     self.paths=_paths
-    self.objects=_children
-    self.objects << pid
+    self.objects=_nodes
   end
   def solr_query(query, start, rows, fl, collection_prefix=false)
     query_parms = {}
@@ -127,13 +167,8 @@ class SolrCollection
     @ids
   end
   def members()
-    if !(@members)
-      _members = objects().collect{|id| id.split('@')[0] }
-      _members.compact!
-      _members.uniq!
-      @members = _members
-    end
-    @members
+    paths
+    objects
   end
 end
 class Gatekeeper
