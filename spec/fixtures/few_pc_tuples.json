@@ -1,0 +1,13 @@
+{"results":[
+{"child" : "info:fedora/ldpd:10014","parent" : "info:fedora/ldpd:10018"}
+,{"child" : "info:fedora/ldpd:10016","parent" : "info:fedora/ldpd:10018"}
+,{"child" : "info:fedora/ldpd:10042","parent" : "info:fedora/ldpd:10044"}
+,{"child" : "info:fedora/ldpd:10040","parent" : "info:fedora/ldpd:10044"}
+,{"child" : "info:fedora/ldpd:10026","parent" : "info:fedora/ldpd:10028"}
+,{"child" : "info:fedora/ldpd:10022","parent" : "info:fedora/ldpd:10024"}
+,{"child" : "info:fedora/ldpd:10020","parent" : "info:fedora/ldpd:10024"}
+,{"child" : "info:fedora/ldpd:10018","parent" : "info:fedora/ldpd:87283"}
+,{"child" : "info:fedora/ldpd:10044","parent" : "info:fedora/ldpd:87283"}
+,{"child" : "info:fedora/ldpd:10028","parent" : "info:fedora/ldpd:87283"}
+,{"child" : "info:fedora/ldpd:10024","parent" : "info:fedora/ldpd:87283"}
+]}

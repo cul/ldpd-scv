@@ -109,7 +109,7 @@ class SolrCollection
       end
     }
     self.paths=_paths
-    self.objects=_nodes
+    self.objects=_nodes.keys
   end
   def solr_query(query, start, rows, fl, collection_prefix=false)
     query_parms = {}
@@ -384,7 +384,7 @@ namespace :solr do
            base_obj.send :update_index
            successes += 1
          rescue Exception => e
-            puts "indexing into #{update_uri} threw error #{e.message}"
+            puts "indexing #{pid} into #{update_uri} threw error #{e.message}"
             puts e.backtrace
             exit(1)
          end
