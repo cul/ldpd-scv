@@ -15,9 +15,9 @@
         - if permitted_to? :fedora_content, Cul::Fedora::MimeDummy.new(resource), {:context => :download}
           %td
             - if resource[:mime_type].match(/tiff$/) or resource[:mime_type].match(/wav$/)
-              = link_to "[Download]", fedora_content_path("download", resource[:pid], resource[:dsid], resource[:image_file_name])
+              = link_to "[Download]", resource[:download_path]
             - else
-              = link_to "[Show]", fedora_content_path("show", resource[:pid], resource[:dsid], resource[:image_file_name])
+              = link_to "[Show]", resource[:show_path]
             = link_to "[DC]", resource[:dc_path] if resource[:dc_path]
         - else
           %td

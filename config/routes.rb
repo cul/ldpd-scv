@@ -9,7 +9,7 @@ Scv::Application.routes.draw do
 
 
   match '/download/fedora_content/:download_method/:uri/:block/:filename', 
-    :to => 'download#fedora_content',
+    :to => DownloadController.action(:fedora_content),
     :as => :fedora_content,
     :constraints => {
       :uri => /.+/,

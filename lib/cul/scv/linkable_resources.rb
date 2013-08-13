@@ -1,6 +1,23 @@
 module Cul
   module Scv
     module LinkableResources
+      # so as to avoid including all the url hepers via:
+      ## include Rails.application.routes.url_helpers
+      # we are just going to delegate
+      delegate :fedora_content_path,  :to => 'Rails.application.routes.url_helpers'
+      delegate :cache_path,  :to => 'Rails.application.routes.url_helpers'
+
+      def http_client
+        unless @http_client
+          @http_client ||= HTTPClient.new
+          @http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
+          uname = Cul::Fedora.repository.config[:user]
+          pwd = Cul::Fedora.repository.config[:password]
+          @http_client.set_auth(nil, uname, pwd)
+        end
+        @http_client
+      end
+
       def linkable_resources
         r = self.parts(:response_format => :solr)
         return [] if r.blank?
@@ -11,21 +28,28 @@ module Cul
         }
         members.delete_if { |sd| (sd[:has_model_s] & ["info:fedora/ldpd:Resource"]).blank? }
         case self.route_as
-          when "zoomingimage"
-            results = members.collect {|doc| image_resource(doc)}
-            base_id = base_id_for(document)
-            url = Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + base_id + "/SOURCE"
-            head_req = http_client.head(url)
-            file_size = head_req.header["Content-Length"].first.to_i
-            results << {:dimensions => "Original", :mime_type => "image/jp2", :show_path => fedora_content_path("show", base_id, "SOURCE", base_id + "_source.jp2"), :download_path => fedora_content_path("download", base_id , "SOURCE", base_id + "_source.jp2"), :content_models=>[]}  
-          when "audio"
-            results = members.collect {|doc| audio_resource(doc)}
-          when "image"
-            results = members.collect {|doc| image_resource(doc)}
-          else
-            raise "Unknown format #{format}"
-          end
-          return results
+        when "zoomingimage"
+          results = members.collect {|doc| image_resource(doc)}
+          base_id = self.pid
+          url = Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + base_id + "/SOURCE"
+          head_req = http_client().head(url)
+          file_size = head_req.header["Content-Length"].first.to_i
+          results << {
+            :dimensions => "Original",
+            :mime_type => "image/jp2",
+            :show_path =>
+              fedora_content_path(:download_method=>"show", :uri=>base_id, :block=>"SOURCE", :filename=>base_id + "_source.jp2"),
+            :download_path =>
+              fedora_content_path(:download_method=>"download", :uri=>base_id, :block=>"SOURCE", :filename=>base_id + "_source.jp2"),
+            :content_models=>[]}  
+        when "audio"
+          results = members.collect {|doc| audio_resource(doc)}
+        when "image"
+          results = members.collect {|doc| image_resource(doc)}
+        else
+          raise "Unknown format #{format}"
+        end
+        return results
       end
       
       def basic_resource(document)
@@ -56,10 +80,10 @@ module Cul
         dc_filename = base_filename + "_dc.xml"
         res[:image_file_name] = img_filename
         res[:dc_file_name] = dc_filename
-        #res[:show_path] = fedora_content_path("show", base_id, "CONTENT", img_filename)
-        #res[:cache_path] = cache_path("show", base_id, "CONTENT", img_filename)
-        #res[:download_path] = fedora_content_path("download", base_id, "CONTENT", img_filename)
-        #res[:dc_path] = fedora_content_path('show_pretty', base_id, "DC", dc_filename)
+        res[:show_path] = fedora_content_path(:download_method=>"show", :uri=>base_id, :block=>"CONTENT", :filename=>img_filename)
+        res[:download_path] = fedora_content_path(:download_method=>"download", :uri=>base_id, :block=>"CONTENT", :filename=>img_filename)
+        res[:dc_path] = fedora_content_path(:download_method=>"show_pretty", :uri=>base_id, :block=>"DC", :filename=>dc_filename)
+        res[:cache_path] = cache_path(:download_method=>"show", :uri=>base_id, :block=>"CONTENT", :filename=>img_filename)
         res
       end
 
@@ -76,11 +100,12 @@ module Cul
         end
         filename = base_filename + "." + ext
         dc_filename = base_filename + "_dc.xml"
-        res[:download_path] = fedora_content_path("download", base_id, "CONTENT", filename)
-        res[:dc_path] = fedora_content_path('show_pretty', base_id, "DC", dc_filename)
+        res[:download_path] = fedora_content_path(:download_method=>"download", :uri=>base_id, :block=>"CONTENT", :filename=>filename)
+        res[:dc_path] = fedora_content_path(:download_method=>"show_pretty", :uri=>base_id, :block=>"DC", :filename=>dc_filename)
         res
       end
       
     end
+
   end
 end
