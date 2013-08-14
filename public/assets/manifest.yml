@@ -125,6 +125,8 @@ cul_scv_hydra/crystal/multimedia2.png: cul_scv_hydra/crystal/multimedia2.png
 cul_scv_hydra/crystal/multimedia2/index.png: cul_scv_hydra/crystal/multimedia2.png
 cul_scv_hydra/crystal/video.png: cul_scv_hydra/crystal/video.png
 cul_scv_hydra/crystal/video/index.png: cul_scv_hydra/crystal/video.png
+jquery.min.map: jquery.min.map
+jquery/index.min.map: jquery.min.map
 glyphicons-halflings-white.png: glyphicons-halflings-white.png
 glyphicons-halflings-white/index.png: glyphicons-halflings-white.png
 glyphicons-halflings.png: glyphicons-halflings.png
@@ -149,5 +151,3 @@ blacklight/start_over.gif: blacklight/start_over.gif
 blacklight/start_over/index.gif: blacklight/start_over.gif
 favicon.ico: favicon.ico
 favicon/index.ico: favicon.ico
-jquery.min.map: jquery.min.map
-jquery/index.min.map: jquery.min.map
