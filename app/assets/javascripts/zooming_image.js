@@ -7,7 +7,7 @@ function init_map(_rft) {
   if (_rft == null) {
     return;
   }
-  metadataUrl = "http://seasnail.cc.columbia.edu:8080/adore-djatoka/resolver?url_ver=Z39.88-2004&rft_id=" + _rft + "&svc_id=info:lanl-repo/svc/getMetadata&svc_val_fmt=info:lanl-repo/svc/getMetadata/callback&svc.callback=?";
+  metadataUrl = "http://iris.cul.columbia.edu:8080/adore-djatoka/resolver?url_ver=Z39.88-2004&rft_id=" + _rft + "&svc_id=info:lanl-repo/svc/getMetadata&svc_val_fmt=info:lanl-repo/svc/getMetadata/callback&svc.callback=?";
   var metadata = new OpenLayers.Layer.OpenURL.Metadata(metadataUrl, setMetadata); // callbacks will actually use metadata
 
 }
@@ -21,7 +21,7 @@ function debugHash(object,label){
 }
 function setMetadata(metadata){
         var OUlayer = new OpenLayers.Layer.OpenURL( "OpenURL",
-          "http://seasnail.cc.columbia.edu:8080/", {layername: 'basic', format:'image/jpeg', rft_id:metadata['identifier'], imgMetadata: metadata} );
+          "http://iris.cul..columbia.edu:8080/", {layername: 'basic', format:'image/jpeg', rft_id:metadata['identifier'], imgMetadata: metadata} );
         
         var lyrMetadata = OUlayer.getImageMetadata();
         var resolutions = OUlayer.getResolutions();        

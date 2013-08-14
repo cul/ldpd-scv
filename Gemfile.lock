@@ -150,7 +150,7 @@ GEM
       json (>= 1.7.6)
     haml (4.0.0)
       tilt
-    hike (1.2.2)
+    hike (1.2.3)
     hooks (0.2.2)
     httparty (0.10.2)
       multi_json (~> 1.0)
@@ -185,9 +185,12 @@ GEM
       logger
       mediashelf-loggable
     journey (1.0.4)
-    jquery-rails (2.2.1)
+    jquery-rails (3.0.4)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
+    jquery-ui-rails (4.0.4)
+      jquery-rails
+      railties (>= 3.1.0)
     json (1.8.0)
     json_pure (1.7.7)
     kaminari (0.14.1)
@@ -204,7 +207,7 @@ GEM
     mime-types (1.23)
     mocha (0.13.2)
       metaclass (~> 0.0.1)
-    multi_json (1.7.3)
+    multi_json (1.7.9)
     multi_xml (0.5.3)
     multipart-post (1.2.0)
     mysql (2.9.1)
@@ -241,7 +244,7 @@ GEM
       rake (>= 0.8.7)
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
-    rake (10.0.4)
+    rake (10.1.0)
     rdf (1.0.3)
       addressable (>= 2.2)
     rdf-rdfxml (0.3.9)
@@ -370,6 +373,7 @@ DEPENDENCIES
   i18n
   jettywrapper (~> 0.0.10)
   jquery-rails
+  jquery-ui-rails
   json_pure (> 1.4.3)
   loggable
   mime-types

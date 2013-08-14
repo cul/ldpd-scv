@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
   end
 
   def openlayers_base
-   @olbase ||= 'http://www.columbia.edu/cu/libraries/inside/projects/imaging/jsonp-openlayers'
+   @olbase ||= 'http://www.columbia.edu/cu/libraries/inside/projects/imaging/openlayers'
   end
   def openlayers_js 
    @oljs ||= openlayers_base + '/lib/OpenLayers.js'
