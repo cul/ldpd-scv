@@ -21,14 +21,21 @@ function debugHash(object,label){
 }
 function setMetadata(metadata){
         var OUlayer = new OpenLayers.Layer.OpenURL( "OpenURL",
-          "http://iris.cul..columbia.edu:8080/", {layername: 'basic', format:'image/jpeg', rft_id:metadata['identifier'], imgMetadata: metadata} );
+          "http://iris.cul.columbia.edu:8080/", {layername: 'basic', format:'image/jpeg', rft_id:metadata['identifier'], imgMetadata: metadata} );
         
         var lyrMetadata = OUlayer.getImageMetadata();
         var resolutions = OUlayer.getResolutions();        
         var maxExtent = new OpenLayers.Bounds(0, 0, lyrMetadata.width, lyrMetadata.height);
         var tileSize = OUlayer.getTileSize();
         var options = {resolutions: resolutions, maxExtent: maxExtent, tileSize: tileSize};
-        if (!map) map = new OpenLayers.Map( 'map');
+        if (!map) {
+           map = new OpenLayers.Map( 'map', { controls: []});
+           map.addControl(new OpenLayers.Control.ZoomPanel());
+           map.addControl(new OpenLayers.Control.PanPanel());
+           map.addControl(new OpenLayers.Control.DragFeature());
+           map.addControl(new OpenLayers.Control.OverviewMap());
+           map.addControl(new OpenLayers.Control.KeyboardDefaults());
+        }
         if (layerId){
           var prev = map.getLayer(layerId);
           prev.destroy();
@@ -38,6 +45,7 @@ function setMetadata(metadata){
         map.addLayer(OUlayer);
         var lon = lyrMetadata.width / 2;
         var lat = lyrMetadata.height / 2;
-        map.setCenter(new OpenLayers.LonLat(lon, lat), 0);
+        map.zoomToMaxExtent();
+        //map.setCenter(new OpenLayers.LonLat(lon, lat), 0);
 }
 
