@@ -24,10 +24,9 @@ class StaticImageAggregator < ::ActiveFedora::Base
   def thumbnail_info
     candidate = nil
     max_dim = 0
-    resources(:response_format=>:id_array).each do |pid|
-      resource = Resource.find(pid)
-      width = resource.object_relations[CUL_WIDTH].first.to_s.to_i
-      length = resource.object_relations[CUL_LENGTH].first.to_s.to_i
+    linkable_resources().each do |resource|
+      width = resource[:width].to_s.to_i
+      length = resource[:length].to_s.to_i
       max = (width > length) ? width : length
       if max > max_dim and max <= 251
         candidate = resource
@@ -37,7 +36,7 @@ class StaticImageAggregator < ::ActiveFedora::Base
     if candidate.nil?
       return {:asset=>"cul_scv_hydra/crystal/file_broken.png",:mime=>'image/png'}
     else
-      return {:url=>"#{ActiveFedora.fedora_config.credentials[:url]}/objects/#{candidate.pid}/datastreams/CONTENT/content",:mime=>candidate.datastreams['CONTENT'].mimeType}
+      return {:url=>"#{ActiveFedora.fedora_config.credentials[:url]}/objects/#{candidate[:pid]}/datastreams/CONTENT/content",:mime=>candidate[:mime_type]}
     end
   end
 end
