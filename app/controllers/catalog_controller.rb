@@ -53,5 +53,19 @@ class CatalogController < ApplicationController
     Thread.current[:doc_cache].clear
     Thread.current[:doc_cache] = nil
   end
-  
+
+  def show
+    @response, @document = get_solr_response_for_doc_id
+    if @document[:format] == 'zoomingimage'
+          extra_head_content << [stylesheet_tag(openlayers_css, :media=>'all'), javascript_tag(openlayers_js)]
+    end
+
+    respond_to do |format|
+      format.html {setup_next_and_previous_documents}
+
+      @document.export_formats.each_key do | format_name |
+          format.send(format_name.to_sym) {render :text => @document.export_as(format_name), :layout=>false}
+      end
+    end
+  end
 end
