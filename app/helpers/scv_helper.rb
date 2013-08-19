@@ -125,7 +125,7 @@ module ScvHelper
     if _params[:rows].is_a? Array
       _params[:rows] =  _params[:rows].first
     end
-    logger.debug _params.inspect
+    puts _params.inspect
     resp = Blacklight.solr.find(_params)
     [resp, resp.docs]
   end
@@ -138,21 +138,22 @@ module ScvHelper
   end
   def get_groups_for_mash(document)
     if document.is_a? SolrDocument
-      groups = document.get(:cul_member_of_s) or document.get("cul_member_of_s")
+      groups = document.get(:cul_member_of_s, :sep=>nil)
     else
-      groups = document["cul_member_of_s"] or document[:cul_member_of_s]
+      groups = document[:cul_member_of_s]
     end
     return [] if groups.blank?
     cache = Thread.current[:doc_cache]
-    groups = [groups] if groups.is_a? String 
+    groups = [groups] if groups.is_a? String
     groups.collect! {|x| x.split(/\//,-1)[-1]}
-    adds = groups.find_all{|x| not cache.include? x}
+    adds = groups - cache.keys
     unless adds.blank?
       resp, docs = get_independent_solr_response_for_field_values("id",adds)
       adds = docs.collect {|g| SolrDocument.new(g)}
       adds.each {|x| cache[x.get(:id)] = x unless x.nil? }
     end
-    (groups.collect {|x| cache[x]}).compact
+    result = (groups.collect {|x| cache[x]}).compact
+    result
   end
 
   def get_rows(member_list, row_length)
