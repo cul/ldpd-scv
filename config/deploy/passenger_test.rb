@@ -1,5 +1,5 @@
 set :rails_env, "passenger_test"
-set :domain,      "rhys.cul.columbia.edu"
+set :domain,      "berlioz.cul.columbia.edu"
 set :deploy_to,   "/opt/passenger/scv_test/"
 set :user, "deployer"
 set :branch, "passenger_test"
