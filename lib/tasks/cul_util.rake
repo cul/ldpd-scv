@@ -28,9 +28,9 @@ namespace :util do
     mods_project_ptr = [:lib_project]
     mods_repo_ptr = [:location, :repo_code]
     # dc pointers
-    dc_title_ptr = [:dc, :title]
-    dc_id_ptr = [:dc, :identifier]
-    dc_clio_ptr = [:dc, :relation]
+    dc_title_ptr = [:dc, :dc_title]
+    dc_id_ptr = [:dc, :dc_identifier]
+    dc_clio_ptr = [:dc, :dc_relation]
 
     # do the work!
     IO.foreach(fpath) do |objuri|

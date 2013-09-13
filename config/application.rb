@@ -33,7 +33,8 @@ module Scv
     # config.i18n.default_locale = :de
 
     # JavaScript files you want as :defaults (application.js is always included).
-    # config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
+    #config.action_view.javascript_expansions[:defaults] = %w(<a href="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js">http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js</a> rails)
+    config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
 
     config.generators do |g|
       g.template_engine :haml
@@ -48,5 +49,6 @@ module Scv
     
     config.assets.enabled = true
     config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
+
   end
 end

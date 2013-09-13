@@ -1,0 +1,4 @@
+.document.thumbnail
+    = render :partial => 'document_header', :locals => { :document => document, :document_counter => document_counter }
+    = render_document_partial document, :thumbnail, :document_counter => document_counter
+    = render_document_partial_with_locals document, :index, :document_counter=>document_counter

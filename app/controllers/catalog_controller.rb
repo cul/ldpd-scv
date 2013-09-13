@@ -12,9 +12,7 @@ class CatalogController < ApplicationController
   
   before_filter :require_staff
   before_filter :search_session, :history_session
-  before_filter :delete_or_assign_search_session_params,  :only=>:index
   before_filter :cache_docs,  :only=>[:index, :show]
-  before_filter :adjust_for_results_view, :only=>:update
   after_filter :set_additional_search_session_values, :only=>:index
   after_filter :uncache_docs, :only=>[:index, :show]
   
@@ -28,7 +26,7 @@ class CatalogController < ApplicationController
   # The index action will more than likely throw this one.
   # Example, when the standard query parser is used, and a user submits a "bad" query.
   rescue_from RSolr::Error::Http, :with => :rsolr_request_error
-    
+  
   # single document image resource
   def image
   end
@@ -56,12 +54,14 @@ class CatalogController < ApplicationController
 
   def show
     @response, @document = get_solr_response_for_doc_id
-    if @document[:format] == 'zoomingimage'
+    if @document[:format_ssim] == 'zoomingimage'
           extra_head_content << [stylesheet_tag(openlayers_css, :media=>'all'), javascript_tag(openlayers_js)]
     end
 
     respond_to do |format|
       format.html {setup_next_and_previous_documents}
+
+      format.json { render json: {response: {document: @document}}}
 
       @document.export_formats.each_key do | format_name |
           format.send(format_name.to_sym) {render :text => @document.export_as(format_name), :layout=>false}

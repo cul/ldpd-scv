@@ -1,11 +1,2 @@
 #documents
-  - @response.docs.each_with_index do |document,counter| 
-
-    .document
-      
-      .container-fluid.documentHeader
-        .span9
-          = render_document_partial_with_locals document, :index_title, {:counter=>counter}
-        .span3
-          = render :partial=>'bookmark_control', :locals=>{:document=>document}
-      = render_document_partial_with_locals document, :index, {:counter=>counter}
+  = render :collection=>documents, :partial => :document

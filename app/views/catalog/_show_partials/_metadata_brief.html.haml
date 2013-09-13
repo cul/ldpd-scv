@@ -3,20 +3,20 @@
 %div
   %dl.dl-horizontal
     %dt="Title:"
-    %dd= (link)? (link_to_mash document) : document["title_display"]
+    %dd= (link)? (link_to_mash document) : document["title_ssm"][0]
     %dt="ID:"
-    - if document[:identifier_s]
-      - if document[:identifier_s].is_a? Array
-        - document[:identifier_s].each do |value|
+    - if document[:identifier_ssm]
+      - if document[:identifier_ssm].is_a? Array
+        - document[:identifier_ssm].each do |value|
           %dd= value
       - else
-        %dd= document[:identifier_s]
+        %dd= document[:identifier_ssm]
     - else
       %dd= document["id"]
-    - if document[:access_condition_s]
+    - if document[:access_condition_ssm]
       %dt.label.label-info="Access:"
-      - if document[:access_condition_s].is_a? Array
-        - document[:access_condition_s].each do |value|
+      - if document[:access_condition_ssm].is_a? Array
+        - document[:access_condition_ssm].each do |value|
           %dd= value
       - else
-        %dd= document[:access_condition_s]
+        %dd= document[:access_condition_ssm]

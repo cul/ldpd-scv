@@ -48,7 +48,7 @@ class Report < ActiveRecord::Base
 
     page = 0
     per_page = 100 
-    query_params = {:q => "", :fl => "format, object_display,id,collection_h", :per_page => per_page, :facets => {:fields => ['collection_h']}}
+    query_params = {:q => "", :fl => "format_ssim, object_ssm,id,collection_ssim", :per_page => per_page, :facets => {:fields => ['collection_h']}}
 
     while
       page_results = Blacklight.solr.find(query_params.merge(:page => page))

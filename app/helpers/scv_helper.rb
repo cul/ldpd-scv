@@ -63,10 +63,10 @@ module ScvHelper
   end
 
   def get_index_type_label(document)
-    unless document["index_type_label_s"]
-      logger.warn "did not expect #{document[:id]} to lack index_type_label_s"
+    unless document["index_type_label_ssm"]
+      logger.warn "did not expect #{document[:id]} to lack index_type_label_ssm"
     end
-    document["index_type_label_s"]
+    document["index_type_label_ssm"]
   end
   def update_doc(id, fields={})
       _solr = RSolr.connect :url => Blacklight.solr_config[:url]
@@ -82,7 +82,7 @@ module ScvHelper
     docs.each do |doc|
       logger.info "#{doc["id"]}  #{doc["format"]}"
       if imageOnly
-        if doc["format"] ==  "image"
+        if doc["format_ssi"] ==  "image"
           return [doc,docs.length]
         end
       else
@@ -94,7 +94,7 @@ module ScvHelper
 
   def get_members(document, format=:solr)
     klass = false
-    document[:has_model_s].each do |model|
+    document[:has_model_ssim].each do |model|
       klass ||= ActiveFedora::Model.from_class_uri(model)
     end
     klass ||= GenericAggregator
@@ -125,7 +125,6 @@ module ScvHelper
     if _params[:rows].is_a? Array
       _params[:rows] =  _params[:rows].first
     end
-    puts _params.inspect
     resp = Blacklight.solr.find(_params)
     [resp, resp.docs]
   end
@@ -138,9 +137,9 @@ module ScvHelper
   end
   def get_groups_for_mash(document)
     if document.is_a? SolrDocument
-      groups = document.get(:cul_member_of_s, :sep=>nil)
+      groups = document.get(:cul_member_of_ssim, :sep=>nil)
     else
-      groups = document[:cul_member_of_s]
+      groups = document[:cul_member_of_ssim]
     end
     return [] if groups.blank?
     cache = Thread.current[:doc_cache]
@@ -227,7 +226,7 @@ module ScvHelper
 
   def url_to_clio(document)
     if document.is_a? ActiveFedora::Base
-      clio_id = document.datastreams['descMetadata'].term_values(:clio)
+      clio_id = document.datastreams['descMetadata'].term_values(:clio_ssm)
       clio_id = clio_id.first unless clio_id.nil?
     else
       if document["clio_s"] and document["clio_s"].length > 0

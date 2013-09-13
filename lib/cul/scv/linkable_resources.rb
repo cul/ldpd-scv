@@ -21,12 +21,10 @@ module Cul
       def linkable_resources
         r = self.parts(:response_format => :solr)
         return [] if r.blank?
-        puts "r: " + r.inspect
-        # puts "r[\"response\"]: " + r["response"]
         members = r.collect {|hit|
           SolrDocument.new(hit)
         }
-        members.delete_if { |sd| (sd[:has_model_s] & ["info:fedora/ldpd:Resource"]).blank? }
+        members.delete_if { |sd| (sd[:has_model_ssim] & ["info:fedora/ldpd:Resource"]).blank? }
         case self.route_as
         when "zoomingimage"
           results = members.collect {|doc| image_resource(doc)}
@@ -47,7 +45,7 @@ module Cul
         when "image"
           results = members.collect {|doc| image_resource(doc)}
         else
-          raise "Unknown format #{format}"
+          raise "Unknown format #{self.route_as}"
         end
         return results
       end
@@ -56,19 +54,19 @@ module Cul
         res = {}
         res[:pid] = document["id"]
         res[:dsid] = "CONTENT"
-        res[:mime_type] = document["dc_format_t"] ? document["dc_format_t"].first : "application/octect-stream"
-        res[:content_models] = document["has_model_s"]
-        res[:file_size] = document["extent_s"].first.to_i
-        res[:size] = (document["extent_s"].first.to_i / 1024).to_s + " Kb"
+        res[:mime_type] = document["dc_format_ssm"] ? document["dc_format_ssm"].first : "application/octect-stream"
+        res[:content_models] = document["has_model_ssim"]
+        res[:file_size] = document["extent_ssim"].first.to_i
+        res[:size] = (document["extent_ssim"].first.to_i / 1024).to_s + " Kb"
         res
       end
 
       def image_resource(document)
         res = basic_resource(document)
-        if document["image_width_s"]
-          res[:dimensions] = document["image_width_s"].first + " x " + document["image_length_s"].first
-          res[:width] = document["image_width_s"].first
-          res[:height] = document["image_length_s"].first
+        if document["image_width_ssim"]
+          res[:dimensions] = document["image_width_ssim"].first + " x " + document["image_length_ssim"].first
+          res[:width] = document["image_width_ssim"].first
+          res[:height] = document["image_length_ssim"].first
         else
           res[:dimensions] = "? x ?"
           res[:width] = "0"
@@ -76,7 +74,7 @@ module Cul
         end
         base_id = document["id"]
         base_filename = base_id.gsub(/\:/,"")
-        img_filename = base_filename + "." + document["dc_format_t"].first.gsub(/^[^\/]+\//,"")
+        img_filename = base_filename + "." + document["dc_format_ssm"].first.gsub(/^[^\/]+\//,"")
         dc_filename = base_filename + "_dc.xml"
         res[:image_file_name] = img_filename
         res[:dc_file_name] = dc_filename

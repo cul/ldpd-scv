@@ -13,9 +13,9 @@ gem 'arel'
 gem 'actionmailer'
 gem 'sass'
 gem 'sass-rails',   '~> 3.2.3'
-gem "bootstrap-sass", "~>2.1"
-gem 'compass'
-gem 'compass-rails'
+gem "bootstrap-sass", "~>2.1.0.0"
+#gem 'compass'
+#gem 'compass-rails'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 # Gems used only for assets and not required
@@ -24,20 +24,20 @@ group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.0.3'
-  gem "bootstrap-sass", "~>2.1"
-  gem 'compass-rails'
+  gem "bootstrap-sass", "~>2.1.0.0"
+#  gem 'compass-rails'
 end
 gem "unicode", :platforms => [:mri_18, :mri_19]
-gem "hydra-head"
+gem "hydra-head", "6.2.2"
 # gem "active-fedora", '~>4.5.0'
-gem 'active-fedora', '~>5.0'
+gem 'active-fedora', '~>6.1.1'
 gem 'active_fedora_finders', '~>0.3.0'
-gem "active_fedora_relsint"
+gem "active_fedora_relsint", :git=>'https://github.com/projecthydra/active_fedora_relsint.git', :branch=>'master'
 gem 'active_fedora_streamable', '~>0.3.0'
 gem 'columnize'
 gem 'crack'
 gem 'cul_image_props'
-gem 'cul_scv_hydra' , '~>0.7.0'
+gem 'cul_scv_hydra' , :git=>'https://github.com/cul/cul_scv_hydra.git', :branch=>'master'
 gem 'curb'
 gem 'database_cleaner'
 gem 'declarative_authorization', '0.5.3'
@@ -60,7 +60,7 @@ gem 'rake'
 # gem 'rcov'
 gem 'rsolr', '1.0.6' # Default to using the version required by Blacklight
 gem 'rsolr-ext' # Default to using the version required by Blacklight
-gem 'rubydora' #, :path => "/opt/project_hydra/rubydora"
+gem 'rubydora', :git=>'https://github.com/barmintor/rubydora.git', :branch=>'fetch-profiles'
 gem 'RedCloth', '>=4.2.3'
 gem 'solr-ruby' 
 gem 'sprockets'
@@ -70,7 +70,7 @@ gem 'block_helpers'
 gem 'sanitize'
 group :development do
   gem 'yard'
-  gem 'jettywrapper', "~> 0.0.10"
+  gem 'jettywrapper', ">= 1.4.1"
 #  gem 'ruby-debug19'
 #  gem 'ruby-debug-base19'
   gem 'rspec', '>= 2.0.0'  

@@ -1,0 +1,5 @@
+.container-fluid.documentHeader
+  .span9
+    = render_document_partial document, :index_title, {:document=>document,:label=>true,:document_counter=>document_counter}
+  .span3
+    = render :partial=>'bookmark_control', :locals=>{:document=>document}  

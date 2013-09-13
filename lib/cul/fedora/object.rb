@@ -27,11 +27,11 @@ hd
      if @memberquery
        @memberquery
      else
-       if document[:pid_s]
-         if document[:pid_s].kind_of? String
-           @memberquery = MEMBER_QUERY_TEMPLATE.gsub(/\$PID/,document[:pid_s])
+       if document[:pid_ssi]
+         if document[:pid_ssi].kind_of? String
+           @memberquery = MEMBER_QUERY_TEMPLATE.gsub(/\$PID/,document[:pid_ssi])
          else
-           @memberquery = MEMBER_QUERY_TEMPLATE.gsub(/\$PID/,document[:pid_s].first)
+           @memberquery = MEMBER_QUERY_TEMPLATE.gsub(/\$PID/,document[:pid_ssi].first)
          end
        else
          _pid = document[:id]
@@ -48,10 +48,10 @@ hd
      if @memberquery
        @memberquery
      else
-       if document[:pid_s].kind_of? String
-         @memberquery = MEMBER_QUERY_TEMPLATE.gsub(/\$PID/,document[:pid_s])
+       if document[:pid_ssi].kind_of? String
+         @memberquery = MEMBER_QUERY_TEMPLATE.gsub(/\$PID/,document[:pid_ssi])
        else
-         @memberquery = MEMBER_QUERY_TEMPLATE.gsub(/\$PID/,document[:pid_s].first)
+         @memberquery = MEMBER_QUERY_TEMPLATE.gsub(/\$PID/,document[:pid_ssi].first)
        end
        @memberquery
      end
@@ -63,10 +63,10 @@ hd
       def initialize(document, client=HTTPClient.new)
         @riurl = Cul::Fedora::ResourceIndex.config[:riurl] + '/risearch'
         @http_client = client
-        if document[:pid_s].nil?
+        if document[:pid_ssi].nil?
             _pid = document[:id].split('@')[0]
         else
-          _pid = (document[:pid_s].kind_of? String) ? document[:pid_s] : document[:pid_s].first
+          _pid = (document[:pid_ssi].kind_of? String) ? document[:pid_ssi] : document[:pid_ssi].first
         end
         @metadataquery = Cul::Fedora::Aggregator::DESCRIPTION_QUERY_TEMPLATE.gsub(/\$PID/,_pid)
         @triplesquery = Cul::Fedora::TRIPLES_QUERY_TEMPLATE.gsub(/\$PID/,_pid)

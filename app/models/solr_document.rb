@@ -4,7 +4,7 @@ class SolrDocument
   include Blacklight::Solr::Document
   
   # The following shows how to setup this blacklight document to display marc documents
-  extension_parameters[:marc_source_field] = :marc_display
+  extension_parameters[:marc_source_field] = :marc_ssm
   extension_parameters[:marc_format_type] = :marcxml
   
   # Email uses the semantic field mappings below to generate the body of an email.
@@ -20,9 +20,9 @@ class SolrDocument
   # Recommendation: Use field names from Dublin Core
   use_extension( Blacklight::Solr::Document::DublinCore)    
   field_semantics.merge!(    
-                         :title => "title_display",
-                         :author => "author_display",
-                         :language => "language_facet",
-                         :format => "format"
+                         :title => "title_ssm",
+                         :author => "author_ssm",
+                         :language => "language_sim",
+                         :format => "format_ssim"
                          )
 end

@@ -45,33 +45,33 @@ class BlacklightConfiguration
     config[:unique_key] = :id
 
     # solr field values given special treatment in the show (single result) view
-    config.show.html_title = 'title_display'
-    config.show.heading = 'title_display'
-    config.show.display_type = :format
+    config.show.html_title = 'title_ssm'
+    config.show.heading = 'title_ssm'
+    config.show.display_type = :format_ssi
 
     # solr fld values given special treatment in the index (search results) view
-    config.index.show_link = 'title_display'
-    config.index.record_display_type = :format
+    config.index.show_link = 'title_ssm'
+    config.index.record_display_type = :format_ssi
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
     # TODO: Reorganize facet data structures supplied in config to make simpler
     # for human reading/writing, kind of like search_fields. Eg,
     # config[:facet] << {:field_name => "format", :label => "Format", :limit => 10}
-    config.add_facet_field "lib_project_facet", :label => "Projects", :limit => 10 #, :sort => "index"
-    config.add_facet_field "lib_name_facet", :label => "Names", :limit => 10, :sort => "index"
-    config.add_facet_field "lib_date_facet", :label => "Dates", :limit => 10, :sort => "count"
-    config.add_facet_field "lib_format_facet", :label => "Formats", :limit => 10 #, :sort => "count"
-    config.add_facet_field "lib_collection_facet", :label => "Collections" #, :limit => 10, :sort => "index"
-    config.add_facet_field "lib_repo_facet", :label => "Repositories", :limit => 10 #, :sort => "index"
-    config.add_facet_field "subject_topic_facet", :label => "Topics", :limit => 10, :sort => "count"
-    config.add_facet_field "language_facet", :label => "Languages", :limit => 10, :sort => "count"
-    config.add_facet_field "subject_geo_facet", :label => "Regions", :limit => 10, :sort => "count"
-    config.add_facet_field "subject_era_facet", :label => "Eras", :limit => 10, :sort => "count"
+    config.add_facet_field "lib_project_sim", :label => "Projects", :limit => 10, :sort => "index"
+    config.add_facet_field "lib_name_sim", :label => "Names", :limit => 10, :sort => "index"
+    config.add_facet_field "lib_date_sim", :label => "Dates", :limit => 10, :sort => "count"
+    config.add_facet_field "lib_format_sim", :label => "Formats", :limit => 10 #, :sort => "count"
+    config.add_facet_field "lib_collection_sim", :label => "Collections", :limit => 10, :sort => "index"
+    config.add_facet_field "lib_repo_sim", :label => "Repositories", :limit => 10 #, :sort => "index"
+    config.add_facet_field "subject_topic_sim", :label => "Topics", :limit => 10, :sort => "count"
+    config.add_facet_field "language_sim", :label => "Languages", :limit => 10, :sort => "count"
+    config.add_facet_field "subject_geo_sim", :label => "Regions", :limit => 10, :sort => "count"
+    config.add_facet_field "subject_era_sim", :label => "Eras", :limit => 10, :sort => "count"
 
     if !Rails.env.eql?"passenger_prod"
-      config.add_facet_field "format", :label => "Routed As", :limit => 10
-      config.add_facet_field "descriptor", :label => "Metadata Type", :limit => 10
+      config.add_facet_field "format_ssim", :label => "Routed As", :limit => 10
+      config.add_facet_field "descriptor_ssim", :label => "Metadata Type", :limit => 10
     end
 
     # Have BL send all facet field names to Solr, which has been the default
@@ -79,23 +79,22 @@ class BlacklightConfiguration
     # handler defaults, or have no facets.
     #config.default_solr_params[:'facet.field'] = config.facet_fields.keys
 
-    config.add_index_field "title_display", :label => "Title:"
-    config.add_index_field "title_vern_display", :label => "Title:"
-    config.add_index_field "lib_name_facet", :label => "Names:"
-    config.add_index_field "lib_repo_facet", :label => "Repository:"
-    config.add_index_field "lib_collection_facet", :label => "Collection:"
-    config.add_index_field "author_display", :label => "Author:"
-    config.add_index_field "author_vern_display", :label => "Author:"
-    config.add_index_field "lib_format_facet", :label => "Format:"
-    config.add_index_field "format", :label => "Routing:"
-    config.add_index_field "clio_s", :label => "CLIO Id:"
-    config.add_index_field "extent_display", :label => "Extent:"
-    config.add_index_field "lib_project_facet", :label => "Project:"
-    config.add_index_field "language_facet", :label => "Language:"
-    config.add_index_field "published_display", :label => "Published:"
-    config.add_index_field "object_display", :label => "In Fedora:"
-    config.add_index_field "cul_member_of_s"
-    config.add_index_field "index_type_label_s"
+    config.add_index_field "title_ssm", :label => "Title:"
+    config.add_index_field "title_vern_ssm", :label => "Title:"
+    config.add_index_field "lib_name_ssm", :label => "Names:"
+    config.add_index_field "lib_repo_ssm", :label => "Repository:"
+    config.add_index_field "lib_collection_ssm", :label => "Collection:"
+    config.add_index_field "author_ssm", :label => "Author:"
+    config.add_index_field "author_vern_ssm", :label => "Author:"
+    config.add_index_field "lib_format_ssm", :label => "Format:"
+    config.add_index_field "format_ssim", :label => "Routing:"
+    config.add_index_field "clio_ssm", :label => "CLIO Id:"
+    config.add_index_field "extent_ssm", :label => "Extent:"
+    config.add_index_field "lib_project_ssm", :label => "Project:"
+    config.add_index_field "published_ssm", :label => "Published:"
+    config.add_index_field "object_ssm", :label => "In Fedora:"
+    config.add_index_field "cul_member_of_ssim"
+    config.add_index_field "index_type_label_ssm"
     config.add_index_field "resource_json"
 
     # solr fields to be displayed in the index (search results) view
@@ -103,25 +102,24 @@ class BlacklightConfiguration
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display 
-    config.add_show_field "title_display", :label=>"Title:"
-    config.add_show_field "title_vern_display", :label=>"Title:"
-    config.add_show_field "subtitle_display", :label=>"Subtitle:"
-    config.add_show_field "subtitle_vern_display", :label=>"Subtitle:"
-    config.add_show_field "author_display", :label=>"Author:"
-    config.add_show_field "author_vern_display", :label=>"Author:"
-    config.add_show_field "lib_format_display", :label=>"Format:"
-    config.add_show_field "format", :label=>"Routing:"
-    config.add_show_field "lib_collection_display", :label=>"Collection:"
-    config.add_show_field "lib_repo_display", :label=>"Repository:"
-    config.add_show_field "url_fulltext_display", :label=>"URL:"
-    config.add_show_field "url_suppl_display", :label=>"More Information:"
-    config.add_show_field "material_type_display", :label=>"Physical Description:"
-    config.add_show_field "language_facet", :label=>"Language:"
-    config.add_show_field "published_display", :label=> "Published:"
-    config.add_show_field "published_vern_display", :label=> "Published:"
-    config.add_show_field "lc_callnum_display", :label=> "Call number:"
-    config.add_show_field "object_display", :label=> "In Fedora:"
-    config.add_show_field "isbn_t", :label=> "ISBN:"
+    config.add_show_field "title_ssm", :label=>"Title:"
+    config.add_show_field "title_vern_ssm", :label=>"Title:"
+    config.add_show_field "subtitle_ssm", :label=>"Subtitle:"
+    config.add_show_field "subtitle_vern_ssm", :label=>"Subtitle:"
+    config.add_show_field "author_ssm", :label=>"Author:"
+    config.add_show_field "author_vern_ssm", :label=>"Author:"
+    config.add_show_field "lib_format_ssm", :label=>"Format:"
+    config.add_show_field "format_ssim", :label=>"Routing:"
+    config.add_show_field "lib_collection_ssm", :label=>"Collection:"
+    config.add_show_field "lib_repo_ssm", :label=>"Repository:"
+    config.add_show_field "url_fulltext_ssm", :label=>"URL:"
+    config.add_show_field "url_suppl_ssm", :label=>"More Information:"
+    config.add_show_field "material_type_ssm", :label=>"Physical Description:"
+    config.add_show_field "published_ssm", :label=> "Published:"
+    config.add_show_field "published_vern_ssm", :label=> "Published:"
+    config.add_show_field "lc_callnum_ssm", :label=> "Call number:"
+    config.add_show_field "object_ssm", :label=> "In Fedora:"
+    config.add_show_field "isbn_ssim", :label=> "ISBN:"
 
   # "fielded" search configuration. Used by pulldown among other places.
     config.add_search_field("text") do |field|
@@ -164,9 +162,9 @@ class BlacklightConfiguration
     # whether the sort is ascending or descending (it must be asc or desc
     # except in the relevancy case).
     # label is key, solr field is value
-    config.add_sort_field 'score desc, title_sort asc, date_created_dt desc', :label => 'relevance'
-    config.add_sort_field 'date_created_dt desc, title_sort asc', :label => 'year'
-    config.add_sort_field 'title_sort asc, date_created_dt desc', :label => 'title'
+    config.add_sort_field 'score desc, title_si asc, lib_date_dtsi desc', :label => 'relevance'
+    config.add_sort_field 'lib_date_dtsi desc, title_si asc', :label => 'year'
+    config.add_sort_field 'title_si asc, lib_date_dtsi desc', :label => 'title'
 
     # If there are more than this many search results, no spelling ("did you 
     # mean") suggestion is offered.

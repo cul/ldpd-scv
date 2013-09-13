@@ -4,7 +4,6 @@ module Cul
       extend ActiveSupport::Concern
       
       def load_inbound_relationship(name, predicate, opts={})
-        puts "name: #{name} predicate: #{predicate} opts: #{opts.inspect}"
         super
       end
 

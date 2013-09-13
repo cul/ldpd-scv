@@ -1,12 +1,9 @@
 - label ||= false
-- counter ||= nil
-- if !(counter.nil?)
-  - counter = counter.to_i  + @response[:start].to_i + 1
-- else
-  - counter = nil
+- document_counter ||= -1
+- data_counter = (document_counter + 1 + @response.params[:start].to_i)
 - href ||= url_to_document(document)
 - if label
   %div.item_type
     %span.item_type="PART"
-%a{:href=>href}
+%a{:href=>href, :'data-counter'=>data_counter}
   %img{:src=>"#{thumbnail_path(document[:id])}",:class=>"thumbnail"} 
