@@ -15,16 +15,9 @@ GIT
       rest-client
 
 GIT
-  remote: https://github.com/projecthydra/active_fedora_relsint.git
-  revision: f0c6bf091a4007e73b39efa41592df04961854c3
+  remote: https://github.com/cul/cul_scv_hydra.git
+  revision: 9fe0f2ffa0035fc00cd1ec41c8f354934f39da36
   branch: master
-  specs:
-    active_fedora_relsint (0.2.0)
-      active-fedora (>= 6.0)
-      activesupport (>= 3.2.0, < 5.0)
-
-PATH
-  remote: /Users/ba2213/Github/cul_scv_hydra
   specs:
     cul_scv_hydra (0.8.0)
       active-fedora (~> 6.1.1)
@@ -35,6 +28,15 @@ PATH
       hydra-head (= 6.2.2)
       om (~> 2.1.0)
       solrizer (~> 3.0.0)
+
+GIT
+  remote: https://github.com/projecthydra/active_fedora_relsint.git
+  revision: f0c6bf091a4007e73b39efa41592df04961854c3
+  branch: master
+  specs:
+    active_fedora_relsint (0.2.0)
+      active-fedora (>= 6.0)
+      activesupport (>= 3.2.0, < 5.0)
 
 GEM
   remote: http://rubygems.org/
