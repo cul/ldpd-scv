@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/barmintor/rubydora.git
+  remote: git://github.com/barmintor/rubydora.git
   revision: 5e228697ee506a5ee2080a6a86212669a77b13ed
   branch: fetch-profiles
   specs:
@@ -15,7 +15,7 @@ GIT
       rest-client
 
 GIT
-  remote: https://github.com/cul/cul_scv_hydra.git
+  remote: git://github.com/cul/cul_scv_hydra.git
   revision: 9fe0f2ffa0035fc00cd1ec41c8f354934f39da36
   branch: master
   specs:
@@ -30,7 +30,7 @@ GIT
       solrizer (~> 3.0.0)
 
 GIT
-  remote: https://github.com/projecthydra/active_fedora_relsint.git
+  remote: git://github.com/projecthydra/active_fedora_relsint.git
   revision: f0c6bf091a4007e73b39efa41592df04961854c3
   branch: master
   specs:
