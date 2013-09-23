@@ -14,12 +14,13 @@
 
     = render :partial => 'did_you_mean'
 
-    = render 'results_pagination'
+    %div.pageEntriesInfo
+      = render 'results_pagination'
 
     %h2.hide-text = t('blacklight.search.search_results')
     = render_document_index
 
     %div.pageEntriesInfo
-    = render 'results_pagination'
+      = render 'results_pagination'
     - unless Rails.env == 'passenger_prod'
       = render :partial=>'solr_request'

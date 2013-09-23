@@ -125,7 +125,8 @@ class BlacklightConfiguration
     config.add_search_field("all_text_timv") do |field|
       field.label = 'All Fields'
       field.solr_parameters = {
-        :qt=>"search"
+        :qt=>"search",
+        :qf=>["all_text_timv"]
       }
     end
 
@@ -133,7 +134,7 @@ class BlacklightConfiguration
       field.label = 'Title'
       field.solr_parameters = {
         :qt=>"title_search",
-        :qf=>[],
+        :qf=>["search_title_info_search_title_teim"],
         :"spellcheck.dictionary" => "title"
       }
     end
@@ -142,7 +143,7 @@ class BlacklightConfiguration
       field.label = 'Name'
       field.solr_parameters = {
         :qt=>"name_search",
-        :qf=>[],
+        :qf=>["lib_name_teim"],
         :"spellcheck.dictionary" => "name"
       }
     end
@@ -151,7 +152,7 @@ class BlacklightConfiguration
       field.label = 'CLIO ID'
       field.solr_parameters = {
         :qt=>"clio_search",
-        :qf=>[],
+        :qf=>["clio_sim"],
         :"spellcheck.dictionary" => "clio"
       }
     end
