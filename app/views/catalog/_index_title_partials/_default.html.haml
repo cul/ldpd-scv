@@ -4,18 +4,7 @@
     = (document_counter + 1 + @response.params[:start].to_i).to_s + '.'
 = link_to_mash(document, :label=>document_show_link_field, :counter => (document_counter + 1 + @response.params[:start].to_i)) + ((document[document_show_link_field][0].match(/\.$/)) ? '' : '.')
 - groups = get_groups(document)
-  - groups = get_groups(document)
 - if groups.length > 0
   .index_title
-    - _links = groups.collect {|g| link_to_mash(g,:label=>document_show_link_field)}
-    %span.from_groups!="&nbsp;From: #{_links.join(',')}.&nbsp;"
-.index_metadata
-  - if document["lib_date_ssm"]
-    = (document["lib_date_ssm"][0] + ".&nbsp;").html_safe
-  - if document["lib_name_ssm"]
-    = (document["lib_name_ssm"][0] + ".&nbsp;").html_safe
-  - if document["extent_ssi"]
-    = (document["extent_ssi"][0] + ".&nbsp;").html_safe
-  = document["lib_repo_ssm"]
-  - if document["lib_collection_ssm"]
-    = " - " + document["lib_collection_ssm"].join(',')
+    %span.from_groups!=groups_text(groups)
+.index_metadata=index_title_text(document)

@@ -36,5 +36,27 @@ module Scv
       "#{display_type.gsub("-"," ")}".parameterize("_").to_s
     end
     
+    def index_title_text(document)
+      text = ""
+      if document["lib_date_ssm"]
+        text += (document["lib_date_ssm"][0] + ".&nbsp;")
+      end
+      if document["lib_name_ssm"]
+        text += (document["lib_name_ssm"][0] + ".&nbsp;")
+      end
+      if document["extent_ssi"]
+        text += (document["extent_ssi"][0] + ".&nbsp;")
+      end
+      text += document["lib_repo_ssm"][0] if document["lib_repo_ssm"]
+      if document["lib_collection_ssm"]
+        text += (" - " + document["lib_collection_ssm"].join(','))
+      end
+      text.html_safe
+    end
+
+    def groups_text(groups)
+      links = groups.collect {|g| link_to_mash(g,:label=>document_show_link_field)}
+      "&nbsp;From: #{links.join(',')}.&nbsp;"
+    end
   end
 end

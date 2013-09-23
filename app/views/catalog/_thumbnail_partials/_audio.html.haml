@@ -1,3 +1,4 @@
+-# coding: utf-8
 - label ||= false
 - document_counter ||= -1
 - data_counter = (document_counter + 1 + @response.params[:start].to_i)
@@ -6,4 +7,4 @@
   %div.item_type
     %span.item_type="PART"
 %a{:href=>href, :'data-counter'=>data_counter}
-  %img{:src=>"#{thumbnail_path(document[:id])}",:class=>"thumbnail"} 
+  %img{:src=>"#{thumbnail_path(document[:id])}"}

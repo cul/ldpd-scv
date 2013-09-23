@@ -122,14 +122,14 @@ class BlacklightConfiguration
     config.add_show_field "isbn_ssim", :label=> "ISBN:"
 
   # "fielded" search configuration. Used by pulldown among other places.
-    config.add_search_field("text") do |field|
+    config.add_search_field("all_text_timv") do |field|
       field.label = 'All Fields'
       field.solr_parameters = {
         :qt=>"search"
       }
     end
 
-    config.add_search_field("title") do |field|
+    config.add_search_field("search_title_info_search_title_teim") do |field|
       field.label = 'Title'
       field.solr_parameters = {
         :qt=>"title_search",
@@ -138,7 +138,7 @@ class BlacklightConfiguration
       }
     end
 
-    config.add_search_field("name") do |field|
+    config.add_search_field("lib_name_teim") do |field|
       field.label = 'Name'
       field.solr_parameters = {
         :qt=>"name_search",
@@ -147,7 +147,7 @@ class BlacklightConfiguration
       }
     end
 
-    config.add_search_field("clio") do |field|
+    config.add_search_field("clio_sim") do |field|
       field.label = 'CLIO ID'
       field.solr_parameters = {
         :qt=>"clio_search",

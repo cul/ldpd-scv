@@ -1,11 +1,10 @@
 -# coding: utf-8
-- label = get_index_type_label(document)
+- label ||= false
 - document_counter ||= -1
 - data_counter = (document_counter + 1 + @response.params[:start].to_i)
 - href ||= url_to_document(document)
-%div.thumbnail-image
-	%a{:href=>href, :'data-counter'=>data_counter}
-		%img{:src=>thumbnail_path(document[:id]), :alt=>""}
-- if label
-	.label.label-info
-		="#{label} ITEM"
+.thumbnail
+  %a{:href=>href, :'data-counter'=>data_counter}
+    %img{:src=>"#{thumbnail_path(document[:id])}"}
+  - if label
+    .label="#{label} ITEM"
