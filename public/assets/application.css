@@ -9913,3 +9913,6 @@ DIV.smallmap {
  width:800px;
  height:600px;
 }
+DIV.forceChange {
+ color: #fff;
+}
