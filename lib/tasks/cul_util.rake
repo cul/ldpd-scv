@@ -15,6 +15,54 @@ namespace :util do
     ENV['RAILS_ENV'] ||= 'development'
     ActiveFedora.init :fedora_config_path =>"config/fedora.yml", :solr_config_path => "config/solr.yml"
   end
+  desc "iterate over a list of pids adding project title if necessary"
+  task :add_project => :configure do
+    p_title = ENV['TITLE']
+    yield unless p_title
+    fpath = ENV['LIST']
+    yield unless fpath and File.exist? fpath
+    ns = {'mods'=>'http://www.loc.gov/mods/v3'}
+    # do the work!
+    IO.foreach(fpath) do |objuri|
+      objuri.strip!
+      begin
+        o = ContentAggregator.find(objuri)
+        xml = o.descMetadata.ng_xml
+        coll = xml.xpath('/mods:mods/mods:relatedItem[@displayLabel=\'Collection\']')
+        project = xml.xpath('/mods:mods/mods:relatedItem[@displayLabel=\'Project\']')
+
+        if !project.empty?
+          puts "skipping #{o.pid} = #{project[0].text}"
+          next
+        end
+        if coll.empty?
+          puts "skipping #{o.pid} (no collection)"
+          next
+        end
+
+        coll = coll[0]
+        new_related = Nokogiri::XML::Node.new("mods:relatedItem", xml)
+        new_related['displayLabel'] = 'Project'
+        new_related['type'] = 'host'
+        coll.add_next_sibling(new_related)
+        new_title_info = Nokogiri::XML::Node.new("mods:titleInfo", xml)
+        new_title =  Nokogiri::XML::Node.new("mods:title", xml)
+        new_related.add_child new_title_info
+        new_title_info.add_child new_title 
+        new_title.add_child Nokogiri::XML::Text.new(p_title, xml)
+        project = xml.xpath('/mods:mods/mods:relatedItem[@displayLabel=\'Project\']')
+        if (!project.empty?)
+          puts "success #{o.pid} = #{project[0].text}"
+          o.descMetadata.content = xml.to_xml
+          o.save
+        else
+          puts "failure #{o.pid}"
+        end
+      rescue Exception=>e
+        puts "error adding project to #{objuri}"
+      end
+    end
+  end
   desc "iterate over a file of fedora uri's, moving DC metadata to mods if necessary"
   task :correct_metadata => :configure do
     fpath = ENV['LIST']
