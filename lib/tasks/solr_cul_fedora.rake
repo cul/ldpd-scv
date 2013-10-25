@@ -298,6 +298,10 @@ namespace :solr do
          urls = url_list.start { |http| http.get(uri.path).body }
          url_list.finish
          urls
+       when ENV['PID_LIST']
+         url_array = []
+         File.readlines(ENV['PID_LIST']).each {|pid| url_array << pid.strip}
+         url_array
        when ENV['COLLECTION_PID']
          solr_url = ENV['SOLR'] || Blacklight.solr_config[:url]
          collection = BagAggregator.find_by_identifier(ENV['COLLECTION_PID'])
