@@ -12,4 +12,19 @@ class BagAggregator < ::ActiveFedora::Base
   def route_as
     "collection"
   end
+  
+  def thumbnail_info
+    members = part_ids
+    if members.length > 1
+      return {:asset=>"cul_scv_hydra/crystal/kmultiple.png",:mime=>'image/png'}
+    elsif members.length == 0
+      return {:asset=>"cul_scv_hydra/crystal/file.png",:mime=>'image/png'}
+    else
+      member = ActiveFedora::Base.find(members[0], :cast=>true)
+      if member.respond_to? :thumbnail_info
+        return member.thumbnail_info
+      end
+    end
+    return {:asset=>"cul_scv_hydra/crystal/file.png",:mime=>'image/png'}
+  end
 end
