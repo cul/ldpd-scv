@@ -74,6 +74,8 @@ class BlacklightConfiguration
       config.add_facet_field "descriptor_ssim", :label => "Metadata Type", :limit => 10
     end
 
+    config.add_facet_fields_to_solr_request!
+
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
     # handler defaults, or have no facets.
