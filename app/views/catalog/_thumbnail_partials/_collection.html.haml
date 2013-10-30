@@ -6,6 +6,4 @@
   .relative-box
     %a{:href=>href, :'data-counter'=>data_counter, :class=>'thumbnail-link'}
       %img{:src=>"#{thumbnail_path(document[:id])}"} 
-    - if label
-      .label="GROUP/COLLECTION"
     =image_tag("crystal/kmultiple_overlay.png", :class=>"thumb-overlay")
