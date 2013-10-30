@@ -1,10 +1,11 @@
 -# coding: utf-8
-- label ||= false
 - document_counter ||= -1
 - data_counter = (document_counter + 1 + @response.params[:start].to_i)
 - href ||= url_to_document(document)
 .thumbnail
-  %a{:href=>href, :'data-counter'=>data_counter}
-    %img{:src=>"#{thumbnail_path(document[:id])}"} 
-  - if label
-    .label="GROUP/COLLECTION"
+  .relative-box
+    %a{:href=>href, :'data-counter'=>data_counter, :class=>'thumbnail-link'}
+      %img{:src=>"#{thumbnail_path(document[:id])}"} 
+    - if label
+      .label="GROUP/COLLECTION"
+    =image_tag("crystal/kmultiple_overlay.png", :class=>"thumb-overlay")

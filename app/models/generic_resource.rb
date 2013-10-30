@@ -48,9 +48,10 @@ class GenericResource < ::ActiveFedora::Base
     thumb = rels_int.relationships(datastreams['content'],:foaf_thumbnail).first
     if thumb
       t_dsid = thumb.object.to_s.split('/')[-1]
-      return {:url=>"#{ActiveFedora.fedora_config.credentials[:url]}/objects/#{pid}/datastreams/#{t_dsid}/content",:mime=>datastreams[t_dsid].mimeType}
+      t_url = "#{ActiveFedora.fedora_config.credentials[:url]}/objects/#{pid}/datastreams/#{t_dsid}/content"
+      return {:url=>t_url,:mime=>datastreams[t_dsid].mimeType}
     else
-      return {:asset=>"cul_scv_hydra/crystal/file.png",:mime=>'image/png'}
+      return {:asset=>"crystal/file.png",:mime=>'image/png'}
     end
   end
   

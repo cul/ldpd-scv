@@ -33,7 +33,7 @@ class StaticImageAggregator < ::ActiveFedora::Base
       end
     end
     if candidate.nil?
-      return {:asset=>"cul_scv_hydra/crystal/file_broken.png",:mime=>'image/png'}
+      return {:asset=>"crystal/file_broken.png",:mime=>'image/png'}
     else
       return {:url=>"#{ActiveFedora.fedora_config.credentials[:url]}/objects/#{candidate[:pid]}/datastreams/CONTENT/content",:mime=>candidate[:mime_type]}
     end

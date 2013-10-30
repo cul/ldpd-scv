@@ -3,7 +3,7 @@ class ThumbnailsController < ActionController::Base
   NO_THUMB = Rails.root.join("public/images/crystal/file.png")
   BROKEN_THUMB = Rails.root.join("public/images/crystal/file_broken.png")
   COLLECTION_THUMB = Rails.root.join("public/images/crystal/kmultiple.png")
-  AUDIO_THUMB = Rails.root.join("public/images/crystal/mp3.png")
+  AUDIO_THUMB = Rails.root.join("public/images/crystal/sound.png")
   # some rel predicates
   FORMAT = "http://purl.org/dc/elements/1.1/format"
   MEMBER_OF = "http://purl.oclc.org/NET/CUL/memberOf"
@@ -30,8 +30,11 @@ class ThumbnailsController < ActionController::Base
       url = {:url=>image_url(COLLECTION_THUMB),:mime=>'image/png'}
     end
     if url[:asset]
-      url[:url] = Rails.configuration.assets.enabled ? Rails.application.assets.find_asset(url[:asset]).pathname : asset_path_from_config(url[:asset])
+      url[:url] = Rails.configuration.assets.enabled ?
+       Rails.application.assets.find_asset(url[:asset]).pathname :
+       asset_path_from_config(url[:asset])
     end
+    #puts "#{url[:url]} #{url[:mime]}"
     filename = pid + '.' + url[:mime].split('/')[1].downcase
     h_cd = "filename=""#{CGI.escapeHTML(filename)}"""
     headers.delete "Cache-Control"

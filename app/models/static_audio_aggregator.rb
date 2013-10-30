@@ -19,6 +19,6 @@ class StaticAudioAggregator < ::ActiveFedora::Base
   end
   
   def thumbnail_info
-    return {:asset=>"cul_scv_hydra/crystal/mp3.png",:mime=>'image/png'}
+    return {:asset=>"crystal/sound.png",:mime=>'image/png'}
   end
 end

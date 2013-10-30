@@ -25,3 +25,19 @@ div.constraint-widget {
 div.constraint-widget .btn {
 	padding: 5px 10px;
 }
+
+div.relative-box {
+	position: relative;
+	width: auto;
+}
+
+a.thumbnail-link {
+	display: inline-block;
+}
+
+.thumb-overlay {
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	z-index: 1;
+}

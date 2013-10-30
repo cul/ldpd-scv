@@ -57,7 +57,6 @@ class BlacklightConfiguration
     #   The ordering of the field names is the order of the display
     # TODO: Reorganize facet data structures supplied in config to make simpler
     # for human reading/writing, kind of like search_fields. Eg,
-    # config[:facet] << {:field_name => "format", :label => "Format", :limit => 10}
     config.add_facet_field "lib_project_sim", :label => "Projects", :limit => 10, :sort => "index"
     config.add_facet_field "lib_name_sim", :label => "Names", :limit => 10, :sort => "index"
     config.add_facet_field "lib_date_sim", :label => "Dates", :limit => 10, :sort => "count"
@@ -69,10 +68,10 @@ class BlacklightConfiguration
     config.add_facet_field "subject_geo_sim", :label => "Regions", :limit => 10, :sort => "count"
     config.add_facet_field "subject_era_sim", :label => "Eras", :limit => 10, :sort => "count"
 
-    if !Rails.env.eql?"passenger_prod"
-      config.add_facet_field "format_ssim", :label => "Routed As", :limit => 10
-      config.add_facet_field "descriptor_ssim", :label => "Metadata Type", :limit => 10
-    end
+    #if !Rails.env.eql?"passenger_prod"
+      config.add_facet_field "format_ssi", :label => "Routed As", :limit => 10
+      config.add_facet_field "descriptor_ssi", :label => "Metadata Type", :limit => 10
+    #end
 
     config.add_facet_fields_to_solr_request!
 
@@ -96,7 +95,7 @@ class BlacklightConfiguration
     config.add_index_field "published_ssm", :label => "Published:"
     config.add_index_field "object_ssm", :label => "In Fedora:"
     config.add_index_field "cul_member_of_ssim"
-    config.add_index_field "index_type_label_ssm"
+    config.add_index_field "index_type_label_ssi"
     config.add_index_field "resource_json"
 
     # solr fields to be displayed in the index (search results) view
