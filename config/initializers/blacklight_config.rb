@@ -59,19 +59,19 @@ class BlacklightConfiguration
     # for human reading/writing, kind of like search_fields. Eg,
     config.add_facet_field "lib_project_sim", :label => "Projects", :limit => 10, :sort => "index"
     config.add_facet_field "lib_name_sim", :label => "Names", :limit => 10, :sort => "index"
-    config.add_facet_field "lib_date_sim", :label => "Dates", :limit => 10, :sort => "count"
+    config.add_facet_field "lib_date_sim", :label => "Dates", :limit => 10, :sort => "index"
     config.add_facet_field "lib_format_sim", :label => "Formats", :limit => 10 #, :sort => "count"
     config.add_facet_field "lib_collection_sim", :label => "Collections", :limit => 10, :sort => "index"
     config.add_facet_field "lib_repo_sim", :label => "Repositories", :limit => 10 #, :sort => "index"
-    config.add_facet_field "subject_topic_sim", :label => "Topics", :limit => 10, :sort => "count"
-    config.add_facet_field "language_sim", :label => "Languages", :limit => 10, :sort => "count"
-    config.add_facet_field "subject_geo_sim", :label => "Regions", :limit => 10, :sort => "count"
-    config.add_facet_field "subject_era_sim", :label => "Eras", :limit => 10, :sort => "count"
+    config.add_facet_field "subject_topic_sim", :label => "Topics", :limit => 10, :sort => "index"
+    config.add_facet_field "language_sim", :label => "Languages", :limit => 10, :sort => "index"
+    config.add_facet_field "subject_geo_sim", :label => "Regions", :limit => 10, :sort => "index"
+    config.add_facet_field "subject_era_sim", :label => "Eras", :limit => 10, :sort => "index"
 
-    #if !Rails.env.eql?"passenger_prod"
+    if !Rails.env.eql?"passenger_prod"
       config.add_facet_field "format_ssi", :label => "Routed As", :limit => 10
       config.add_facet_field "descriptor_ssi", :label => "Metadata Type", :limit => 10
-    #end
+    end
 
     config.add_facet_fields_to_solr_request!
 
