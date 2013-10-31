@@ -111,20 +111,15 @@ class SolrCollection
     self.paths=_paths
     self.objects=_nodes.keys
   end
-  def solr_query(query, start, rows, fl, collection_prefix=false)
+  def run_solr_query(query, start, rows, fl)
     query_parms = {}
-    query_parms[:q]=query
+    query_parms[:fq]=query
     query_parms[:start]=start
     query_parms[:rows]=rows
     query_parms[:fl]= "*"
     query_parms[:wt]= :ruby
-    query_parms[:qt]= :document
-    if (collection_prefix)
-      query_parms[:facet]="on"
-      query_parms["facet.field"]=:internal_h
-      query_parms["facet.prefix"]=(collection_prefix + "*")
-    end
-    resp_json = solr.get('select', query_parms)
+    #query_parms[:qt]= :document
+    resp_json = solr.get('select', {:params=>query_parms})
     resp_json
   end
   def paths()
@@ -142,27 +137,19 @@ class SolrCollection
       if (paths.length == 0)
         p "Warning: No paths given to find SolrCollection members"
       end
-      paths.each{|path|
-        q = path.gsub(@colon,'\:')
-        if q.index('/') == 0
-          q = q.slice(1,q.size - 1)
-        end
-        if q.rindex('/') < (q.length() - 1)
-          q = q + '/'
-        end
-        q = "internal_h:" + q
-        puts q
-        size = 10
-        start = 0
-        while
-          response=solr_query(q,start,size,:id)
-          numFound = response["response"]["numFound"]
-          docs = response["response"]["docs"] | []
-          @ids.concat( docs.collect{|doc| doc["id"] })
-          start += size
-          break if start > numFound
-        end
-      }
+      query_pid = "info:fedora\\/#{@pid}".gsub(@colon, '\:')
+      q = "cul_member_of_ssim:#{query_pid}"
+      puts q
+      size = 10
+      start = 0
+      while
+        response=run_solr_query(q,start,size,:id)["response"]
+        numFound = response["numFound"].to_i
+        docs = response["docs"] | []
+        @ids.concat( docs.collect{|doc| doc["id"] })
+        start = @ids.length
+        break if start >= numFound
+      end
     end
     @ids
   end
@@ -285,6 +272,26 @@ namespace :solr do
        puts "committed..."
      end
 
+     desc "delete all this collections children from index"
+     task :delete_from => :configure do
+       solr_url = ENV['SOLR'] || Blacklight.solr_config[:url]
+       p "deleting from PID #{ENV['COLLECTION_PID']}"
+       collection = SolrCollection.new(ENV['COLLECTION_PID'],solr_url)
+       delete_array = collection.ids
+       p "delete_array.length: #{delete_array.length}"
+       if (delete_array.length == 0)
+         p "no deletes necessary; exiting"
+         exit
+       end
+       deletes = 0
+       delete_array.each do |id|
+         puts "to delete id: #{id}"
+         ActiveFedora::SolrService.instance.conn.delete_by_id(id)
+         deletes += 1
+       end
+       ActiveFedora::SolrService.instance.conn.commit
+     end
+
      desc "index objects from a CUL fedora repository"
      task :index => :configure do
        delete_array = []
@@ -374,11 +381,12 @@ namespace :solr do
        
        update_uri = URI.parse(solr_url.gsub(/\/$/, "") + "/update")
        p "delete_array.length: #{delete_array.length}"
-       #if (delete_array.length == 0)
-       #  exit
-       #end
+       if (delete_array.length == 0)
+         exit
+       end
        delete_array.each do |id|
-         ActiveFedora::SolrService.instance.conn.delete(id)
+        puts "to delete id: #{id}"
+         ActiveFedora::SolrService.instance.conn.delete_by_id(id)
          deletes += 1
        end
        ActiveFedora::SolrService.instance.conn.commit
