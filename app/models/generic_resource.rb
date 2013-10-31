@@ -96,8 +96,8 @@ class GenericResource < ::ActiveFedora::Base
   def datastream_as_resource(dsid, props={})
     ds = datastreams[dsid]
     res = {}
-    res[:pid] = self.pid
-    res[:dsid] = dsid
+    res[:uri] = self.pid
+    res[:block] = dsid
     res[:mime_type] = ds.mimeType
     res[:content_models] = ["Datastream"]
     res[:file_size] = ds.dsSize.to_s
@@ -109,8 +109,8 @@ class GenericResource < ::ActiveFedora::Base
     res[:height] = props[LENGTH_PREDICATE].first || "0"
     res[:dimensions] = "#{res[:width]} x #{res[:height]}"
     base_filename = pid.gsub(/\:/,"")
-    res[:image_file_name] = base_filename + "." + dsid + "." + ds.mimeType.gsub(/^[^\/]+\//,"")
-    res
+    res[:filename] = base_filename + "." + dsid + "." + ds.mimeType.gsub(/^[^\/]+\//,"")
+   res
   end
         
 end

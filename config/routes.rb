@@ -16,7 +16,7 @@ Scv::Application.routes.draw do
       :download_method => /(download|show|show_pretty)/
     }
   match '/download/cache/:download_method/:uri/:block/:filename', 
-    :to => 'download#cachecontent',
+    :to => DownloadController.action(:cachecontent),
     :as => :cache,
     :constraints => {
       :uri => /.+/,

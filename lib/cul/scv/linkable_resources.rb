@@ -35,10 +35,7 @@ module Cul
           results << {
             :dimensions => "Original",
             :mime_type => "image/jp2",
-            :show_path =>
-              fedora_content_path(:download_method=>"show", :uri=>base_id, :block=>"SOURCE", :filename=>base_id + "_source.jp2"),
-            :download_path =>
-              fedora_content_path(:download_method=>"download", :uri=>base_id, :block=>"SOURCE", :filename=>base_id + "_source.jp2"),
+            :uri=>base_id, :block=>"SOURCE", :filename=>base_id + "_source.jp2",
             :content_models=>[]}  
         when "audio"
           results = members.collect {|doc| audio_resource(doc)}
@@ -75,13 +72,9 @@ module Cul
         base_id = document["id"]
         base_filename = base_id.gsub(/\:/,"")
         img_filename = base_filename + "." + document["dc_format_ssm"].first.gsub(/^[^\/]+\//,"")
-        dc_filename = base_filename + "_dc.xml"
-        res[:image_file_name] = img_filename
-        res[:dc_file_name] = dc_filename
-        res[:show_path] = fedora_content_path(:download_method=>"show", :uri=>base_id, :block=>"CONTENT", :filename=>img_filename)
-        res[:download_path] = fedora_content_path(:download_method=>"download", :uri=>base_id, :block=>"CONTENT", :filename=>img_filename)
-        res[:dc_path] = fedora_content_path(:download_method=>"show_pretty", :uri=>base_id, :block=>"DC", :filename=>dc_filename)
-        res[:cache_path] = cache_path(:download_method=>"show", :uri=>base_id, :block=>"CONTENT", :filename=>img_filename)
+        res[:filename] = img_filename
+        res[:block] = "CONTENT"
+        res[:uri] = base_id
         res
       end
 
@@ -98,7 +91,9 @@ module Cul
         end
         filename = base_filename + "." + ext
         dc_filename = base_filename + "_dc.xml"
-        res[:download_path] = fedora_content_path(:download_method=>"download", :uri=>base_id, :block=>"CONTENT", :filename=>filename)
+        res[:uri] = base_id
+        res[:block] = "CONTENT"
+        res[:filename] = filename
         res[:dc_path] = fedora_content_path(:download_method=>"show_pretty", :uri=>base_id, :block=>"DC", :filename=>dc_filename)
         res
       end

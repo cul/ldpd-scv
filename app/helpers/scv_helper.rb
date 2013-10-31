@@ -31,6 +31,15 @@ module ScvHelper
     end
   end
 
+  def uri_from_resource_parms(args = {}, dl_method="show")
+    args = {:cache => false}.merge(args)
+    if (args[:cache])
+      cache_path(dl_method, args)
+    else
+      fedora_content_path(dl_method, args)
+    end
+  end
+
   def base_id_for(doc)
     if doc.nil?
       doc
