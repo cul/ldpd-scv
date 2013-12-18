@@ -1,0 +1,7 @@
+%div
+  %ul.nav.nav-pills
+    %li{:class => ((active_prefix? nil) ? 'active' : '')}
+      = link_to("All", @pagination.params_for_resort_url('index', params).merge(@pagination.request_keys[:sort] => @pagination.sort, "facet.prefix" => nil))
+    - ('A'..'Z').each do |letter|
+      %li{:class => ((active_prefix? letter) ? 'active' : '')}
+        = link_to(letter, @pagination.params_for_resort_url('index', params).merge(@pagination.request_keys[:sort] => @pagination.sort, "facet.prefix" => letter))

@@ -2,7 +2,6 @@
   
   - sidebar_items << capture do
     %p= link_back_to_catalog 
-
   %div.facet_pagination.top
     = render :partial=>'facet_pagination'
   %div.modal-header
@@ -18,5 +17,6 @@
             - else
               != render_facet_value(params[:id], item)
   %div.modal-footer    
+    = render :partial=>'facet_prefix'
     %div.facet_pagination.bottom
       = render :partial=>'facet_pagination'

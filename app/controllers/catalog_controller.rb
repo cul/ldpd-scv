@@ -5,6 +5,7 @@ class CatalogController < ApplicationController
   unloadable
   include Blacklight::Catalog
   include Blacklight::SolrHelper
+  include Cul::Scv::FacetExtras
   
   configure_blacklight do |config|
     Scv::BlacklightConfiguration.configure(config)
