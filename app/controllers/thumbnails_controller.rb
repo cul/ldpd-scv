@@ -1,9 +1,9 @@
 class ThumbnailsController < ActionController::Base
   # some thumbnail urls
-  NO_THUMB = Rails.root.join("public/images/crystal/file.png")
-  BROKEN_THUMB = Rails.root.join("public/images/crystal/file_broken.png")
-  COLLECTION_THUMB = Rails.root.join("public/images/crystal/kmultiple.png")
-  AUDIO_THUMB = Rails.root.join("public/images/crystal/sound.png")
+  NO_THUMB = "crystal/file.png"
+  BROKEN_THUMB = "crystal/file_broken.png"
+  COLLECTION_THUMB = "crystal/kmultiple.png"
+  AUDIO_THUMB = "crystal/sound.png"
   # some rel predicates
   FORMAT = "http://purl.org/dc/elements/1.1/format"
   MEMBER_OF = "http://purl.oclc.org/NET/CUL/memberOf"
@@ -14,7 +14,7 @@ class ThumbnailsController < ActionController::Base
   include Cul::Scv::Controller
   
   before_filter :require_staff
-  caches_action :show, :expires_in => 7.days
+  #caches_action :show, :expires_in => 7.days
   
   def show
     pid = params[:id].split(/@/)[0]
@@ -27,12 +27,10 @@ class ThumbnailsController < ActionController::Base
     if r_obj.respond_to? :thumbnail_info
       url = r_obj.thumbnail_info
     else
-      url = {:url=>image_url(COLLECTION_THUMB),:mime=>'image/png'}
+      url = {:asset=>COLLECTION_THUMB,:mime=>'image/png'}
     end
     if url[:asset]
-      url[:url] = Rails.configuration.assets.enabled ?
-       Rails.application.assets.find_asset(url[:asset]).pathname :
-       asset_path_from_config(url[:asset])
+      url[:url] = image_asset_url(url[:asset])
     end
     #puts "#{url[:url]} #{url[:mime]}"
     filename = pid + '.' + url[:mime].split('/')[1].downcase
@@ -65,5 +63,9 @@ class ThumbnailsController < ActionController::Base
       return result if File.exists?(result)
     end
     return nil
+  end
+
+  def image_asset_url(source)
+    URI.join(root_url, ActionController::Base.helpers.asset_path(source))
   end
 end

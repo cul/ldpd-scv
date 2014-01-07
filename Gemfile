@@ -28,11 +28,11 @@ group :assets do
 #  gem 'compass-rails'
 end
 gem "unicode", :platforms => [:mri_18, :mri_19]
-gem "hydra-head", "6.2.2"
+gem "hydra-head", "~>6.2"
 # gem "active-fedora", '~>4.5.0'
-gem 'active-fedora', '~>6.1.1'
+gem 'active-fedora', '~>6.1'
 gem 'active_fedora_finders', '~>0.3.0'
-gem "active_fedora_relsint", :git=>'git://github.com/projecthydra/active_fedora_relsint.git', :branch=>'master'
+gem "active_fedora_relsint", '~>0.3.0' # :git=>'git://github.com/projecthydra/active_fedora_relsint.git', :branch=>'master'
 gem 'active_fedora_streamable', '~>0.3.0'
 gem 'columnize'
 gem 'crack'

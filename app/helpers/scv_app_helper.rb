@@ -82,7 +82,6 @@ module ScvAppHelper
     opts[:label] = blacklight_config.index.show_link.to_sym unless opts[:label]
 # blacklight render_document_index_label will not handle a Symbol key appropriately for a Hash/Mash, and must have a proc
     if opts[:label].instance_of? Symbol
-      puts doc.inspect
       old_label = opts[:label]
       opts[:label] = lambda { |doc, opts| doc[old_label][0]}
     else

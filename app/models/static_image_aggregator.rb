@@ -9,8 +9,8 @@ class StaticImageAggregator < ::ActiveFedora::Base
   include Cul::Scv::LinkableResources
   alias :file_objects :resources
   
-  CUL_WIDTH = ActiveFedora::RelsExtDatastream.short_predicate("http://purl.oclc.org/NET/CUL/RESOURCE/STILLIMAGE/BASIC/imageWidth")
-  CUL_LENGTH = ActiveFedora::RelsExtDatastream.short_predicate("http://purl.oclc.org/NET/CUL/RESOURCE/STILLIMAGE/BASIC/imageLength")
+  CUL_WIDTH = ActiveFedora::Predicates.short_predicate("http://purl.oclc.org/NET/CUL/RESOURCE/STILLIMAGE/BASIC/imageWidth")
+  CUL_LENGTH = ActiveFedora::Predicates.short_predicate("http://purl.oclc.org/NET/CUL/RESOURCE/STILLIMAGE/BASIC/imageLength")
 
   def route_as
     "image"
