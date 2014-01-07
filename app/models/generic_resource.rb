@@ -15,10 +15,10 @@ class GenericResource < ::ActiveFedora::Base
   IMAGE_EXT = {"image/bmp" => 'bmp', "image/gif" => 'gif', "image/jpeg" => 'jpg', "image/png" => 'png', "image/tiff" => 'tif', "image/x-windows-bmp" => 'bmp'}
   WIDTH = RDF::URI(ActiveFedora::Predicates.find_graph_predicate(:image_width))
   LENGTH = RDF::URI(ActiveFedora::Predicates.find_graph_predicate(:image_length))
-  WIDTH_PREDICATE = ActiveFedora::RelsExtDatastream.short_predicate("http://www.w3.org/2003/12/exif/ns#imageWidth").to_s
-  LENGTH_PREDICATE = ActiveFedora::RelsExtDatastream.short_predicate("http://www.w3.org/2003/12/exif/ns#imageLength").to_s
-  EXTENT_PREDICATE = ActiveFedora::RelsExtDatastream.short_predicate("http://purl.org/dc/terms/extent").to_s
-  FORMAT_OF_PREDICATE = ActiveFedora::RelsExtDatastream.short_predicate("http://purl.org/dc/terms/isFormatOf").to_s
+  WIDTH_PREDICATE = ActiveFedora::Predicates.short_predicate("http://www.w3.org/2003/12/exif/ns#imageWidth").to_s
+  LENGTH_PREDICATE = ActiveFedora::Predicates.short_predicate("http://www.w3.org/2003/12/exif/ns#imageLength").to_s
+  EXTENT_PREDICATE = ActiveFedora::Predicates.short_predicate("http://purl.org/dc/terms/extent").to_s
+  FORMAT_OF_PREDICATE = ActiveFedora::Predicates.short_predicate("http://purl.org/dc/terms/isFormatOf").to_s
   FORMAT_URI = RDF::URI("http://purl.org/dc/terms/format")
   
   has_datastream :name => "content", :type=>::ActiveFedora::Datastream, :versionable => true
