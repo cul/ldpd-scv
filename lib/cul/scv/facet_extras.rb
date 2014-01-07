@@ -14,7 +14,6 @@ module Cul
         else
           solr_params.delete 'facet.prefix'
         end
-        puts 'RABBLE RABBLE RABBLE'
       end
     end
   end
