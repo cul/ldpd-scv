@@ -14,7 +14,7 @@ class ThumbnailsController < ActionController::Base
   include Cul::Scv::Controller
   
   before_filter :require_staff
-  #caches_action :show, :expires_in => 7.days
+  caches_action :show, :expires_in => 7.days
   
   def show
     pid = params[:id].split(/@/)[0]
