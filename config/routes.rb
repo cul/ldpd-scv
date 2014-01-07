@@ -23,6 +23,14 @@ Scv::Application.routes.draw do
       :filename => /.+/,
       :download_method => /(download|show|show_pretty)/
     }
+  get '/resolve/:action/:id',
+    :to => ResolveController.action(:get),
+    :as => :resolver,
+    :constraints => {
+      :id => /([^\/])+?/,
+      :action => /(catalog|thumbnails)/,
+      :format => //
+    }
   match 'wind_logout', :to => 'welcome#logout'
   match '/access_denied', :to => 'welcome#access_denied'
   # match '/thumbnail/:id', :to => 'thumbnail#get'
