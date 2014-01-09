@@ -4,7 +4,7 @@
     .pull-right.dropdown
       %a.dropdown-toggle#user_links_label{:"data-toggle"=>"dropdown", :href=>"#"}
         %span="My SCV [" + current_user.login + "]"
-        %span.caret
+        %i.icon-list
       %ul.dropdown-menu{:role=>"menu", :"aria-labelledby"=>"user_links_label"}
         - if current_user.last_search_url
           %li= link_to('View your last search', catalog_index_path(current_user.last_search_url))
