@@ -1,8 +1,6 @@
 -# coding: utf-8
 - if query_has_constraints?
-  %div#appliedParams.constraints-container
+  %div#appliedParams.well.well-constraints
     %span.constraints-label=t('blacklight.search.filters.title')
-    = render :partial => 'sort_widget'
-    = render :partial => 'per_page_widget'
     = render :partial => 'start_over_widget'
     = render_constraints(params)

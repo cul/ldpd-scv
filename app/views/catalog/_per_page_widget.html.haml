@@ -1,0 +1,8 @@
+- if show_sort_and_per_page? and !blacklight_config.per_page.blank?
+  %div#per_page-dropdown.dropdown.pull-right.hidden-phone
+    %span.hide-text= t('blacklight.search.per_page.title')
+    = link_to(t(:'blacklight.search.per_page.button_label', :count => current_per_page), "#", {:id=>"per_page-toggle", :"data-toggle"=>"dropdown", :class=>"dropdown-toggle"})
+    %span.caret
+    %ul.dropdown-menu{:role=>"menu",:"aria-labelledby"=>"per_page-toggle"}
+      - blacklight_config.per_page.each do |count|
+        %li= link_to(t(:'blacklight.search.per_page.label', :count => count).html_safe, url_for(params_for_search.merge(:per_page => count)))

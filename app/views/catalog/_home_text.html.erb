@@ -1,4 +1,5 @@
 <% # coding: utf-8 %>
+<%= render_search_bar %>
 <% if block = ContentBlock.find_by_title("Home Page") -%>
   <%= sanitize block.data %>
 <% else -%>

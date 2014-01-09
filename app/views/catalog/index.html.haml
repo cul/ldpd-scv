@@ -8,6 +8,7 @@
     %h2.hide-text.top-content-title=t('blacklight.search.search_results_header')
     - @page_title = t('blacklight.search.title', :application_name => application_name)
     - extra_head_content << render_opensearch_response_metadata.html_safe
+    = render_search_bar
 
     = render 'constraints', :localized_params=> params
     -# render_pagination_info @response, :entry_name=>'item'
@@ -17,7 +18,7 @@
     %div.pageEntriesInfo
       = render 'results_pagination'
 
-    %h2.hide-text = t('blacklight.search.search_results')
+    %h2.hide-text= t('blacklight.search.search_results')
     = render_document_index
 
     %div.pageEntriesInfo

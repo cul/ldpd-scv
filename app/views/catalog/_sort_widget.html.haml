@@ -1,0 +1,7 @@
+- if show_sort_and_per_page? and !blacklight_config.sort_fields.blank?
+  %div#sort-dropdown.dropdown.pull-right.hidden-phone
+    = link_to(t(:'blacklight.search.sort.label', :field => current_sort_field.label), "#", {:id=>"sort-toggle", :"data-toggle"=>"dropdown", :class=>"dropdown-toggle"})
+    %span.caret
+    %ul.dropdown-menu{:role=>"menu",:"aria-labelledby"=>"sort-toggle"}
+      - blacklight_config.sort_fields.each do |sort_key, field|
+        %li= link_to(field.label, url_for(params_for_search.merge(:sort => sort_key)))

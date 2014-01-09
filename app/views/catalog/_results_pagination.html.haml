@@ -1,5 +1,5 @@
 - if paginate_params(@response).num_pages > 1
-  .pagination
-    %h2!=t('blacklight.search.pagination.title') + " "  + render_pagination_info(@response)
-  .pagination
-    = paginate_rsolr_response @response, :outer_window => 2, :theme => 'blacklight'
+  %div
+    = paginate_rsolr_response @response, :outer_window => 2, :theme => 'scv'
+    = render :partial => 'sort_widget'
+    = render :partial => 'per_page_widget'
