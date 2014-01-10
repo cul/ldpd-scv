@@ -45,12 +45,12 @@ class BlacklightConfiguration
     config[:unique_key] = :id
 
     # solr field values given special treatment in the show (single result) view
-    config.show.html_title = 'title_ssm'
-    config.show.heading = 'title_ssm'
+    config.show.html_title = 'title_display_ssm'
+    config.show.heading = 'title_display_ssm'
     config.show.display_type = :format_ssi
 
     # solr fld values given special treatment in the index (search results) view
-    config.index.show_link = 'title_ssm'
+    config.index.show_link = 'title_display_ssm'
     config.index.record_display_type = :format_ssi
 
     # solr fields that will be treated as facets by the blacklight application
@@ -80,7 +80,7 @@ class BlacklightConfiguration
     # handler defaults, or have no facets.
     #config.default_solr_params[:'facet.field'] = config.facet_fields.keys
 
-    config.add_index_field "title_ssm", :label => "Title:"
+    config.add_index_field "title_display_ssm", :label => "Title:"
     config.add_index_field "title_vern_ssm", :label => "Title:"
     config.add_index_field "lib_name_ssm", :label => "Names:"
     config.add_index_field "lib_repo_ssm", :label => "Repository:"
@@ -103,7 +103,7 @@ class BlacklightConfiguration
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display 
-    config.add_show_field "title_ssm", :label=>"Title:"
+    config.add_show_field "title_display_ssm", :label=>"Title:"
     config.add_show_field "title_vern_ssm", :label=>"Title:"
     config.add_show_field "subtitle_ssm", :label=>"Subtitle:"
     config.add_show_field "subtitle_vern_ssm", :label=>"Subtitle:"
@@ -123,11 +123,11 @@ class BlacklightConfiguration
     config.add_show_field "isbn_ssim", :label=> "ISBN:"
 
   # "fielded" search configuration. Used by pulldown among other places.
-    config.add_search_field("all_text_timv") do |field|
+    config.add_search_field("all_text_teim") do |field|
       field.label = 'All Fields'
       field.solr_parameters = {
         :qt=>"search",
-        :qf=>["all_text_timv"]
+        :qf=>["all_text_teim"]
       }
     end
 
