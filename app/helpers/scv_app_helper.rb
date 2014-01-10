@@ -83,7 +83,7 @@ module ScvAppHelper
 # blacklight render_document_index_label will not handle a Symbol key appropriately for a Hash/Mash, and must have a proc
     if opts[:label].instance_of? Symbol
       old_label = opts[:label]
-      opts[:label] = lambda { |doc, opts| doc[old_label][0]}
+      opts[:label] = lambda { |doc, opts| doc[old_label] ? doc[old_label][0] : old_label}
     else
       puts "label: #{opts[:label]} class: #{opts[:label].class}"
     end
