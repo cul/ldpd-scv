@@ -37,19 +37,6 @@ module ScvAppHelper
     result.html_safe
   end
 
-  def render_document_partial_with_locals(doc, action_name, locals={})
-    if doc[document_show_link_field].nil?
-       doc[document_show_link_field] = "#{doc['dc_title']} (from DC)"
-    end
-    format = document_partial_name(doc)
-    locals = locals.merge({:document=>doc})
-    begin
-      render :partial=>"catalog/_#{action_name}_partials/#{format}", :locals=>locals
-    rescue ActionView::MissingTemplate
-      render :partial=>"catalog/_#{action_name}_partials/default", :locals=>locals
-    end
-  end
-
 # Return a normalized partial name that can be used to contruct view partial path
   def object_partial_name(object)
     # .to_s is necessary otherwise the default return value is not always a string

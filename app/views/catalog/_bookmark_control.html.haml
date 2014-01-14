@@ -6,14 +6,14 @@
   - # the data-doc-id attribute is used by our JS that converts to a checkbox/label.
   - unless existing_bookmark
 
-    = form_tag( bookmark_path( document[:id] ), :method => :put, :class => "bookmark_toggle", "data-doc-id" => document[:id], :title=> document[document_show_link_field][0] ) do
-      = hidden_field(:bookmark, :title, :value => document[document_show_link_field][0] )
+    = form_tag( bookmark_path( document[:id] ), :method => :put, :class => "bookmark_toggle", "data-doc-id" => document[:id], :title=> document.link_title(document_show_link_field) ) do
+      = hidden_field(:bookmark, :title, :value => document.link_title(document_show_link_field) )
       = submit_tag("Bookmark", :id => "bookmark_toggle_#{document[:id].to_s.parameterize}", :class => "bookmark_add")
   
   - else
   
-    = form_tag( bookmark_path( document[:id] ), :method => :delete, :class => "bookmark_toggle", "data-doc-id" => document[:id], :title=> document[document_show_link_field][0]) do
-      = hidden_field(:bookmark, :title, :value => document[document_show_link_field][0] )
+    = form_tag( bookmark_path( document[:id] ), :method => :delete, :class => "bookmark_toggle", "data-doc-id" => document[:id], :title=> document.link_title(document_show_link_field)) do
+      = hidden_field(:bookmark, :title, :value => document.link_title(document_show_link_field) )
       = submit_tag("Remove bookmark", :id => "bookmark_toggle_#{document[:id].to_s.parameterize}", :class => "bookmark_remove")
       
 - else

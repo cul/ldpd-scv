@@ -308,6 +308,7 @@ namespace :solr do
        when ENV['PID_LIST']
          url_array = []
          File.readlines(ENV['PID_LIST']).each {|pid| url_array << pid.strip}
+         delete_array = url_array.dup
          url_array
        when ENV['COLLECTION_PID']
          solr_url = ENV['SOLR'] || Blacklight.solr_config[:url]
@@ -401,6 +402,7 @@ namespace :solr do
             exit(1)
          end
        end
+       ActiveFedora::SolrService.instance.conn.commit
 
        puts "#{deletes} existing SOLR docs deleted prior to index"
        puts "#{successes} URLs scanned successfully."

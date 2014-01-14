@@ -2,7 +2,7 @@
 .index_title
   - if document_counter
     = (document_counter + 1 + @response.params[:start].to_i).to_s + '.'
-= link_to_mash(document, :label=>document_show_link_field, :counter => (document_counter + 1 + @response.params[:start].to_i)) + ((document[document_show_link_field][0].match(/\.$/)) ? '' : '.')
+= link_to_mash(document, :label=>document_show_link_field, :counter => (document_counter + 1 + @response.params[:start].to_i)) + ((document.link_title(document_show_link_field).match(/\.$/)) ? '' : '.')
 - groups = get_groups(document)
 - if groups.length > 0
   .index_title

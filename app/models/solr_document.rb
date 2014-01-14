@@ -20,9 +20,18 @@ class SolrDocument
   # Recommendation: Use field names from Dublin Core
   use_extension( Blacklight::Solr::Document::DublinCore)    
   field_semantics.merge!(    
-                         :title => "title_ssm",
+                         :title => "title_display_ssm",
                          :author => "author_ssm",
                          :language => "language_sim",
-                         :format => "format_ssim"
+                         :format => "lib_format_ssm"
                          )
+
+  def link_title(link_field = nil)
+    @link_title ||= (
+      (link_field and self[link_field] and self[link_field].first) or
+      (self["title_display_ssm"] and self["title_display_ssm"].first) or
+      (self["dc_title_ssm"] and self["dc_title_ssm"].first) or
+      (self["object_profile_ssm"] and JSON.parse(self["object_profile_ssm"])["objLabel"]) or
+      self[:id])
+  end
 end
