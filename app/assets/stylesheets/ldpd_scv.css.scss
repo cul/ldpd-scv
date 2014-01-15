@@ -56,8 +56,32 @@ a.thumbnail-link {
 }
 
 .thumb-overlay {
-	position: absolute;
+	position: relative;
 	left: 0px;
 	bottom: 0px;
+	margin-left:-24px;
+	vertical-align: bottom;
 	z-index: 1;
+}
+
+.index_title {
+ font-weight: bold;
+}
+
+.title_data {
+  font-weight: bold;
+}
+
+span.from_groups a {
+  font-weight:normal;
+}
+
+span.index_metadata {
+  font-weight:normal;
+}
+
+div.member-item div {
+}
+div.member-item > hr {
+  width: 75%;
 }

@@ -3,8 +3,8 @@
 - document_counter ||= -1
 - data_counter = (document_counter + 1 + @response.params[:start].to_i)
 - href ||= url_to_document(document)
-.thumbnail
+.thumbnail.pull-left
   %a{:href=>href, :'data-counter'=>data_counter}
     %img{:src=>thumbnail_path(document[:id]), :alt=>""}
   - if label
-    .label="PART"
+    %h6.label="PART"

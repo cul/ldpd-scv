@@ -65,22 +65,6 @@ module ScvAppHelper
 
   end
 
-  def link_to_mash(doc, opts={:label=>nil, :counter => nil, :results_view => true})
-    opts[:label] = blacklight_config.index.show_link.to_sym unless opts[:label]
-# blacklight render_document_index_label will not handle a Symbol key appropriately for a Hash/Mash, and must have a proc
-    if opts[:label].instance_of? Symbol
-      old_label = opts[:label]
-      opts[:label] = lambda { |doc, opts| doc[old_label] ? doc[old_label][0] : old_label}
-    else
-      puts "label: #{opts[:label]} class: #{opts[:label].class}"
-    end
-    label = render_document_index_label doc, opts
-# blacklight does not pass the correct arguments for Rails 3 url_for
-    url_for_opts = {:controller => :catalog, :action => :show, :id => doc[:id]}
-    label = label.first if label.is_a? Array
-    link_to label, url_for_opts, { :'data-counter' => opts[:counter] }.merge(opts.reject { |k,v| [:label, :counter, :results_view].include? k  })
-  end
-
   def url_to_document(doc)
     url_for_opts = {:controller => :catalog, :action => :show}
     if doc.is_a? ActiveFedora::Base

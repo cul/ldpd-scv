@@ -1,11 +1,12 @@
 -# coding: utf-8
-.index_title
+%span.title_data
   - _counter = (document_counter + 1 + @response.params[:start].to_i)
   - if document_counter
     = _counter.to_s + '. '
-  = link_to_mash(document, :label=>document_show_link_field, :counter => (document_counter + 1 + @response.params[:start].to_i)) + ((document.link_title(document_show_link_field).match(/\.$/)) ? '' : '.')
-- groups = get_groups(document)
-- if groups.length > 0
-  .index_title
-    %span.from_groups!=groups_text(groups)
-.index_metadata=index_title_text(document)
+  = link_to_mash(document, :label=>document_show_link_field, :counter => _counter) + ((document.link_title(document_show_link_field).match(/\.$/)) ? '' : '.')
+  - groups = get_groups(document)
+  - if groups.length > 0
+    %span.from_groups
+      !="&nbsp;&nbsp;From: "
+      =link_to_groups(groups)
+%span.index_metadata=index_title_text(document)

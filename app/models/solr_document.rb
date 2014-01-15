@@ -32,6 +32,6 @@ class SolrDocument
       (self["title_display_ssm"] and self["title_display_ssm"].first) or
       (self["dc_title_ssm"] and self["dc_title_ssm"].first) or
       (self["object_profile_ssm"] and JSON.parse(self["object_profile_ssm"])["objLabel"]) or
-      self[:id])
+      self[:id]).strip.sub(/[\W]$/,'')
   end
 end
