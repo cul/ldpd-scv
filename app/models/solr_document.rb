@@ -27,11 +27,15 @@ class SolrDocument
                          )
 
   def link_title(link_field = nil)
-    @link_title ||= (
-      (link_field and self[link_field] and self[link_field].first) or
-      (self["title_display_ssm"] and self["title_display_ssm"].first) or
-      (self["dc_title_ssm"] and self["dc_title_ssm"].first) or
-      (self["object_profile_ssm"] and JSON.parse(self["object_profile_ssm"])["objLabel"]) or
-      self[:id]).strip.sub(/[\W]$/,'')
+    begin
+      @link_title ||= (
+        (link_field and self[link_field] and self[link_field].first) or
+        (self["title_display_ssm"] and self["title_display_ssm"].first) or
+        (self["dc_title_ssm"] and self["dc_title_ssm"].first) or
+        (self["object_profile_ssm"] and JSON.parse(self["object_profile_ssm"])["objLabel"]) or
+        self[:id]).strip.sub(/[\W]$/,'')
+    rescue
+      @link_title = "untitled or needs reindex"
+    end
   end
 end

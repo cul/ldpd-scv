@@ -3,7 +3,7 @@
 %div
   %dl.dl-horizontal
     %dt="Title:"
-    %dd= (link)? (link_to_mash document) : (document[document_show_link_field] ? document[document_show_link_field][0] : document_show_link_field )
+    %dd= (link)? (link_to_mash document) : document.link_title(document_show_link_field)
     %dt="ID:"
     - if document[:identifier_ssm]
       - if document[:identifier_ssm].is_a? Array
