@@ -1,0 +1,15 @@
+- structure = struct_metadata(document)
+- ng_xml = structure.struct_map
+%h2=ng_xml['LABEL']
+%ul
+  - ['1','2'].each do |pos|
+    - div = structure.divs_with_attribute(true, 'ORDER', pos).first
+    %li
+      %ul
+        %li
+          %h3=div['LABEL']
+        %li
+          - thumb_url = div['pid'] ? thumbnail_path(div['pid']) : resolver_path(div['CONTENTIDS'], :action=>'thumbnails')
+          - href = div['pid'] ? catalog_path(div['pid']) : resolver_path(div['CONTENTIDS'], :action=>'catalog')
+          %a{:href=>href, :class=>'thumbnail-link'}
+            %img{:src=>thumb_url}

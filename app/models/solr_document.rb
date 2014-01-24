@@ -38,4 +38,8 @@ class SolrDocument
       @link_title = "untitled or needs reindex"
     end
   end
+
+  def structured?
+    self['structured_bsi'] == true
+  end
 end

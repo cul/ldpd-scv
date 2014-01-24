@@ -16,6 +16,10 @@ module ScvHelper
     @http_client
   end
 
+  def rubydora
+    @rubydora ||= ActiveFedora::RubydoraConnection.new(ActiveFedora.configurator.fedora_config).connection
+  end
+
   def get_resources(document)
     if (document.nil?)
       puts "document was nil?"
@@ -102,20 +106,21 @@ module ScvHelper
   end
 
   def get_members(document, format=:solr)
+    memoize = (@document and document[:id] == @document[:id])
+    return @members if memoize and not @members.nil?
     klass = false
     document[:has_model_ssim].each do |model|
       klass ||= ActiveFedora::Model.from_class_uri(model)
     end
     klass ||= GenericAggregator
+    members = []
     if klass.include? Cul::Scv::Hydra::ActiveFedora::Model::Aggregator
       agg = klass.load_instance_from_solr(document[:id],document)
       r = agg.parts(:response_format => format)
-      return [] if r.blank?
-      return r.collect {|hit|
-        SolrDocument.new(hit)
-      }
+      members = r.collect {|hit| SolrDocument.new(hit) } unless r.blank?
     end
-    return []
+    @members = members if memoize
+    members
   end
 
   def get_solr_params_for_field_values(field, values, extra_controller_params={})
@@ -223,6 +228,26 @@ module ScvHelper
       end
     end
     return results
+  end
+
+  def struct_metadata(doc)
+    pid = base_id_for(doc)
+    members = get_members(doc)
+    #xml = Cul::Fedora.repository.datastream_dissemination(:pid=>pid, :dsid=>'structMetadata')
+    xml = rubydora.datastream_dissemination(:pid=>pid, :dsid=>'structMetadata')
+    ds = Cul::Scv::Hydra::ActiveFedora::Model::StructMetadata.from_xml(xml)
+    node_map = {}
+    ds.divs_with_attribute(true,'CONTENTIDS').each do |node|
+      node_map[node['CONTENTIDS']] = node
+    end
+      
+    members.each do |doc|
+      ids = (Array(doc[:identifier_ssim]) + Array(doc[:dc_identifier_ssim])).uniq
+      node_map.each do |cid, node|
+        node['pid'] = doc[:id] if ids.include? cid
+      end
+    end
+    ds
   end
 
   def trim_fedora_uri_to_pid(uri)
