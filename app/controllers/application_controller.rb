@@ -38,6 +38,9 @@ class ApplicationController < ActionController::Base
   def openlayers_js 
    @oljs ||= openlayers_base + '/lib/OpenLayers.js'
   end
+  def zooming_js
+    
+  end
   def openlayers_css
    @olcss ||= openlayers_base + '/theme/default/style.css'
   end

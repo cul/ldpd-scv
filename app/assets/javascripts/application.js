@@ -13,7 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.ui.core
-//
+//= require zooming_image
 // Required by Blacklight
 //= require bootstrap
 //= require blacklight/blacklight

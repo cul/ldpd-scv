@@ -56,7 +56,7 @@ class CatalogController < ApplicationController
   def show
     @response, @document = get_solr_response_for_doc_id
     if @document[:format_ssim] == 'zoomingimage'
-          extra_head_content << [stylesheet_tag(openlayers_css, :media=>'all'), javascript_tag(openlayers_js)]
+          extra_head_content << [stylesheet_tag(openlayers_css, :media=>'all'), javascript_tag(zooming_js)]
     end
 
     respond_to do |format|

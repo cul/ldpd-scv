@@ -1,3 +1,6 @@
+//= require ./openseadragon
+//= require ./djtilesource
+//= require ./djlogviewer
 // Note: The Open and close links are pretty much identical.
 var map, mapDiv, layerId = false;
 function init_ext(){
@@ -10,6 +13,11 @@ function init_map(_rft) {
   metadataUrl = "http://iris.cul.columbia.edu:8080/adore-djatoka/resolver?url_ver=Z39.88-2004&rft_id=" + _rft + "&svc_id=info:lanl-repo/svc/getMetadata&svc_val_fmt=info:lanl-repo/svc/getMetadata/callback&svc.callback=?";
   var metadata = new OpenLayers.Layer.OpenURL.Metadata(metadataUrl, setMetadata); // callbacks will actually use metadata
 
+}
+function init_seadragon(_rft) {
+  var ts = new OpenSeadragon.DjTileSource("http://iris.cul.columbia.edu:8080/view/", _rft);
+  var viewer = new OpenSeadragon.Viewer("map", undefined, '/assets/seadragon/');
+  viewer.openTileSource(ts);
 }
 function debugHash(object,label){
   debug = label + "[\n";
