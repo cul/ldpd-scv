@@ -15,7 +15,7 @@ function init_map(_rft) {
 
 }
 function init_seadragon(_rft, _showNav) {
-  var ts = new OpenSeadragon.DjTileSource("http://iris.cul.columbia.edu:8080/view/", _rft);
+  var ts = new OpenSeadragon.DjTileSource("http://iris.cul.columbia.edu:8888/view/", _rft);
   var viewer = new OpenSeadragon.Viewer("map", undefined, '/assets/seadragon/');
   viewer.showNavigator = _showNav;
   viewer.openTileSource(ts);
