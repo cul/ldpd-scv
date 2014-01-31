@@ -59,8 +59,9 @@ hd
   end
   module Objects
     class BaseObject
+      include Cul::Scv:FedoraUrlHelperBehavior
       def initialize(document, client=HTTPClient.new)
-        @riurl = ActiveFedora.config[:url] + '/risearch'
+        @riurl = fedora_risearch_url
         @http_client = client
         if document[:pid_ssi].nil?
             _pid = document[:id].split('@')[0]

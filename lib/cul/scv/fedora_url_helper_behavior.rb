@@ -21,6 +21,10 @@ module Cul
       def fedora_method_url(pid, method)
         fedora_object_url(pid) + '/methods/' + method
       end
+
+      def fedora_risearch_url
+        fedora_url + '/risearch'
+      end
     end
   end
 end

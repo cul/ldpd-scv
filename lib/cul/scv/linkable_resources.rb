@@ -1,6 +1,7 @@
 module Cul
   module Scv
     module LinkableResources
+      include FedoraUrlHelperBehavior
       # so as to avoid including all the url hepers via:
       ## include Rails.application.routes.url_helpers
       # we are just going to delegate
@@ -29,7 +30,7 @@ module Cul
         when "zoomingimage"
           results = members.collect {|doc| image_resource(doc)}
           base_id = self.pid
-          url = ActiveFedora.config[:url] + "/objects/" + base_id + "datastreams/SOURCE/content"
+          url = fedora_ds_url(base_id, 'SOURCE') + '/content'
           head_req = http_client().head(url)
           file_size = head_req.header["Content-Length"].first.to_i
           results << {
