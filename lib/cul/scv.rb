@@ -1,9 +1,10 @@
 module Cul
 module Scv
-  require 'cul/scv/controller'
-  require 'cul/scv/facet_extras'
-  require 'cul/scv/version'
-  require 'cul/scv/linkable_resources'
-  require 'cul/scv/solr_4_queries'
+  autoload :Controller, 'cul/scv/controller'
+  autoload :FacetExtras, 'cul/scv/facet_extras'
+  autoload :FedoraUrlHelperBehavior, 'cul/scv/fedora_url_helper_behavior'
+  autoload :Version, 'cul/scv/version'
+  autoload :LinkableResources, 'cul/scv/linkable_resources'
+  autoload :Solr4Queries, 'cul/scv/solr_4_queries'
 end
 end

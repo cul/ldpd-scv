@@ -1,15 +1,17 @@
-- structure = struct_metadata(document)
+- structure, m_map = struct_metadata(document)
 - ng_xml = structure.struct_map
-%h2=ng_xml['LABEL']
-%ul
-  - ['1','2'].each do |pos|
-    - div = structure.divs_with_attribute(true, 'ORDER', pos).first
-    %li
-      %ul
-        %li
-          %h3=div['LABEL']
-        %li
-          - thumb_url = div['pid'] ? thumbnail_path(div['pid']) : resolver_path(div['CONTENTIDS'], :action=>'thumbnails')
-          - href = div['pid'] ? catalog_path(div['pid']) : resolver_path(div['CONTENTIDS'], :action=>'catalog')
-          %a{:href=>href, :class=>'thumbnail-link'}
-            %img{:src=>thumb_url}
+%div
+  %h2=ng_xml['LABEL']
+  %div.media-list
+    - ['1','2'].each do |pos|
+      - div = structure.divs_with_attribute(true, 'ORDER', pos).first
+      %div.media
+        - thumb_url = div['pid'] ? thumbnail_path(div['pid']) : resolver_path(div['CONTENTIDS'], :action=>'thumbnails')
+        - href = div['pid'] ? catalog_path(div['pid']) : resolver_path(div['CONTENTIDS'], :action=>'catalog')
+        %a{:href=>href, :class=>'pull-left'}
+          %img{:src=>thumb_url, :class=>'media-object thumbnail'}
+        .media-body
+          %h3.media-heading=div['LABEL']
+          - if div['pid']
+            = render :partial => "catalog/_show_partials/metadata_brief", :locals => {:document => m_map[div['pid']], :link=>true}
+            = render :partial => "catalog/_show_partials/image/display_derivatives", :locals => {:document => m_map[div['pid']]}

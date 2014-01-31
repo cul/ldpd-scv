@@ -1,22 +1,21 @@
 -# coding: utf-8
 - link ||= false
-%div
-  %dl.dl-horizontal
-    %dt="Title:"
-    %dd= (link)? (link_to_mash document) : document.link_title(document_show_link_field)
-    %dt="ID:"
-    - if document[:identifier_ssm]
-      - if document[:identifier_ssm].is_a? Array
-        - document[:identifier_ssm].each do |value|
-          %dd= value
-      - else
-        %dd= document[:identifier_ssm]
+%dl.dl-horizontal
+  %dt="Title:"
+  %dd= (link)? (link_to_mash document) : document.link_title(document_show_link_field)
+  %dt="ID:"
+  - if document[:identifier_ssm]
+    - if document[:identifier_ssm].is_a? Array
+      - document[:identifier_ssm].each do |value|
+        %dd= value
     - else
-      %dd= document["id"]
-    - if document[:access_condition_ssm]
-      %dt.label.label-info="Access:"
-      - if document[:access_condition_ssm].is_a? Array
-        - document[:access_condition_ssm].each do |value|
-          %dd= value
-      - else
-        %dd= document[:access_condition_ssm]
+      %dd= document[:identifier_ssm]
+  - else
+    %dd= document["id"]
+  - if document[:access_condition_ssm]
+    %dt.label.label-info="Access:"
+    - if document[:access_condition_ssm].is_a? Array
+      - document[:access_condition_ssm].each do |value|
+        %dd= value
+    - else
+      %dd= document[:access_condition_ssm]

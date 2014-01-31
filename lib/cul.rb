@@ -1,4 +1,4 @@
 module Cul
-  require 'cul/fedora'
-  require 'cul/scv'
+  autoload :Fedora, 'cul/fedora'
+  autoload :Scv, 'cul/scv'
 end

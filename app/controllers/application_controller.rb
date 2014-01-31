@@ -23,6 +23,16 @@ class ApplicationController < ActionController::Base
     ActiveFedora::SolrService.register(ActiveFedora.solr_config[:url])
   end
 
+  def af_object
+    @object ||= begin
+      if params[:id]
+        ActiveFedora::Base.find(params[:id], :cast=>true)
+      else
+        nil
+      end
+    end
+  end
+
   def store_location
     session[:return_to] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}"
   end

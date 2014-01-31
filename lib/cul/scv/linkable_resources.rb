@@ -29,7 +29,7 @@ module Cul
         when "zoomingimage"
           results = members.collect {|doc| image_resource(doc)}
           base_id = self.pid
-          url = Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + base_id + "/SOURCE"
+          url = ActiveFedora.config[:url] + "/objects/" + base_id + "datastreams/SOURCE/content"
           head_req = http_client().head(url)
           file_size = head_req.header["Content-Length"].first.to_i
           results << {

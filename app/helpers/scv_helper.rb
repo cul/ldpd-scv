@@ -2,8 +2,11 @@ require 'rsolr'
 require 'blacklight'
 require 'cul'
 module ScvHelper
+
   include CatalogHelper
   include ModsHelper
+  include Cul::Scv::FedoraUrlHelperBehavior
+  include Scv::StructMetadataHelperBehavior
 
   def http_client
     unless @http_client
@@ -53,7 +56,7 @@ module ScvHelper
   end
 
   def doc_object_method(doc, method)
-    Cul::Fedora::ResourceIndex.config[:riurl] + '/get/' + base_id_for(doc).to_s +  method.to_s
+    fedora_method_url(base_id_for(doc).to_s, method.to_s)
   end
 
   def doc_json_method(doc, method)
@@ -189,7 +192,7 @@ module ScvHelper
     filename += ".xml"
        res[:show_url] = fedora_content_path(:show_pretty, res[:id], block, filename) + '?print_binary_octet=true'
     res[:download_url] = fedora_content_path(:download, res[:id], block, filename)
-    res[:direct_link] = Cul::Fedora::ResourceIndex.config[:riurl] + "/get/" + res[:id] + "/" + block
+    res[:direct_link] = fedora_ds_url(res[:id], block) + "/content"
     res[:type] = block == "DC"  ? "DublinCore" : "MODS"
     res
   end
@@ -230,32 +233,12 @@ module ScvHelper
     return results
   end
 
-  def struct_metadata(doc)
-    pid = base_id_for(doc)
-    members = get_members(doc)
-    #xml = Cul::Fedora.repository.datastream_dissemination(:pid=>pid, :dsid=>'structMetadata')
-    xml = rubydora.datastream_dissemination(:pid=>pid, :dsid=>'structMetadata')
-    ds = Cul::Scv::Hydra::ActiveFedora::Model::StructMetadata.from_xml(xml)
-    node_map = {}
-    ds.divs_with_attribute(true,'CONTENTIDS').each do |node|
-      node_map[node['CONTENTIDS']] = node
-    end
-      
-    members.each do |doc|
-      ids = (Array(doc[:identifier_ssim]) + Array(doc[:dc_identifier_ssim])).uniq
-      node_map.each do |cid, node|
-        node['pid'] = doc[:id] if ids.include? cid
-      end
-    end
-    ds
-  end
-
   def trim_fedora_uri_to_pid(uri)
     uri.gsub(/info\:fedora\//,"")
   end
 
   def resolve_fedora_uri(uri)
-    Cul::Fedora::ResourceIndex.config[:riurl] + "/get" + uri.gsub(/info\:fedora/,"")
+    fedora_object_url(uri)
   end
 
   def url_to_clio(document)

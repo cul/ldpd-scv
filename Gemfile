@@ -5,7 +5,7 @@ gem 'sqlite3'
 group :passenger_dev, :passenger_test, :passenger_prod do
   gem 'mysql2'
 end
-gem "blacklight", '~> 4.0.0'
+gem "blacklight", '4.2.2'
 
 gem 'authlogic', '~>3.1.0'
 gem 'authlogic_wind'
@@ -13,7 +13,7 @@ gem 'arel'
 gem 'actionmailer'
 gem 'sass'
 gem 'sass-rails',   '~> 3.2.3'
-gem "bootstrap-sass", "~>2.1.0.0"
+gem "bootstrap-sass", "~>2.3.2.2"
 #gem 'compass'
 #gem 'compass-rails'
 gem 'jquery-rails'
@@ -24,7 +24,7 @@ group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.0.3'
-  gem "bootstrap-sass", "~>2.1.0.0"
+  gem "bootstrap-sass", "~>2.3.2.2"
 #  gem 'compass-rails'
 end
 gem "unicode", :platforms => [:mri_18, :mri_19]
@@ -68,7 +68,7 @@ gem 'term-ansicolor'
 gem 'xml-simple'
 gem 'block_helpers'
 gem 'sanitize'
-group :development do
+group :development, :test do
   gem 'yard'
   gem 'jettywrapper', ">= 1.4.1"
 #  gem 'ruby-debug19'

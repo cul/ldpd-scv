@@ -3,9 +3,6 @@
 - document_counter ||= -1
 - data_counter = (document_counter + 1 + @response.params[:start].to_i)
 - href ||= url_to_document(document)
-.thumbnail.pull-left
-  %a{:href=>href, :'data-counter'=>data_counter, :class=>'thumbnail-link'}
-    %img{:src=>"#{thumbnail_path(document[:id])}"}
-    - if label
-      - if !(label =~ /SINGLE/) 
-        =image_tag("crystal/add_overlay.png", :class=>"thumb-overlay")
+- _class = (label and !(label =~ /SINGLE/)) ? "multipart-label" : ""
+%a{:href=>href, :'data-counter'=>data_counter, :class=>'thumbnail pull-left thumbnail-link'}
+  %img{:src=>thumbnail_path(document[:id]), :alt=>"", :class=>"media-object"}

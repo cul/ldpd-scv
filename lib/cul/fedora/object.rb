@@ -1,4 +1,3 @@
-require 'cul/fedora/resource_index'
 module Cul
 module Fedora
   TRIPLES_QUERY_TEMPLATE = <<-hd.gsub(/\s+/, " ").strip
@@ -61,7 +60,7 @@ hd
   module Objects
     class BaseObject
       def initialize(document, client=HTTPClient.new)
-        @riurl = Cul::Fedora::ResourceIndex.config[:riurl] + '/risearch'
+        @riurl = ActiveFedora.config[:url] + '/risearch'
         @http_client = client
         if document[:pid_ssi].nil?
             _pid = document[:id].split('@')[0]
@@ -76,7 +75,7 @@ hd
         query[:format] = 'json'
         query[:type] = 'tuples'
         query[:lang] = 'itql'
-        query[:limit] = ''
+        query[:limit] = nil
         res = @http_client.get_content(@riurl,query)
         JSON.parse(res)["results"]
       end

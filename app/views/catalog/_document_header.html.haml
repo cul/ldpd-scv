@@ -1,5 +1,3 @@
-%div.row-fluid
-  %div.span11
-    = render_document_partial document, :index_title, {:document=>document,:label=>true,:document_counter=>document_counter}
-  .span1
-    = render :partial=>'bookmark_control', :locals=>{:document=>document}  
+%div.media-body
+  = render_document_partial document, :index_title, {:document=>document,:label=>true,:document_counter=>document_counter}
+  = render :partial=>'bookmark_control', :locals=>{:document=>document}  

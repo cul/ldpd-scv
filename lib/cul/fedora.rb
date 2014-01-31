@@ -1,7 +1,6 @@
 require 'rubydora'
 module Cul
 module Fedora
-  require 'cul/fedora/resource_index'
   require 'cul/fedora/object'
   module RubydoraPatch
   # This module is just to patch Rubydora to make use of a streaming block
