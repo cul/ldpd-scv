@@ -1,4 +1,4 @@
-require 'cul/scv'
+require 'cul'
 module ApplicationHelper
-  include Cul::Scv::FedoraUrlHelperBehavior
+  include Cul::Fedora::UrlHelperBehavior
 end

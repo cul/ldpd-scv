@@ -1,6 +1,6 @@
 module Cul
-  module Scv
-    module FedoraUrlHelperBehavior
+  module Fedora
+    module UrlHelperBehavior
 
       def fedora_url
         @fedora_url ||= ActiveFedora.config.credentials[:url]

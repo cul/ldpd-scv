@@ -1,7 +1,7 @@
 module Cul
   module Scv
     module LinkableResources
-      include FedoraUrlHelperBehavior
+      include Cul::Fedora::UrlHelperBehavior
       # so as to avoid including all the url hepers via:
       ## include Rails.application.routes.url_helpers
       # we are just going to delegate

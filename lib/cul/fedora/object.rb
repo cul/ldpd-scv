@@ -59,7 +59,7 @@ hd
   end
   module Objects
     class BaseObject
-      include Cul::Scv:FedoraUrlHelperBehavior
+      include Cul::Fedora::UrlHelperBehavior
       def initialize(document, client=HTTPClient.new)
         @riurl = fedora_risearch_url
         @http_client = client

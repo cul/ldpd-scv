@@ -16,7 +16,7 @@ GIT
 
 GIT
   remote: git://github.com/cul/cul_scv_hydra.git
-  revision: 306822dfbd235bda8a870d3331e3f338a2ada3fe
+  revision: 2d0bee5f719eab4c735adb6525447ad58a138a0e
   branch: master
   specs:
     cul_scv_hydra (0.8.0)
@@ -26,6 +26,7 @@ GIT
       blacklight (>= 4.0.0)
       cul_image_props
       hydra-head (= 6.4.1)
+      mods
       om
       solrizer (~> 3.0)
 
@@ -138,7 +139,7 @@ GEM
     daemons (1.1.9)
     database_cleaner (1.2.0)
     declarative_authorization (0.5.3)
-    deprecation (0.0.5)
+    deprecation (0.1.0)
       activesupport
     diff-lcs (1.2.5)
     ensure_valid_encoding (0.5.3)
@@ -179,6 +180,7 @@ GEM
       hydra-core (= 6.4.1)
       rails (>= 3.2.6)
     i18n (0.6.9)
+    iso-639 (0.2.4)
     jettywrapper (1.5.2)
       activesupport (>= 3.0.0)
       childprocess
@@ -210,6 +212,10 @@ GEM
     mini_portile (0.5.2)
     mocha (1.0.0)
       metaclass (~> 0.0.1)
+    mods (0.0.23)
+      iso-639
+      nokogiri
+      nom-xml
     multi_json (1.8.4)
     multi_test (0.0.3)
     multi_xml (0.5.5)

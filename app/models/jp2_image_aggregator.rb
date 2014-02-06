@@ -4,6 +4,7 @@ class JP2ImageAggregator < ::ActiveFedora::Base
   include ::ActiveFedora::Finders
   include ::ActiveFedora::DatastreamCollections
   include ::Hydra::ModelMethods
+  include Cul::Fedora::UrlHelperBehavior
   include Cul::Scv::Hydra::ActiveFedora::Model::Common
   include Cul::Scv::Hydra::ActiveFedora::Model::Aggregator
   include Cul::Scv::LinkableResources
@@ -37,6 +38,7 @@ class JP2ImageAggregator < ::ActiveFedora::Base
   end
   
   def thumbnail_info
-    {:url => "#{ActiveFedora.fedora_config.credentials[:url]}/objects/#{pid}/methods/ldpd:sdef.Image/getView?max=250", :mime => 'image/jpeg'}
+    url = fedora_method_url(pid,'ldpd:sdef.Image/getView?max=250')
+    {:url => url, :mime => 'image/jpeg'}
   end
 end

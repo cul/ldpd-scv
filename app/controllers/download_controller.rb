@@ -1,5 +1,6 @@
 require 'net/http'
 require 'cul_scv_hydra'
+require 'cul'
 class DownloadController  < ActionController::Base
   include Cul::Scv::Controller
   

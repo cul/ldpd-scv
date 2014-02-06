@@ -5,7 +5,7 @@ module ScvHelper
 
   include CatalogHelper
   include ModsHelper
-  include Cul::Scv::FedoraUrlHelperBehavior
+  include Cul::Fedora::UrlHelperBehavior
   include Scv::StructMetadataHelperBehavior
 
   def http_client
