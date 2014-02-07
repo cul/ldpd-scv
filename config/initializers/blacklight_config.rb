@@ -78,7 +78,7 @@ class BlacklightConfiguration
     # field cannot be the nameof another facet!
     config.add_facet_field "collection_pivot", {
       label: "Collections (Pivot)",
-      pivot: ["lib_repo_sim","lib_collection_sim", "lib_shelf_sim"],
+      pivot: ["lib_collection_sim", "lib_shelf_sim"],
       sort: "index",
       #mincount: 0,
       show: true
