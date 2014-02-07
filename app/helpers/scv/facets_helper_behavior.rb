@@ -22,5 +22,36 @@ module Scv
         params[:'facet.prefix'] == prefix
       end
     end
+    def any_facet_in_params? field
+      params[:f] and params[:f][field] and params[:f][field].length > 0
+    end
+    def should_render_facet? display_facet
+      facet_config = facet_configuration_for_field(display_facet.name)
+      if facet_config[:only]
+        any_facet_in_params?( facet_config[:only] ) and super
+      else
+        super
+      end
+    end
+
+    # OVERRIDES
+    # Standard display of a SELECTED facet value, no link, special span
+    # with class, and 'remove' button.
+    def render_selected_facet_value(facet_solr_field, item)
+      #Updated class for Bootstrap Blacklight
+      deps = []
+      (params[:f] || {}).each do |f,i|
+        facet_config = facet_configuration_for_field(f)
+        if facet_config[:only] and facet_config[:only] == facet_solr_field
+          puts facet_config.inspect
+          deps << facet_config[:field]
+        end
+      end
+
+      remove_params = remove_facet_params(facet_solr_field, item, params)
+      deps.each {|f| remove_params[:f].delete(f)}
+      content_tag(:span, render_facet_value(facet_solr_field, item, :suppress_link => true), :class => "selected") +
+        link_to(content_tag(:i, '', :class => "icon-remove") + content_tag(:span, '[remove]', :class => 'hide-text'), remove_params, :class=>"remove")
+    end
   end
 end

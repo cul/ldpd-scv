@@ -1,0 +1,10 @@
+%ul.pivot-facet.list-unstyled
+  - display_facet.items.each do |item|
+    %li
+      %span.facet-values
+        - if facet_in_params?( solr_field, item )
+          = render_selected_facet_value(solr_field, item)
+        - else
+          = render_facet_value(solr_field, item)
+      - if ( facet_in_params?( solr_field, item ) and not item.items.blank? )
+        = render :partial => 'facet_pivot', :locals => { :display_facet => item, :solr_field => solr_field }

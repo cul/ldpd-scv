@@ -19,6 +19,10 @@ require 'blacklight'
 
 module Scv
 class BlacklightConfiguration
+  def self.dependent_facet(controller, config, display_facet)
+    config[:only] and facet_in_params?(config[:only])
+  end
+
   def self.configure(config)
 
   #   Set up and register the default SolrDocument Marc extension
@@ -32,6 +36,7 @@ class BlacklightConfiguration
           :defType          => "dismax",
           :facet            => true,
           :'facet.mincount' => 1,
+          :'facet.pivot.mincount' => 0,
           :rows         => 10,
           :'q.alt'          => "*:*"
         }
@@ -58,10 +63,26 @@ class BlacklightConfiguration
     # TODO: Reorganize facet data structures supplied in config to make simpler
     # for human reading/writing, kind of like search_fields. Eg,
     config.add_facet_field "lib_project_sim", :label => "Projects", :limit => 10, :sort => "index"
-    config.add_facet_field "lib_name_sim", :label => "Names", :limit => 10, :sort => "index"
+    config.add_facet_field "lib_name_sim", {
+      :label => "Names", :limit => 10, :sort => "index"}
+    config.add_facet_field "lib_recipient_sim", :label => "RCP", :limit => 10, :sort => "index", :show=>false
     config.add_facet_field "lib_date_sim", :label => "Dates", :limit => 10, :sort => "index"
     config.add_facet_field "lib_format_sim", :label => "Formats", :limit => 10, :sort => "index"
-    config.add_facet_field "lib_collection_sim", :label => "Collections", :limit => 10, :sort => "index"
+    config.add_facet_field "lib_collection_sim", :label => "Collections (Cndtl)", :limit => 10, :sort => "index"
+    config.add_facet_field "lib_shelf_sim", {
+      :label => "Location (Cndtl)",
+      :limit => 10,
+      :sort => "index",
+      :only => "lib_collection_sim"
+    }
+    # field cannot be the nameof another facet!
+    config.add_facet_field "collection_pivot", {
+      label: "Collections (Pivot)",
+      pivot: ["lib_repo_sim","lib_collection_sim", "lib_shelf_sim"],
+      sort: "index",
+      #mincount: 0,
+      show: true
+    }
     config.add_facet_field "lib_repo_sim", :label => "Repositories", :limit => 10, :sort => "index"
     config.add_facet_field "subject_topic_sim", :label => "Topics", :limit => 10, :sort => "index"
     config.add_facet_field "language_sim", :label => "Languages", :limit => 10, :sort => "index"
@@ -84,7 +105,7 @@ class BlacklightConfiguration
     config.add_index_field "title_vern_ssm", :label => "Title:"
     config.add_index_field "lib_name_ssm", :label => "Names:"
     config.add_index_field "lib_repo_ssm", :label => "Repository:"
-    config.add_index_field "lib_collection_ssm", :label => "Collection:"
+    config.add_index_field "lib_collection_sim", :label => "Collection:"
     config.add_index_field "author_ssm", :label => "Author:"
     config.add_index_field "author_vern_ssm", :label => "Author:"
     config.add_index_field "lib_format_ssm", :label => "Format:"
