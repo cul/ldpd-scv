@@ -54,35 +54,32 @@ class BlacklightConfiguration
     config.show.heading = 'title_display_ssm'
     config.show.display_type = :format_ssi
 
-    # solr fld values given special treatment in the index (search results) view
+    # solr field values given special treatment in the index (search results) view
     config.index.show_link = 'title_display_ssm'
     config.index.record_display_type = :format_ssi
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
-    # TODO: Reorganize facet data structures supplied in config to make simpler
-    # for human reading/writing, kind of like search_fields. Eg,
     config.add_facet_field "lib_project_sim", :label => "Projects", :limit => 10, :sort => "index"
-    config.add_facet_field "lib_name_sim", {
+    config.add_facet_field "lib_name_sim", { 
       :label => "Names", :limit => 10, :sort => "index"}
-    config.add_facet_field "lib_recipient_sim", :label => "RCP", :limit => 10, :sort => "index", :show=>false
+    config.add_facet_field "lib_recipient_sim", :label => "RCP", :limit => 10, :sort => "index", :only=>"lib_name_sim"
     config.add_facet_field "lib_date_sim", :label => "Dates", :limit => 10, :sort => "index"
     config.add_facet_field "lib_format_sim", :label => "Formats", :limit => 10, :sort => "index"
-    config.add_facet_field "lib_collection_sim", :label => "Collections (Cndtl)", :limit => 10, :sort => "index"
+    config.add_facet_field "lib_collection_sim", :label => "Collections", :limit => 10, :sort => "index"
     config.add_facet_field "lib_shelf_sim", {
-      :label => "Location (Cndtl)",
+      :label => "Location",
       :limit => 10,
       :sort => "index",
       :only => "lib_collection_sim"
     }
-    # field cannot be the nameof another facet!
-    config.add_facet_field "collection_pivot", {
-      label: "Collections (Pivot)",
-      pivot: ["lib_collection_sim", "lib_shelf_sim"],
-      sort: "index",
-      #mincount: 0,
-      show: true
-    }
+## field cannot be the nameof another facet!
+#    config.add_facet_field "collection_pivot", {
+#      label: "Collections (Pivot)",
+#      pivot: ["lib_collection_sim", "lib_shelf_sim"],
+#      sort: "index",
+#      show: true
+#    }
     config.add_facet_field "lib_repo_sim", :label => "Repositories", :limit => 10, :sort => "index"
     config.add_facet_field "subject_topic_sim", :label => "Topics", :limit => 10, :sort => "index"
     config.add_facet_field "language_sim", :label => "Languages", :limit => 10, :sort => "index"
