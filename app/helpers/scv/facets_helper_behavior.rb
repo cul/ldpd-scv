@@ -53,5 +53,6 @@ module Scv
       content_tag(:span, render_facet_value(facet_solr_field, item, :suppress_link => true), :class => "selected") +
         link_to(content_tag(:i, '', :class => "icon-remove") + content_tag(:span, '[remove]', :class => 'hide-text'), remove_params, :class=>"remove")
     end
+
   end
 end

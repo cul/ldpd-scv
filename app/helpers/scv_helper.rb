@@ -6,7 +6,9 @@ module ScvHelper
   include CatalogHelper
   include ModsHelper
   include Cul::Fedora::UrlHelperBehavior
+  include Scv::UrlHelperBehavior
   include Scv::StructMetadataHelperBehavior
+  include Scv::MembersHelperBehavior
 
   def http_client
     unless @http_client
@@ -93,38 +95,6 @@ module ScvHelper
       _solr.add(_doc)
       _solr.commit
   end
-  def get_first_member(document, imageOnly=true)
-    docs = get_members(document)
-    docs.each do |doc|
-      logger.info "#{doc["id"]}  #{doc["format"]}"
-      if imageOnly
-        if doc["format_ssi"] ==  "image"
-          return [doc,docs.length]
-        end
-      else
-        return [doc,docs.length]
-      end
-    end
-    return [false,docs.length]
-  end
-
-  def get_members(document, format=:solr)
-    memoize = (@document and document[:id] == @document[:id])
-    return @members if memoize and not @members.nil?
-    klass = false
-    document[:has_model_ssim].each do |model|
-      klass ||= ActiveFedora::Model.from_class_uri(model)
-    end
-    klass ||= GenericAggregator
-    members = []
-    if klass.include? Cul::Scv::Hydra::ActiveFedora::Model::Aggregator
-      agg = klass.load_instance_from_solr(document[:id],document)
-      r = agg.parts(:response_format => format)
-      members = r.collect {|hit| SolrDocument.new(hit) } unless r.blank?
-    end
-    @members = members if memoize
-    members
-  end
 
   def get_solr_params_for_field_values(field, values, extra_controller_params={})
     value_str = "(\"" + values.to_a.join("\" OR \"") + "\")"
@@ -172,16 +142,6 @@ module ScvHelper
     result
   end
 
-  def get_rows(member_list, row_length)
-#    indexes = ((0...members.length).collect{|x| ((x % row_length)==0?x:nil}).compact
-    indexes = []
-    (0...member_list.length).collect {|x| if (x % row_length)==0 then  indexes.push x end}
-    rows = []
-    for index in indexes
-      rows.push [index,index+1,index+2].collect {|x| member_list.at(x)?x:nil}
-    end
-    rows
-  end
   def decorate_metadata_response(type, pid)
     res = {}
     res[:title] = type
@@ -239,34 +199,6 @@ module ScvHelper
 
   def resolve_fedora_uri(uri)
     fedora_object_url(uri)
-  end
-
-  def url_to_clio(document)
-    if document.is_a? ActiveFedora::Base
-      clio_id = document.datastreams['descMetadata'].term_values(:clio_ssm)
-      clio_id = clio_id.first unless clio_id.nil?
-    else
-      if document["clio_s"] and document["clio_s"].length > 0
-        clio_id = document["clio_s"][0]
-      end
-    end
-    clio_id ? "http://clio.cul.columbia.edu:7018/vwebv/holdingsInfo?bibId=#{clio_id}" : false
-  end
-     
-
-  def link_to_clio(document,link_text="More information in CLIO")
-    clio_url = url_to_clio(document)
-    if clio_url
-      link_to link_text + "<i class=\"icon-globe\"></i>".html_safe, clio_url, :target=>"_blank"
-    else
-      ""
-    end
-  end
-
-  def link_to_object(object, opts={:label=>nil, :counter => nil, :results_view => true})
-    label ||= lambda { |doc, opts| doc[blacklight_config[:index][:show_link].to_s]}
-    label = render_document_index_label object, opts
-    link_to label, {:controller => :catalog, :id=>object.pid}, :'data-counter' => opts[:counter]
   end
 
 end

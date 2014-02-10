@@ -47,12 +47,14 @@ class ContentAggregator < ::ActiveFedora::Base
 
   def thumb_from_members(members)
     sorted = members.sort do |a,b|
-      c = a.title_si <=> b.title_si
-      return c unless c == 0
-      a.identifier_ssim.delete(a.id) unless a.identifier_ssim.length == 1
-      b.identifier_ssim.delete(a.id) unless b.identifier_ssim.length == 1
-      c = a.identifier_ssim[0] <=> b.identifier_ssim[0]
-      return c
+      c = a['title_si'] <=> b['title_si']
+      if c == 0
+        a['identifier_ssim'].delete(a.id) unless a['identifier_ssim'].length == 1
+        b['identifier_ssim'].delete(a.id) unless b['identifier_ssim'].length == 1
+        a['identifier_ssim'][0] <=> b['identifier_ssim'][0]
+      else
+        c
+      end
     end
     thumb_from_solr_doc(sorted[0])
   end

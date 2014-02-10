@@ -1,5 +1,5 @@
 -# coding: utf-8
-- members_list = get_members(document)
+- members_list = sort_member_docs(get_members(document))
 - counter ||= session[:search][:counter]
 - display_members = session[:search][:display_members]
 - display_members = "list" unless not (display_members.nil? || "".eql?(display_members))
