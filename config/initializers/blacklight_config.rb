@@ -68,7 +68,7 @@ class BlacklightConfiguration
     config.add_facet_field "lib_format_sim", :label => "Formats", :limit => 10, :sort => "index"
     config.add_facet_field "lib_collection_sim", :label => "Collections", :limit => 10, :sort => "index"
     config.add_facet_field "lib_shelf_sim", {
-      :label => "Location",
+      :label => "Sublocation",
       :limit => 10,
       :sort => "index",
       :only => "lib_collection_sim"
