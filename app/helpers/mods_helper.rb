@@ -2,6 +2,8 @@ require 'active_support/all'
 module ModsHelper
 #  include Blacklight::SolrHelper
   Namespace = {'mods'=>'http://www.loc.gov/mods/v3'}
+  DATE_TAGS = ['dateCreated', 'dateIssued', 'dateCaptured', 'copyrightDate', 'dateOther', 'dateModified', 'dateValid']
+
   def extract_mods_details(metadata)
     details = []
     metadata[:details] = []
@@ -46,20 +48,27 @@ module ModsHelper
     end
     # date
     xml.xpath("/mods:mods/mods:originInfo",ns).each do |node|
-      node.xpath("./mods:dateCreated",ns).each do |date|
-        value = get_mods_date_details(date)
-        if date.attributes["point"]
-          details << ["Date / #{date.attr("point")}:",value]
-        else
-          details << ["Date:",value]
+      DATE_TAGS.each do |tag|
+        node.xpath("./mods:#{tag}",ns).each do |date|
+          value = get_mods_date_details(date)
+          if date.attributes["point"]
+            details << ["Date / #{date.attr("point")}:",value]
+          else
+            details << ["Date:",value]
+          end
         end
       end
-      node.xpath("./mods:dateIssued",ns).each do |date|
-        value = get_mods_date_details(date)
-        if date.attributes["point"]
-          details << ["Date / #{date.attr("point")}:",value]
-        else
-          details << ["Date:",value]
+    end
+    # this is a patch for bad CSS data pending a refresh
+    xml.xpath("/mods:mods/originInfo",ns).each do |node|
+      DATE_TAGS.each do |tag|
+        node.xpath("./mods:#{tag}",ns).each do |date|
+          value = get_mods_date_details(date)
+          if date.attributes["point"]
+            details << ["Date / #{date.attr("point")}:",value]
+          else
+            details << ["Date:",value]
+          end
         end
       end
     end
