@@ -46,8 +46,11 @@ module Scv
 
     def sort_member_docs(members)
       members.sort do |a,b|
-        c = a['title_si'] <=> b['title_si']
-        if c == 0
+        c = 0
+        if (a['title_ssm'])
+          c = ((a['title_ssm'][0] <=> b['title_ssm'][0]) || 0)
+        end
+        if (c == 0 and a['identifier_ssim'])
           a['identifier_ssim'].delete(a.id) unless a['identifier_ssim'].length == 1
           b['identifier_ssim'].delete(a.id) unless b['identifier_ssim'].length == 1
           a['identifier_ssim'][0] <=> b['identifier_ssim'][0]
