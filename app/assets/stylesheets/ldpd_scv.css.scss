@@ -85,3 +85,14 @@ div.member-item div {
 div.member-item > hr {
   width: 75%;
 }
+
+dt,
+dd {
+  line-height: 12px;
+}
+
+.table th,
+.table td {
+  padding: 8px;
+  line-height: 12px;
+}
