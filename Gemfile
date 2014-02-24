@@ -60,7 +60,7 @@ gem 'rake'
 # gem 'rcov'
 gem 'rsolr', '1.0.6' # Default to using the version required by Blacklight
 gem 'rsolr-ext' # Default to using the version required by Blacklight
-gem 'rubydora', :git=>'git://github.com/barmintor/rubydora.git', :branch=>'fetch-profiles'
+gem 'rubydora'
 gem 'RedCloth', '>=4.2.3'
 gem 'solr-ruby' 
 gem 'sprockets'

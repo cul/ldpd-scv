@@ -1,25 +1,9 @@
 GIT
-  remote: git://github.com/barmintor/rubydora.git
-  revision: 5e228697ee506a5ee2080a6a86212669a77b13ed
-  branch: fetch-profiles
-  specs:
-    rubydora (1.6.5)
-      activemodel
-      activesupport
-      deprecation
-      equivalent-xml
-      fastercsv
-      hooks (~> 0.3.0)
-      mime-types
-      nokogiri
-      rest-client
-
-GIT
   remote: git://github.com/cul/cul_scv_hydra.git
-  revision: 2d0bee5f719eab4c735adb6525447ad58a138a0e
+  revision: 86398fb5f85cac1c4401173721db8e8f85fe9742
   branch: master
   specs:
-    cul_scv_hydra (0.8.0)
+    cul_scv_hydra (0.9.0)
       active-fedora (~> 6.1)
       active_fedora_finders (>= 0.1.3)
       active_fedora_relsint
@@ -34,12 +18,12 @@ GEM
   remote: http://rubygems.org/
   specs:
     RedCloth (4.2.9)
-    actionmailer (3.2.16)
-      actionpack (= 3.2.16)
+    actionmailer (3.2.17)
+      actionpack (= 3.2.17)
       mail (~> 2.5.4)
-    actionpack (3.2.16)
-      activemodel (= 3.2.16)
-      activesupport (= 3.2.16)
+    actionpack (3.2.17)
+      activemodel (= 3.2.17)
+      activesupport (= 3.2.17)
       builder (~> 3.0.0)
       erubis (~> 2.7.0)
       journey (~> 1.0.4)
@@ -70,18 +54,18 @@ GEM
       active-fedora (>= 4.2.0)
       activesupport (~> 3.2.0)
       rubydora (< 2.0)
-    activemodel (3.2.16)
-      activesupport (= 3.2.16)
+    activemodel (3.2.17)
+      activesupport (= 3.2.17)
       builder (~> 3.0.0)
-    activerecord (3.2.16)
-      activemodel (= 3.2.16)
-      activesupport (= 3.2.16)
+    activerecord (3.2.17)
+      activemodel (= 3.2.17)
+      activesupport (= 3.2.17)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
-    activeresource (3.2.16)
-      activemodel (= 3.2.16)
-      activesupport (= 3.2.16)
-    activesupport (3.2.16)
+    activeresource (3.2.17)
+      activemodel (= 3.2.17)
+      activesupport (= 3.2.17)
+    activesupport (3.2.17)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
     arel (3.0.3)
@@ -110,7 +94,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    childprocess (0.4.0)
+    childprocess (0.5.1)
       ffi (~> 1.0, >= 1.0.11)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
@@ -120,8 +104,8 @@ GEM
       execjs
     coffee-script-source (1.7.0)
     columnize (0.3.6)
-    crack (0.4.1)
-      safe_yaml (~> 0.9.0)
+    crack (0.4.2)
+      safe_yaml (~> 1.0.0)
     cucumber (1.3.10)
       builder (>= 2.1.2)
       diff-lcs (>= 1.1.3)
@@ -147,7 +131,7 @@ GEM
       nokogiri (>= 1.4.3)
     erubis (2.7.0)
     execjs (2.0.2)
-    factory_girl (4.3.0)
+    factory_girl (4.4.0)
       activesupport (>= 3.0.0)
     fastercsv (1.5.5)
     ffi (1.9.3)
@@ -157,7 +141,7 @@ GEM
       tilt
     hike (1.2.3)
     hooks (0.3.3)
-    httparty (0.12.0)
+    httparty (0.13.0)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
     httpclient (2.1.6.1)
@@ -191,8 +175,8 @@ GEM
     jquery-rails (3.1.0)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    jquery-ui-rails (4.1.1)
-      railties (>= 3.1.0)
+    jquery-ui-rails (4.2.0)
+      railties (>= 3.2.16)
     json (1.8.1)
     json_pure (1.8.1)
     kaminari (0.15.1)
@@ -207,7 +191,7 @@ GEM
       ensure_valid_encoding
       unf
     mediashelf-loggable (0.4.9)
-    metaclass (0.0.2)
+    metaclass (0.0.4)
     mime-types (1.25.1)
     mini_portile (0.5.2)
     mocha (1.0.0)
@@ -236,7 +220,7 @@ GEM
       mediashelf-loggable
       nokogiri (>= 1.4.2)
       solrizer (~> 3.1.0)
-    polyglot (0.3.3)
+    polyglot (0.3.4)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -244,17 +228,17 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
-    rails (3.2.16)
-      actionmailer (= 3.2.16)
-      actionpack (= 3.2.16)
-      activerecord (= 3.2.16)
-      activeresource (= 3.2.16)
-      activesupport (= 3.2.16)
+    rails (3.2.17)
+      actionmailer (= 3.2.17)
+      actionpack (= 3.2.17)
+      activerecord (= 3.2.17)
+      activeresource (= 3.2.17)
+      activesupport (= 3.2.17)
       bundler (~> 1.0)
-      railties (= 3.2.16)
-    railties (3.2.16)
-      actionpack (= 3.2.16)
-      activesupport (= 3.2.16)
+      railties (= 3.2.17)
+    railties (3.2.17)
+      actionpack (= 3.2.17)
+      activesupport (= 3.2.17)
       rack-ssl (~> 1.3.2)
       rake (>= 0.8.7)
       rdoc (~> 3.4)
@@ -279,9 +263,9 @@ GEM
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
     rspec-core (2.14.7)
-    rspec-expectations (2.14.4)
+    rspec-expectations (2.14.5)
       diff-lcs (>= 1.1.3, < 2.0)
-    rspec-mocks (2.14.4)
+    rspec-mocks (2.14.6)
     rspec-rails (2.14.1)
       actionpack (>= 3.0)
       activemodel (>= 3.0)
@@ -291,7 +275,17 @@ GEM
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
     ruby-prof (0.14.2)
-    safe_yaml (0.9.7)
+    rubydora (1.7.4)
+      activemodel
+      activesupport
+      deprecation
+      equivalent-xml
+      fastercsv
+      hooks (~> 0.3.0)
+      mime-types
+      nokogiri
+      rest-client
+    safe_yaml (1.0.1)
     sanitize (2.1.0)
       nokogiri (>= 1.4.4)
     sass (3.2.14)
@@ -314,11 +308,11 @@ GEM
       tilt (~> 1.1, != 1.3.0)
     sqlite3 (1.3.8)
     stomp (1.3.2)
-    term-ansicolor (1.2.2)
-      tins (~> 0.8)
+    term-ansicolor (1.3.0)
+      tins (~> 1.0)
     thor (0.18.1)
     tilt (1.4.1)
-    tins (0.13.1)
+    tins (1.0.0)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -329,7 +323,7 @@ GEM
     unf (0.1.3)
       unf_ext
     unf_ext (0.0.6)
-    unicode (0.4.4)
+    unicode (0.4.4.1)
     xml-simple (1.1.3)
     xpath (2.0.0)
       nokogiri (~> 1.3)
@@ -391,7 +385,7 @@ DEPENDENCIES
   rspec (>= 2.0.0)
   rspec-rails (>= 2.0.0)
   ruby-prof
-  rubydora!
+  rubydora
   sanitize
   sass
   sass-rails (~> 3.2.3)

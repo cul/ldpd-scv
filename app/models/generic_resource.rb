@@ -9,10 +9,11 @@ class GenericResource < ::ActiveFedora::Base
   include ::ActiveFedora::DatastreamCollections
   include ::Hydra::ModelMethods
   include Cul::Scv::Hydra::ActiveFedora::Model::Common
+  include Cul::Fedora::UrlHelperBehavior
   include ::ActiveFedora::RelsInt
   alias :file_objects :resources
   
-  IMAGE_EXT = {"image/bmp" => 'bmp', "image/gif" => 'gif', "image/jpeg" => 'jpg', "image/png" => 'png', "image/tiff" => 'tif', "image/x-windows-bmp" => 'bmp'}
+  IMAGE_EXT = {"image/bmp" => 'bmp', "image/gif" => 'gif', "image/jpeg" => 'jpg', "image/png" => 'png', "image/tiff" => 'tif', "image/x-windows-bmp" => 'bmp', 'image/jp2' => 'jp2'}
   WIDTH = RDF::URI(ActiveFedora::Predicates.find_graph_predicate(:image_width))
   LENGTH = RDF::URI(ActiveFedora::Predicates.find_graph_predicate(:image_length))
   WIDTH_PREDICATE = ActiveFedora::Predicates.short_predicate("http://www.w3.org/2003/12/exif/ns#imageWidth").to_s
@@ -20,6 +21,19 @@ class GenericResource < ::ActiveFedora::Base
   EXTENT_PREDICATE = ActiveFedora::Predicates.short_predicate("http://purl.org/dc/terms/extent").to_s
   FORMAT_OF_PREDICATE = ActiveFedora::Predicates.short_predicate("http://purl.org/dc/terms/isFormatOf").to_s
   FORMAT_URI = RDF::URI("http://purl.org/dc/terms/format")
+
+  DJATOKA_THUMBNAIL_PARMS = {
+    "url_ver" => "Z39.88-2004",
+    "svc_id" => "info:lanl-repo/svc/getRegion",
+    "svc_val_fmt" => "info:ofi/fmt:kev:mtx:jpeg2000",
+    "svc.format" => "image/jpeg",
+    "svc.level" => "",
+    "svc.rotate" => "0",
+    "svc.scale" => "200",
+    "svc.clayers" => ""
+  }
+
+  DJATOKA_BASE_URL = "http://iris.cul.columbia.edu:8888/resolve"
   
   has_datastream :name => "content", :type=>::ActiveFedora::Datastream, :versionable => true
   
@@ -29,7 +43,7 @@ class GenericResource < ::ActiveFedora::Base
   end
 
   def route_as
-    "resource"
+    zooming? ? "zoomingimage" : "resource"
   end
 
   def index_type_label
@@ -41,6 +55,12 @@ class GenericResource < ::ActiveFedora::Base
     unless solr_doc["extent_ssim"] || self.datastreams["content"].nil?
       solr_doc["extent_ssim"] = [self.datastreams["content"].size]
     end
+    if self.zooming?
+      fz = rels_int.relationships(datastreams['content'], :foaf_zooming).first.object.to_s.split('/')[-1]
+      ds = datastreams[fz]
+      rft_id = ds.controlGroup == 'E' ? datastreams[fz].dsLocation : fedora_ds_url(pid, ds.dsid) + '/content'
+      solr_doc['rft_id_ss'] = rft_id
+    end
     solr_doc
   end
   
@@ -50,6 +70,11 @@ class GenericResource < ::ActiveFedora::Base
       t_dsid = thumb.object.to_s.split('/')[-1]
       t_url = "#{ActiveFedora.fedora_config.credentials[:url]}/objects/#{pid}/datastreams/#{t_dsid}/content"
       return {:url=>t_url,:mime=>datastreams[t_dsid].mimeType}
+    elsif self.zooming?
+      t_dsid = rels_int.relationships(dsuri, :foaf_zooming).first.object.to_s.split('/')[-1]
+      t_parms = DJATOKA_THUMBNAIL_PARMS.merge({"rft_id" => datastreams[t_dsid].dsLocation})
+      url = "#{DJATOKA_BASE_URL}?#{options.map { |key, value|  "#{CGI::escape(key.to_s)}=#{CGI::escape(value.to_s)}"}.join("&")  }"
+      {:url => url, :mime => t_parms["svc.format"]}
     else
       return {:asset=>"crystal/file.png",:mime=>'image/png'}
     end
@@ -90,6 +115,10 @@ class GenericResource < ::ActiveFedora::Base
       end
     end
     results
+  end
+
+  def zooming?
+    !rels_int.relationships(datastreams['content'], :foaf_zooming).first.blank?
   end
   
   private

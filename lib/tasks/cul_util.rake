@@ -230,5 +230,32 @@ namespace :util do
       end
     end
   end
+  desc "migrate SOURCE ds to content ds"
+  task :migrate_source => :configure do
+    pid = ENV['PID']
+    o = GenericResource.find(pid)
+    old_ds = o.datastreams['SOURCE']
+    opts = {:controlGroup => old_ds.controlGroup, :mimeType =>old_ds.mimeType}
+    if o.datastreams['content'].new?
+      new_ds = o.create_datastream(ActiveFedora::Datastream, 'content', opts)
+      new_ds.dsLocation = old_ds.dsLocation
+      new_ds.save
+    end
+    if (opts[:mimeType] == 'image/jp2' and o.rels_int.relationships(new_ds,:foaf_zooming).blank?)
+      o.rels_int.add_relationship(new_ds,:foaf_zooming, o.internal_uri + "/content")
+    end
+    subject = RDF::URI.new(o.internal_uri)
+    cmodel_pred = ActiveFedora::Predicates.find_graph_predicate(:has_model)
+    type_pred = ActiveFedora::Predicates.find_graph_predicate(:rdf_type)
+    agg_model = RDF::URI.new("info:fedora/ldpd:JP2ImageAggregator")
+    res_model = RDF::URI.new("info:fedora/ldpd:GenericResource")
+    del_stmt = RDF::Statement.new(subject, cmodel_pred, agg_model)
+    add_stmt = RDF::Statement.new(subject, cmodel_pred, res_model)
+    o.remove_relationship(cmodel_pred, agg_model)
+    o.add_relationship(cmodel_pred, res_model)
+    o.remove_relationship(type_pred, RDF::URI.new("http://purl.oclc.org/NET/CUL/Aggregator"))
+    o.add_relationship(type_pred, RDF::URI.new("http://purl.oclc.org/NET/CUL/Resource"))
+    o.save
+  end
 end
 end
