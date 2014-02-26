@@ -236,7 +236,7 @@ namespace :util do
     o = GenericResource.find(pid)
     old_ds = o.datastreams['SOURCE']
     opts = {:controlGroup => old_ds.controlGroup, :mimeType =>old_ds.mimeType}
-    if o.datastreams['content'].new?
+    if o.datastreams['content'].nil? or o.datastreams['content'].new?
       new_ds = o.create_datastream(ActiveFedora::Datastream, 'content', opts)
       new_ds.dsLocation = old_ds.dsLocation
       new_ds.save
