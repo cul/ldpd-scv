@@ -10,7 +10,7 @@
           %li= link_to('View your last search', catalog_index_path(current_user.last_search_url))
         %li= link_to "Saved Searches", saved_searches_path
         %li= link_to "Search History", search_history_path
-        %li= link_to('Saved Items', bookmarks_path)
+        %li= link_to('Bookmarked Items', bookmarks_path)
         - if current_user.admin?
           %li= link_to("Admin", :controller => :admin)
         %li= link_to("Log Out", wind_logout_path)

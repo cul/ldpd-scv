@@ -3,11 +3,11 @@
 
 - if current_or_guest_user.blank?
   
-  %h2="Please log in to see your saved items."
+  %h2="Please log in to see your bookmarked items."
   
 - elsif @document_list.blank?
   
-  %h2="You have no saved items."
+  %h2="You have no bookmarked items."
   
 - else
   = render 'sort_and_per_page'
@@ -15,4 +15,4 @@
   = render_document_index
   = render 'results_pagination'
   %div#userBookmarks
-    %p=link_to "Clear Saved Items", clear_bookmarks_path, :method => :delete, :confirm => "Clear your saved items?"
+    %p=link_to "Clear Bookmarked Items", clear_bookmarks_path, :method => :delete, :confirm => "Clear your bookmarked items?"
