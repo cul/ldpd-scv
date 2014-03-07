@@ -1,27 +1,18 @@
 -# coding: utf-8
 %h1="Saved Items"
 
-- if current_user.blank?
+- if current_or_guest_user.blank?
   
   %h2="Please log in to see your saved items."
   
-- elsif @bookmarks.blank?
+- elsif @document_list.blank?
   
   %h2="You have no saved items."
   
 - else
-
-  = paginate @bookmarks, :theme => 'blacklight'
+  = render 'sort_and_per_page'
+  = render 'tools'
+  = render_document_index
+  = render 'results_pagination'
   %div#userBookmarks
     %p=link_to "Clear Saved Items", clear_bookmarks_path, :method => :delete, :confirm => "Clear your saved items?"
-  
-    %h2="Your Saved Items"
- 
-    %table.zebra
-      - @bookmarks.each do |bm|
-        %tr
-          %td= h(bm.title)
-          %td= h(bm.document_id)
-          %td= h(bm.id)
-          %td= link_to( h(bm.title), {:controller => :catalog, :action=>:show, :id=>CGI.escape(bm.document_id)})
-          %td= button_to 'Remove', {:controller=>:bookmarks, :id=>CGI.escape(bm.document_id)}, :method => :delete, :confirm => 'Remove this item?'
