@@ -3,7 +3,7 @@ require 'cul_scv_hydra'
 require 'cul'
 class DownloadController  < ActionController::Base
   include Cul::Scv::Controller
-  
+
   before_filter :require_staff
   #filter_access_to :fedora_content, :attribute_check => true,
   #                 :model => nil, :load_method => :download_from_params
@@ -70,7 +70,7 @@ class DownloadController  < ActionController::Base
         xml = @resource.datastreams[dsid].content
         xml = Nokogiri::XML.parse(xml, nil, 'UTF-8')
         text_result = xsl.apply_to(xml).to_s
-      elsif dl_hdrs["Content-Type"].include?("txt")
+      elsif dl_hdrs["Content-Type"] =~ /te?xt/
         text_result = @resource.datastreams[dsid].content
       else
         text_result = "Non-xml content streams cannot be pretty printed. (#{dl_hdrs.inspect})"
@@ -85,9 +85,36 @@ class DownloadController  < ActionController::Base
     else
       ds_parms = {:pid => params[:uri], :dsid => dsid}
       response.headers["Last-Modified"] = Time.now.to_s
-      @resource.datastreams[dsid].stream(self)
+      ds = Rubydora::Datastream.new(@resource.inner_object, dsid)
+      size = params[:file_size] || params['file_size']
+      size ||= ds.dsSize
+      size ||= rels_int_size(@resource, dsid)
+      size ||= rels_ext_size(@resource, dsid)
+      unless size and size.to_i > 0
+        response.headers["Transfer-Encoding"] = "chunked"
+      else
+        response.headers["Content-Length"] = size
+      end
+      self.response_body = ds.stream
+#      @resource.datastreams[dsid].stream(self)
     end
   end
+
+  def rels_int_size(obj, dsid)
+    rels = obj.datastreams["RELS-INT"]
+    return nil unless (rels and not rels.new?)
+    triples = rels.relationships(obj.datastreams[dsid], :extent)
+    return nil unless triples
+    return triples.first.to_s.to_i
+  end
+
+  def rels_ext_size(obj, dsid)
+    return nil unless dsid == 'CONTENT' # the only datastream we ever did this for
+    triples = obj.relationships(:extent)
+    return nil unless triples
+    return triples.first.to_s.to_i
+  end
+
 
   class DownloadObject
     attr_reader :content_models, :mime_type
