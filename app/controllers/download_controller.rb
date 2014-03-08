@@ -8,7 +8,7 @@ class DownloadController  < ActionController::Base
   helper :all # include all helpers, all the time
   before_filter :check_new_session #, :af_solr_init
 
-  #before_filter :require_staff
+  before_filter :require_staff
   #filter_access_to :fedora_content, :attribute_check => true,
   #                 :model => nil, :load_method => :download_from_params
   caches_action :cachecontent, :expires_in => 7.days,
