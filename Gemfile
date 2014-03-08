@@ -1,6 +1,8 @@
 source 'http://rubygems.org'
 gem 'ruby-prof'
 gem "rails", '~> 3.2.6'
+gem 'unicorn'
+gem 'rack-handlers'
 gem 'sqlite3'
 group :passenger_dev, :passenger_test, :passenger_prod do
   gem 'mysql2'

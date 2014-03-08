@@ -4,7 +4,11 @@ require 'cul'
 class DownloadController  < ActionController::Base
   include Cul::Scv::Controller
 
-  before_filter :require_staff
+  helper_method :user_session, :current_user, :fedora_config, :solr_config, :relative_root # share some methods w/ views via helpers
+  helper :all # include all helpers, all the time
+  before_filter :check_new_session #, :af_solr_init
+
+  #before_filter :require_staff
   #filter_access_to :fedora_content, :attribute_check => true,
   #                 :model => nil, :load_method => :download_from_params
   caches_action :cachecontent, :expires_in => 7.days,
@@ -95,8 +99,17 @@ class DownloadController  < ActionController::Base
       else
         response.headers["Content-Length"] = size
       end
-      self.response_body = ds.stream
-#      @resource.datastreams[dsid].stream(self)
+#      self.response_body = ds.stream
+      parms = {:dsid=>dsid, :pid=>pid}
+      self.response_body = Enumerator.new do |blk|
+        repo = ActiveFedora::Base.connection_for_pid(pid)
+        repo.datastream_dissemination(parms) do |res|
+          res.read_body do |seg|
+            blk << seg
+          end
+        end
+      end
+    
     end
   end
 

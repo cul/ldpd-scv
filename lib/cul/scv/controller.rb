@@ -12,6 +12,16 @@ module Cul
     @current_user
   end
 
+  def store_location
+    session[:return_to] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}"
+  end
+
+  def redirect_back_or_default(default)
+    redirect_to(session[:return_to] || default)
+    session[:return_to] = nil
+  end
+
+
   def current_user_session
     return @user_session if defined?(@user_session)
     @user_session = UserSession.find
