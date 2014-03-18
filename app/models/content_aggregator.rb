@@ -48,10 +48,14 @@ class ContentAggregator < ::ActiveFedora::Base
   def thumb_from_members(members)
     sorted = members.sort do |a,b|
       c = a['title_si'] <=> b['title_si']
-      if c == 0
-        a['identifier_ssim'].delete(a.id) unless a['identifier_ssim'].length == 1
-        b['identifier_ssim'].delete(a.id) unless b['identifier_ssim'].length == 1
-        a['identifier_ssim'][0] <=> b['identifier_ssim'][0]
+      if c == 0 && a['identifier_ssim']
+        if b['identifier_ssim']
+          a['identifier_ssim'].delete(a.id) unless a['identifier_ssim'].length == 1
+          b['identifier_ssim'].delete(a.id) unless b['identifier_ssim'].length == 1
+          a['identifier_ssim'][0] <=> b['identifier_ssim'][0]
+        else
+          -1
+        end
       else
         c
       end
