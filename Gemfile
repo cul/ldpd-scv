@@ -7,7 +7,7 @@ gem 'sqlite3'
 group :passenger_dev, :passenger_test, :passenger_prod do
   gem 'mysql2'
 end
-gem "blacklight", '4.2.2'
+gem "blacklight", '4.7.0'
 
 gem 'authlogic', '~>3.1.0'
 gem 'authlogic_wind'
@@ -15,7 +15,7 @@ gem 'arel'
 gem 'actionmailer'
 gem 'sass'
 gem 'sass-rails',   '~> 3.2.3'
-gem "bootstrap-sass", "~>2.3.2.2"
+gem "bootstrap-sass"
 #gem 'compass'
 #gem 'compass-rails'
 gem 'jquery-rails'
@@ -26,11 +26,11 @@ group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.0.3'
-  gem "bootstrap-sass", "~>2.3.2.2"
+  gem "bootstrap-sass"
 #  gem 'compass-rails'
 end
 gem "unicode", :platforms => [:mri_18, :mri_19]
-gem "hydra-head", "~>6.2"
+gem "hydra-head", "~>6.5"
 # gem "active-fedora", '~>4.5.0'
 gem 'active-fedora', '~>6.1'
 gem 'active_fedora_finders', '~>0.3.0'
