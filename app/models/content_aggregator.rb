@@ -15,7 +15,8 @@ class ContentAggregator < ::ActiveFedora::Base
   
   def thumbnail_info
     r = self.parts(:response_format => :solr)
-    members = r.collect {|hit| SolrDocument.new(hit) } unless r.blank?
+    members = []
+    r.collect {|hit| members << SolrDocument.new(hit) } unless r.blank?
     if members.length == 0
       return {:asset=>"crystal/file.png",:mime=>'image/png'}
     else
