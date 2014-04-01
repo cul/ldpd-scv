@@ -5,7 +5,7 @@ function () {
     
     // FIXME: port hard-coded, but able to be set in pom.xml
     /* Connects to our local LogSocketServlet to read logs */
-    var socket = new WebSocket('ws://localhost:8888/logs');
+    var socket = new WebSocket('ws://iris.cul.columbia.edu:8888/logs');
     
     /* Opens a new log file for reading */
     socket.onopen = function () {
