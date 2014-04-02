@@ -1,14 +1,17 @@
 -# coding: utf-8
 %div.document.well
   %div.container-fluid
-    %div.span2
+    %div.row-fluid.visible-phone
       = render_document_partial(document, "thumbnail") unless document.nil?
-    %div.span4
-      - if !document.nil?
-        %p.index_title!=link_to_clio(document)
-      = render :partial => "catalog/_show_partials/metadata_brief", :locals => {:document => document, :link => true} unless document.nil?
-      %dl.dl-horizontal
-        %dt="Metadata:"
-        %dd!= get_metadata_list(document,true).collect { |x| link_to "#{x[:type]}", x[:show_url]}.join(", ")
-    %div.span6
+    %div.row-fluid
+      %div.span2.hidden-phone
+        = render_document_partial(document, "thumbnail") unless document.nil?
+      %div.span10
+        - if !document.nil?
+          %p.index_title!=link_to_clio(document)
+        = render :partial => "catalog/_show_partials/metadata_brief", :locals => {:document => document, :link => true} unless document.nil?
+        %dl.dl-horizontal
+          %dt="Metadata:"
+          %dd!= get_metadata_list(document,true).collect { |x| link_to "#{x[:type]}", x[:show_url]}.join(", ")
+    %div.row-fluid
       = render :partial => "catalog/_show_partials/image/display_derivatives", :locals => {:document => document} unless document.nil?
