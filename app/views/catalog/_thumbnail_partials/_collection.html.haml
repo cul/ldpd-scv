@@ -2,7 +2,6 @@
 - document_counter ||= -1
 - data_counter = (document_counter + 1 + @response.params[:start].to_i)
 - href ||= url_to_document(document)
-%a.thumbnail.pull-left{:href=>href, :'data-counter'=>data_counter}
-  %img{:src=>"#{thumbnail_path(document[:id])}", :class=>"media-object"}
+%a.thumbnail.thumbnail-multipart.pull-left{:href=>href, :'data-counter'=>data_counter}
   .thumb-overlay
-  %i{:class=>"icon-folder-open"}=" "
+    %img{:src=>thumbnail_path(document[:id]), :alt=>"", :class=>"media-object"}

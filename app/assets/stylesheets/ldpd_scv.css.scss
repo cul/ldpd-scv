@@ -39,20 +39,39 @@ div.constraint-widget {
 	margin: -5px 0 0 0;
 }
 
-a.thumbnail{
+a.thumbnail-single {
 	display: inline-block;
 	height: 128px;
 	width: 128px;
 	overflow: hidden;
 }
 
+a.thumbnail-multipart {
+	display: inline-block;
+	height: 128px;
+	width: 128px;
+	overflow: hidden;
+	background-image: url('/assets/crystal/kmultiple.png');
+	background-size: contain;
+}
+
+.thumbnail > img {
+	width: 128px;
+	z-index: 0;
+}
+
 .thumb-overlay {
 	position: relative;
-	left: 0px;
-	bottom: 0px;
-	background-color: #fff;
-	vertical-align: bottom;
-	z-index: 1;
+	top: 32px;
+	left: 32px;
+	height: 96px;
+	width: 96px;
+	overflow: hidden;
+}
+
+.thumbnail-overlay > img {
+	height: auto;
+	width: 96px;
 }
 
 .index_title {
