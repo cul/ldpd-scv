@@ -3,6 +3,9 @@
 - document_counter ||= -1
 - data_counter = (document_counter + 1 + @response.params[:start].to_i)
 - href ||= url_to_document(document)
-- _class = (label and !(label =~ /SINGLE/)) ? "multipart-label" : ""
-%a{:href=>href, :'data-counter'=>data_counter, :class=>'thumbnail pull-left thumbnail-link'}
+- multi = (label and !(label =~ /SINGLE/))
+%a{:href=>href, :'data-counter'=>data_counter, :class=>"thumbnail pull-left thumbnail-link"}
   %img{:src=>thumbnail_path(document[:id]), :alt=>"", :class=>"media-object"}
+  - if multi
+    .thumb-overlay
+      %i{:class=>"icon-folder-open"}=" "

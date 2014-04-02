@@ -16,10 +16,6 @@ LABEL, INPUT, BUTTON, SELECT, TEXTAREA {
 	line-height:16px;
 }
 
-h1.site_title {
-	background: transparent url('logo.gif') no-repeat top left;
-}
-
 #facets H2 {
 	font-size: 1.5em;
 }
@@ -36,30 +32,25 @@ h1.site_title {
 	font-size: 1.1em;
 }
 
+// the Start Over link
 div.constraint-widget {
 	position:relative;
 	display: inline-block;
 	margin: -5px 0 0 0;
 }
 
-div.constraint-widget .btn {
-	padding: 5px 10px;
-}
-
-div.relative-box {
-	position: relative;
-	width: auto;
-}
-
-a.thumbnail-link {
+a.thumbnail{
 	display: inline-block;
+	height: 128px;
+	width: 128px;
+	overflow: hidden;
 }
 
 .thumb-overlay {
 	position: relative;
 	left: 0px;
 	bottom: 0px;
-	margin-left:-24px;
+	background-color: #fff;
 	vertical-align: bottom;
 	z-index: 1;
 }
@@ -80,8 +71,6 @@ span.index_metadata {
   font-weight:normal;
 }
 
-div.member-item div {
-}
 div.member-item > hr {
   width: 75%;
 }
