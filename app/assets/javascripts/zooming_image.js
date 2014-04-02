@@ -1,6 +1,5 @@
 //= require ./openseadragon
 //= require ./djtilesource
-//= require ./djlogviewer
 // Note: The Open and close links are pretty much identical.
 var map, mapDiv, layerId = false;
 function init_ext(){
