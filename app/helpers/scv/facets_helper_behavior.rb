@@ -43,7 +43,6 @@ module Scv
       (params[:f] || {}).each do |f,i|
         facet_config = facet_configuration_for_field(f)
         if facet_config[:only] and facet_config[:only] == facet_solr_field
-          puts facet_config.inspect
           deps << facet_config[:field]
         end
       end
