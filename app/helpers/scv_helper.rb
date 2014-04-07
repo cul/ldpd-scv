@@ -166,14 +166,19 @@ module ScvHelper
       idparts = doc[:id].split(/@/) unless doc[:id].nil?
       idparts ||= [""]
       md = idparts.last
-      if not md.match(/^.*#DC$/)
+      unless doc['descriptor_ssi'] =~ /dublin\score/i
         results << decorate_metadata_response("MODS" , base_id_for(doc))
       end
       results << decorate_metadata_response("DC" , base_id_for(doc))
       return results
     end
 
-    json = [{"descMetadata" => base_id_for(doc)} , {"DC" => base_id_for(doc)}]
+    json = []
+    unless doc['descriptor_ssi'] =~ /dublin\score/i
+      json << {"descMetadata" => base_id_for(doc)}
+    end
+      
+    json << {"DC" => base_id_for(doc)}
 
     json.each do  |meta_hash|
       meta_hash.each do |dsid, uri|
