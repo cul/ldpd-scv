@@ -221,6 +221,11 @@ class Gatekeeper
     results
   end
 end
+
+def logger
+  Rails.logger
+end
+
 namespace :solr do
  namespace :cul do
    namespace :fedora do
@@ -280,24 +285,39 @@ namespace :solr do
        delete_array = collection.ids
        p "delete_array.length: #{delete_array.length}"
        if (delete_array.length == 0)
-         p "no deletes necessary; exiting"
+         logger.info "no deletes necessary; exiting"
          exit
        end
        deletes = 0
        delete_array.each do |id|
-         puts "to delete id: #{id}"
+         logger.info "delete: #{id}"
          ActiveFedora::SolrService.instance.conn.delete_by_id(id)
          deletes += 1
        end
        ActiveFedora::SolrService.instance.conn.commit
      end
+     desc "delete this list from Solr"
+     task :delete => :configure do
+        delete_array = []
+        deletes = 0
+        open(ENV['PID_LIST']) do |blob|
+          blob.each {|line| delete_array << line.strip}
+        end
 
+        delete_array.each do |id|
+          logger.info "delete: #{id}"
+          ActiveFedora::SolrService.instance.conn.delete_by_id(id)
+          deletes += 1
+        end
+        ActiveFedora::SolrService.instance.conn.commit
+
+     end
      desc "index objects from a CUL fedora repository"
      task :index => :configure do
        delete_array = []
        urls_to_scan = case
        when ENV['URL_LIST']
-         p "indexing url list #{ENV['URL_LIST']}"
+         logger.info "indexing url list #{ENV['URL_LIST']}"
          url = ENV['URL_LIST']
          uri = URI.parse(url) # where is url assigned?
          url_list = Net::HTTP.new(uri.host, uri.port)
@@ -315,19 +335,19 @@ namespace :solr do
          collection = BagAggregator.find_by_identifier(ENV['COLLECTION_PID'])
          raise "Could not find #{ENV['COLLECTION_PID']}" if collection.nil?
          collection_pid = collection.pid
-         p "indexing collection #{collection_pid} from ID #{ENV['COLLECTION_PID']}"
+         logger.info "indexing collection #{collection_pid} from ID #{ENV['COLLECTION_PID']}"
          collection = SolrCollection.new(collection_pid,solr_url)
-         p collection.paths
+         logger.info collection.paths
          facet_vals = collection.paths.find_all { |val|
            @allowed.allowed?val
          }
-         p facet_vals
+         logger.info facet_vals
          facet_vals = facet_vals.reject{|val|
            facet_vals.any?{|compare|
              (val != compare && val.index(compare) == 0)
            }
          }
-         p facet_vals
+         logger.info facet_vals
          collection.paths=facet_vals
          collection.members
          delete_array = collection.ids
@@ -341,7 +361,7 @@ namespace :solr do
          members |= collection.members
          url_array = members
        when ENV['PID']
-         p "indexing pid #{ENV['PID']}"
+         logger.info "indexing pid #{ENV['PID']}"
          pid = ENV['PID']
          obj = BagAggregator.find_by_identifier(pid) || BagAggregator.find(pid)
          raise "could not find object #{pid}" if obj.nil?
@@ -367,40 +387,60 @@ namespace :solr do
        when ENV['SAMPLE_DATA']
          File.read(File.join(Rails.root,"test","sample_data","cul_fedora_index.json"))
        else
-         p "No input options given!"
+         logger.info "No input options given!"
          url_array = []
        end
 
        url_array ||= JSON::parse(urls_to_scan)
-       puts "#{url_array.size} URLs to scan."
+       logger.info "#{url_array.size} URLs to scan."
 
+       skip_array = begin
+        skips = []
+        if File.exists?('skip.txt')
+          open('skip.txt') do |blob|
+            blob.each {|line| skips << line.strip}
+          end
+        end
+        skips.uniq!       
+        skips.sort!
+        skips 
+       end
        deletes = 0
        successes = 0
 
        solr_url = ENV['SOLR'] || Blacklight.solr_config[:url]
-       puts "Using Solr at: #{solr_url}"
+       logger.info "Using Solr at: #{solr_url}"
        
        update_uri = URI.parse(solr_url.gsub(/\/$/, "") + "/update")
-       p "delete_array.length: #{delete_array.length}"
-       if (delete_array.length == 0)
-         exit
-       end
-       delete_array.each do |id|
-        puts "to delete id: #{id}"
-         ActiveFedora::SolrService.instance.conn.delete_by_id(id)
-         deletes += 1
-       end
+       logger.info "existing descendants in index: #{delete_array.length}"
+       logger.info "indexing descendants into index: #{url_array.length}"
        ActiveFedora::SolrService.instance.conn.commit
+       show_error = true
        url_array.each do |pid|
          begin
-           base_obj = ActiveFedora::Base.find(pid, :cast=>true)
-           base_obj.send :update_index
-           successes += 1
+            unless (ix = skips.index(pid)).nil? or ix < 0
+              logger.info "skip: #{pid}"
+              skips.delete_at(ix)
+              delete_array.delete(pid)
+              next
+            end
+            base_obj = ActiveFedora::Base.find(pid, :cast=>true)
+            base_obj.send :update_index
+            successes += 1
+            delete_array.delete(pid)
+            logger.info "index: #{pid}"
          rescue Exception => e
-            puts "indexing #{pid} into #{update_uri} threw error #{e.message}"
-            puts e.backtrace
-            exit(1)
+            logger.error "error: #{pid} #{e.message}"
+            if show_error
+              puts e.backtrace
+              show_error = false
+            end
          end
+       end
+       delete_array.each do |id|
+        logger.info "delete: #{id}"
+         ActiveFedora::SolrService.instance.conn.delete_by_id(id)
+         deletes += 1
        end
        ActiveFedora::SolrService.instance.conn.commit
 
