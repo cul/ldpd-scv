@@ -9,6 +9,7 @@ class GenericResource < ::ActiveFedora::Base
   include ::ActiveFedora::DatastreamCollections
   include ::Hydra::ModelMethods
   include Cul::Scv::Hydra::ActiveFedora::Model::Common
+  include Cul::Scv::ImageDimensions
   include Cul::Fedora::UrlHelperBehavior
   include ::ActiveFedora::RelsInt
   alias :file_objects :resources
@@ -124,6 +125,7 @@ class GenericResource < ::ActiveFedora::Base
   private
   def datastream_as_resource(dsid, props={})
     ds = datastreams[dsid]
+    raise "No resource at info:fedora/#{pid}/#{dsid}" unless ds
     res = {}
     res[:uri] = self.pid
     res[:block] = dsid

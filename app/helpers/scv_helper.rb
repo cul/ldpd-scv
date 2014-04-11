@@ -31,7 +31,7 @@ module ScvHelper
       return []
     end
     klass = ActiveFedora::SolrService.class_from_solr_document(document)
-    obj = klass.find(document[:id])
+    obj = ActiveFedora::Base.find(document[:id], :cast=>true)
     # obj = klass.load_instance_from_solr(document[:id],document)
     if (obj.respond_to? :linkable_resources)
       return obj.linkable_resources

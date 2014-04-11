@@ -32,7 +32,7 @@ class ThumbnailsController < ActionController::Base
     if url[:asset]
       url[:url] = image_asset_url(url[:asset])
     end
-    #puts "#{url[:url]} #{url[:mime]}"
+    puts "#{url[:url]} #{url[:mime]}"
     filename = pid + '.' + url[:mime].split('/')[1].downcase
     h_cd = "filename=""#{CGI.escapeHTML(filename)}"""
     headers.delete "Cache-Control"

@@ -226,9 +226,9 @@ def logger
   Rails.logger
 end
 
-namespace :solr do
- namespace :cul do
-   namespace :fedora do
+namespace :cul do
+ namespace :scv do
+   namespace :solr do
 # for each collection, the task needs to fetch the unlimited count, and then work through the pages
 # for development, we should probably just hard-code a sheet of data urls
      desc "load the fedora configuration"

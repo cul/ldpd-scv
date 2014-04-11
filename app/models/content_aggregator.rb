@@ -66,7 +66,8 @@ class ContentAggregator < ::ActiveFedora::Base
 
   def thumb_from_solr_doc(solr_doc)
     if solr_doc and (member =  ActiveFedora::Base.find(solr_doc.id, :cast=>true)).respond_to? :thumbnail_info
-      return member.thumbnail_info
+      puts "thumb: " + (thumb = member.thumbnail_info).inspect
+      thumb
     else
       return nil
     end

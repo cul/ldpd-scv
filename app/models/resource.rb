@@ -9,6 +9,7 @@ class Resource < ::ActiveFedora::Base
   include ::Hydra::ModelMethods
   include Cul::Scv::Hydra::ActiveFedora::Model::Common
   include Cul::Scv::Hydra::ActiveFedora::Model::Resource
+  include Cul::Scv::ImageDimensions
   include Cul::Scv::Solr4Queries
   alias :file_objects :resources
 
@@ -62,16 +63,15 @@ class Resource < ::ActiveFedora::Base
     
     def thumbnail_info
       # do the triples indicate this is a thumb? fetch
-      width = object_relations[CUL_WIDTH].first.to_i
-      length = object_relations[CUL_LENGTH].first.to_i
       if width <= 251 && length <= 251
         mime = object_relations[FORMAT].first
         url = {:url=>"#{ActiveFedora.fedora_config.credentials[:url]}/objects/#{self.pid}/datastreams/CONTENT/content", :mime=>mime}
       else
-        if object_relations[MEMBER_OF].blank?
-          return {:asset=>"cul_scv_hydra/crystal/file.png",:mime=>'image/png'}
+        parents = relationships(:cul_member_of).collect {|x| x.to_s}
+        if parents.blank?
+          url = {:asset=>"cul_scv_hydra/crystal/file.png",:mime=>'image/png'}
         else
-          url = StaticImageAggregator.find(object_relations[MEMBER_OF].first).thumbnail_info
+          url = ActiveFedora::Base.find(parents.first, :cast => true).thumbnail_info
         end
       end
       return url

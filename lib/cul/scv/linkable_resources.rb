@@ -75,6 +75,10 @@ module Cul
         img_filename = base_filename + "." + document["dc_format_ssm"].first.gsub(/^[^\/]+\//,"")
         res[:filename] = img_filename
         res[:block] = "CONTENT"
+        res[:mime_type] = document["dc_format_ssm"] ? document["dc_format_ssm"].first : "application/octect-stream"
+        res[:content_models] = document["has_model_ssim"]
+        res[:file_size] = document["extent_ssim"].first.to_i
+        res[:size] = (document["extent_ssim"].first.to_i / 1024).to_s + " Kb"
         res[:uri] = base_id
         res
       end
@@ -96,6 +100,10 @@ module Cul
         res[:block] = "CONTENT"
         res[:filename] = filename
         res[:dc_path] = fedora_content_path(:download_method=>"show_pretty", :uri=>base_id, :block=>"DC", :filename=>dc_filename)
+        res[:mime_type] = document["dc_format_ssm"] ? document["dc_format_ssm"].first : "application/octect-stream"
+        res[:content_models] = document["has_model_ssim"]
+        res[:file_size] = document["extent_ssim"].first.to_i
+        res[:size] = (document["extent_ssim"].first.to_i / 1024).to_s + " Kb"
         res
       end
       
