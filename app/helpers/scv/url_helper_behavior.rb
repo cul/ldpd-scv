@@ -37,7 +37,7 @@ module Scv
   # blacklight render_document_index_label will not handle a Symbol key appropriately for a Hash/Mash, and must have a proc
       if opts[:label].instance_of? Symbol
         old_label = opts[:label]
-        opts[:label] = lambda { |doc, opts| doc.link_title(old_label)}
+        opts[:label] = lambda { |doc, opts| Array(doc[old_label]).first}
       end
       link_to_document SolrDocument.new(doc), opts
     end
