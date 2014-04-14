@@ -39,11 +39,7 @@ module Scv
         old_label = opts[:label]
         opts[:label] = lambda { |doc, opts| doc.link_title(old_label)}
       end
-      label = render_document_index_label doc, opts
-  # blacklight does not pass the correct arguments for Rails 3 url_for
-      url_for_opts = {:controller => :catalog, :action => :show, :id => doc[:id]}
-      label = label.first if label.is_a? Array
-      link_to label, url_for_opts, { :'data-counter' => opts[:counter] }.merge(opts.reject { |k,v| [:label, :counter, :results_view].include? k  })
+      link_to_document SolrDocument.new(doc), opts
     end
 
     def link_to_previous_document(doc)
