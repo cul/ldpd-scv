@@ -8,8 +8,6 @@
       - if (session[:search][:counter].to_i != 0)
         = item_page_entry_info
   = render 'previous_next_doc'
-
-
 %div.span12#document
   %div(:id="doc_#{@document[:id].to_s.encode('UTF-8')}")
     %div#show_bookmark_control

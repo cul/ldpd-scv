@@ -100,5 +100,19 @@ module Scv
       render_field_value label
     end
 
+    def render_document_heading(*args)
+      options = args.extract_options!
+      if args.first.is_a? SolrDocument
+        document = args.shift
+        tag = options[:tag]
+      else
+        document = nil
+        tag = args.first || options[:tag]
+      end
+
+      tag ||= :h4
+
+      content_tag(tag, render_field_value(document_heading(document)), class: 'documentTitle')
+    end
   end
 end

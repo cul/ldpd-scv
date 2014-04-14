@@ -3,7 +3,7 @@
 - document_counter ||= -1
 - data_counter = (document_counter + 1 + @response.params[:start].to_i)
 - href ||= url_to_document(document)
-- multi = (label and !(label =~ /SINGLE/)) ? "-multipart" : "-single"
+- multi = (label and (label =~ /MULTI/)) ? "-multipart" : "-single"
 %a{:href=>href, :'data-counter'=>data_counter, :class=>"thumbnail thumbnail#{multi} pull-left thumbnail-link"}
   - unless multi == '-single'
     .thumb-overlay

@@ -41,37 +41,39 @@ div.constraint-widget {
 
 a.thumbnail-single {
 	display: inline-block;
-	height: 128px;
-	width: 128px;
+	height: 200px;
+	width: 200px;
 	overflow: hidden;
+}
+
+a.thumbnail-single > img {
+	vertical-align: middle;
 }
 
 a.thumbnail-multipart {
 	display: inline-block;
-	height: 128px;
-	width: 128px;
+	height: 200px;
+	width: 200px;
 	overflow: hidden;
 	background-image: url('/assets/crystal/kmultiple.png');
 	background-size: contain;
 }
 
 .thumbnail > img {
-	width: 128px;
-	z-index: 0;
 }
 
 .thumb-overlay {
 	position: relative;
-	top: 32px;
-	left: 32px;
-	height: 96px;
-	width: 96px;
+	top: 50px;
+	left: 50px;
+	height: 150px;
+	width: 150px;
 	overflow: hidden;
 }
 
 .thumbnail-overlay > img {
 	height: auto;
-	width: 96px;
+	width: 150px;
 }
 
 .index_title {
@@ -97,6 +99,18 @@ div.member-item > hr {
 dt,
 dd {
   line-height: 12px;
+}
+
+.show > .navbar {
+	margin-bottom: 0.25em;
+}
+
+form.bookmark_toggle {
+	margin-bottom: 1em;
+}
+
+.documentTitle {
+	margin-top: 0px;
 }
 
 .table th,

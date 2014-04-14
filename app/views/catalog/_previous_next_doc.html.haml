@@ -1,12 +1,14 @@
 -# coding: utf-8
 - if @previous_document || @next_document
-  %div.well#previousNextDocument
-    != link_to_previous_document @previous_document
-    = '|'
-    = item_page_entry_info
-    = '|'
-    = link_to_next_document @next_document
-    %div.pull-right
-      = link_back_to_catalog
-      = '|'
-      = link_to "#{t('blacklight.search.start_over')}", start_over_path(current_search_session.try(:query_params) || {}), :id=>"startOverLink"
+  .navbar
+    .navbar-inner
+      .navbar-text
+        != link_to_previous_document @previous_document if @previous_document
+        = '|'
+        = item_page_entry_info
+        = '|'
+        != link_to_next_document @next_document
+        %div.pull-right
+          = link_back_to_catalog
+          = '|'
+          = link_to "#{t('blacklight.search.start_over')}", start_over_path(current_search_session.try(:query_params) || {}), :id=>"startOverLink"

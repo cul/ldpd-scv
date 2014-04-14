@@ -1,2 +1,5 @@
-
+- if metadata_list.length == 1
+  %dl.dl-horizontal
+    %dt= "Downloadable XML Metadata:"
+    %dd!= metadata_list.collect {|x| link_to "#{x[:type]}", x[:show_url]}.join(", ")
 

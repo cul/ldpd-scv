@@ -24,10 +24,7 @@
 .metadata-list
   .metadata.container-fluid
     - metadata_list.each do |metadata|
-      = render :partial => "catalog/_show_partials/metadata_#{metadata[:type].underscore.downcase}", :locals => {:metadata => metadata, :document=>document}
-  .well.container-fluid
-    ="Downloadable XML Metadata:"
-    != metadata_list.collect {|x| link_to "#{x[:type]}", x[:show_url]}.join(", ")
+      = render :partial => "catalog/_show_partials/metadata_#{metadata[:type].underscore.downcase}", :locals => {:metadata => metadata, :document=>document, :metadata_list=>metadata_list}
 
 - if groups
   = render :partial => "catalog/_show_partials/groups", :locals => {:document => document}
