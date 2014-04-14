@@ -114,5 +114,12 @@ module Scv
 
       content_tag(tag, render_field_value(document_heading(document)), class: 'documentTitle')
     end
+
+    def is_default_search?(search)
+      unless search.is_a? Blacklight::Configuration::SearchField
+        search = blacklight_config.search_fields[search.to_s]
+      end
+      return search.nil? ? false : search.default
+    end
   end
 end

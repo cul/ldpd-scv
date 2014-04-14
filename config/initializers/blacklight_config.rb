@@ -143,6 +143,7 @@ class BlacklightConfiguration
   # "fielded" search configuration. Used by pulldown among other places.
     config.add_search_field("all_text_teim") do |field|
       field.label = 'All Fields'
+      field.default = true
       field.solr_parameters = {
         :qt=>"search",
         :qf=>["all_text_teim"]
