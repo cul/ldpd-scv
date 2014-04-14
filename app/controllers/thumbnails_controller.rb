@@ -30,7 +30,7 @@ class ThumbnailsController < ActionController::Base
       url = {:asset=>COLLECTION_THUMB,:mime=>'image/png'}
     end
     if url[:asset]
-      url[:url] = image_asset_url(url[:asset])
+      url[:url] = asset_path_from_config(url[:asset])
     end
     puts "#{url[:url]} #{url[:mime]}"
     filename = pid + '.' + url[:mime].split('/')[1].downcase

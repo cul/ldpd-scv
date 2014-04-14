@@ -1,6 +1,7 @@
 source 'http://rubygems.org'
 gem 'ruby-prof'
 gem "rails", '~> 3.2.6'
+gem 'memcache-client'
 gem 'unicorn'
 gem 'rack-handlers'
 gem 'sqlite3'
