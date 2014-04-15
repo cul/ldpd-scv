@@ -1,12 +1,6 @@
 -# coding: utf-8
-= render :partial => "catalog/_show_partials/descriptive_information", :locals => {:document => document}
+= render :partial => "catalog/_show_partials/descriptive_information", :locals => {:document => document, groups: true}
 %h3="Resources"
 = render :partial => "catalog/_show_partials/image/display_derivatives", :locals => {:document => document}
 
-- if (rft_id = document["rft_id_ss"])
-  #map{:style=>"height:500px;"}
-  :javascript
-    init_seadragon("#{URI::encode(rft_id, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))}", true);
-- else
-  %p
-    No Zooming Map ID provided
+= render :partial => "catalog/_screen_partials/image/zooming", :locals => {:document => document}

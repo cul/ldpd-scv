@@ -1,8 +1,7 @@
-= render :partial => "catalog/_show_partials/groups", :locals => {:document => document}
 - #metadata_list = get_metadata_list(document)
 .container-fluid
   .span8
-    = render :partial => "catalog/_show_partials/metadata_brief", :locals => {:document => document}
+    = render :partial => "catalog/_show_partials/metadata_brief", :locals => {document: document, groups: true}
   .span4
     != "This is the default display."
     != document.inspect

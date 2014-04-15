@@ -1,12 +1,9 @@
 - # coding: utf-8
 - groups = get_groups(document)
 - if groups.length > 0
-  %div
-    %dl.dl-horizontal#groups
-      %dt="From:"
-      %dd
-        != groups.collect {|x| link_to_document(x)}.join(", ") 
-        %span="(Click  for More Information)"
+  %dt="From Groups:"
+  %dd
+    != groups.collect {|x| link_to_document(x)}.join(", ") 
+    %span="(Click  for More Information)"
 - else
-  .hide
-    %p No groups found
+  / = "No groups found #{document[:id]}"

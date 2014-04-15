@@ -127,6 +127,8 @@ GEM
     deprecation (0.1.0)
       activesupport
     diff-lcs (1.2.5)
+    engine_cart (0.3.4)
+      rails
     ensure_valid_encoding (0.5.3)
     equivalent-xml (0.4.2)
       nokogiri (>= 1.4.3)
@@ -368,6 +370,7 @@ DEPENDENCIES
   database_cleaner
   declarative_authorization (= 0.5.3)
   diff-lcs
+  engine_cart
   factory_girl
   gherkin
   haml

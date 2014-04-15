@@ -1,6 +1,8 @@
 -# coding: utf-8
 - link ||= false
 %dl.dl-horizontal
+  - if (groups ||= false)
+    = render :partial => "catalog/_show_partials/groups", :locals => {:document => document}
   %dt="Title:"
   %dd= (link)? (link_to_mash document) : document.link_title(document_show_link_field)
   %dt="ID:"
