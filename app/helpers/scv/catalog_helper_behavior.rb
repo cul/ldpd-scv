@@ -49,15 +49,6 @@ module Scv
       return linkable_resources
     end
 
-    def zoomable?(document)
-      resources = get_resources(document)
-      zoomable = nil
-      resources.each do |resource|
-        zoomable = resource if resource[:mime_type] =~ /\/jp2$/
-      end
-      zoomable
-    end
-
     def uri_from_resource_parms(args = {}, dl_method="show")
       args = {:cache => false}.merge(args)
       if (args[:cache])
@@ -104,6 +95,7 @@ module Scv
       end
       document["index_type_label_ssm"]
     end
+
     def update_doc(id, fields={})
         _solr = RSolr.connect :url => Blacklight.solr_config[:url]
         _doc = _solr.find({:qt => :document, :id => id})
@@ -224,6 +216,37 @@ module Scv
       fedora_object_url(uri)
     end
 
+    def zoomable?(document)
+      zoomable = nil
+      if document[:format_ssi] == 'zoomingimage' and document[:has_model_ssim].include? 'info:fedora/ldpd:JP2ImageAggregator'
+        zoomable = ("info:fedora/#{document[:id]}/SOURCE")
+      end
+      rels_sym = [:rels_int_profile_tesim, :rels_int_profile_ssm].select {|sym| document[sym] and document[sym].first}.first
+      if zoomable.nil? and rels_sym
+        rels_int = JSON.parse(document[rels_sym].first)
+        rels_int.each do |k,v|
+          if v['foaf_zooming']
+            zoomable = v['foaf_zooming'].first
+          elsif v['format'] == ['image/jp2']
+            zoomable = k
+          end
+        end
+      end
+
+      if zoomable.nil?
+        resources = get_resources(document)
+        resources.each do |resource|
+          if resource[:mime_type] =~ /\/jp2$/
+            parts = resource[:url].split('/')
+            zoomable = "info:fedora/#{parts[-4]}/#{parts[-2]}"
+          end
+        end
+      end
+      return ('file:' + legacy_content_path(Cul::Fedora.ds_for_uri(zoomable))) if zoomable
+      # else fall back to oldest behavior
+      return document["rft_id_ss"]
+    end
+
     def legacy_content_path(ds)
       unless ds.controlGroup == 'M'
         return ds.dsLocation
@@ -237,7 +260,7 @@ module Scv
       day = (ld.day < 10) ? "0#{ld.day}" : ld.day.to_s
       hour = (ld.hour < 10) ? "0#{ld.hour}" : ld.hour.to_s
       min = (ld.min < 10) ? "0#{ld.min}" : ld.min.to_s
-      return File.join(ds_root,"#{ld.year}/#{month}#{day}/#{hour}/#{min}", ds.dsLocation)
+      return File.join(ds_root,"#{ld.year}/#{month}#{day}/#{hour}/#{min}", ds.dsLocation.sub(':','_'))
     end
   end
 end

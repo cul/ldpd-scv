@@ -15,22 +15,52 @@ module Fedora
     File.join(Rails.root.to_s, 'config', 'fedora.yml')
   end
   def self.config
-    @config ||= begin
-      raise "Missing ActiveFedora configuration at #{config_path}" unless File.exists?(config_path)
-      config = YAML::load(File.open(config_path))
-      raise "The #{::Rails.env} environment settings were not found in the fedora.yml config" unless config[::Rails.env]
-      config[::Rails.env].symbolize_keys
-    end
+    ActiveFedora.fedora_config.credentials
   end
+  def self.connection
+    @connection ||= ActiveFedora::RubydoraConnection.new(ActiveFedora.fedora_config.credentials)
+  end
+
   def self.repository
     @repository ||= begin
-      config = self.config.dup
-      raise "No url given in Fedora config!\n#{config.inspect}" unless config[:url]
-      repo = Rubydora::Repository.new(config)
+      repo = connection.connection
       repo.extend(RubydoraPatch)
       repo
     end
   end
+
+  def self.ds_for_uri(fedora_uri, fake_obj=nil)
+    p = fedora_uri.split('/')
+    fake_obj = fake_obj.nil? ? FakeObject.new(p[1]) : fake_obj.spawn(p[1])
+    Rubydora::Datastream.new(fake_obj, p[2])
+  end
+
+  class FakeObject
+    attr_accessor :pid
+    def initialize(pid, isNew=false)
+      @pid = pid
+      @isNew = isNew
+    end
+    def new_record?
+      @isNew
+    end
+    def connection
+      Cul::Fedora.connection
+    end    
+    def repository
+      Cul::Fedora.repository
+    end
+    def spawn(pid)
+      s = FakeObject.new(pid)
+      s.connection= connection
+      s.repository= repository
+      s
+    end
+    protected
+    def connection=(connection); @connection = connection; end
+    def repository=(repo); @repository = repo; end
+  end
+ 
   class Streamer
     def initialize(repo, parms)
       raise "Streamer requires opts[:dsid]" unless parms[:dsid]

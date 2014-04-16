@@ -3,6 +3,7 @@ require 'active-fedora'
 require 'declarative_authorization'
 class CatalogController < ApplicationController
   unloadable
+  include CatalogHelper
   include Blacklight::Catalog
   include Blacklight::SolrHelper
   include Cul::Scv::FacetExtras
@@ -56,8 +57,8 @@ class CatalogController < ApplicationController
 
   def show
     @response, @document = get_solr_response_for_doc_id
-    if @document[:format_ssim] == 'zoomingimage'
-          extra_head_content << [stylesheet_tag(openlayers_css, :media=>'all'), javascript_tag(zooming_js)]
+    if zoomable?(@document)
+          extra_head_content << [stylesheet_tag(openlayers_css, :media=>'all')] #, javascript_tag(zooming_js)]
     end
 
     respond_to do |format|

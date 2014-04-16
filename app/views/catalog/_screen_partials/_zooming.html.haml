@@ -1,4 +1,4 @@
-- if (rft_id = document["rft_id_ss"])
+- if (rft_id = zoomable?(document))
   #map{:style=>"height:500px;"}
   :javascript
     init_seadragon("#{URI::encode(rft_id, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))}", true);
