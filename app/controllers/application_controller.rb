@@ -1,6 +1,7 @@
 require "base64"
 require "blacklight"
 require "ruby-prof"
+require "action_view"
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
 
@@ -49,7 +50,7 @@ class ApplicationController < ActionController::Base
    @oljs ||= openlayers_base + '/lib/OpenLayers.js'
   end
   def zooming_js
-    
+    ActionController::Base.helpers.asset_path('zooming_image.js')
   end
   def openlayers_css
    @olcss ||= openlayers_base + '/theme/default/style.css'

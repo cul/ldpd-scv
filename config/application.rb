@@ -48,7 +48,7 @@ module Scv
     config.consider_all_requests_local = true
     
     config.assets.enabled = true
-    config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
+    config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif zooming_image.js)
 
   end
 end
