@@ -72,6 +72,7 @@ class GenericResource < ::ActiveFedora::Base
       t_url = "#{ActiveFedora.fedora_config.credentials[:url]}/objects/#{pid}/datastreams/#{t_dsid}/content"
       return {:url=>t_url,:mime=>datastreams[t_dsid].mimeType}
     elsif self.zooming?
+      dsuri = internal_uri + '/content'
       t_dsid = rels_int.relationships(dsuri, :foaf_zooming).first.object.to_s.split('/')[-1]
       t_parms = DJATOKA_THUMBNAIL_PARMS.merge({"rft_id" => datastreams[t_dsid].dsLocation})
       url = "#{DJATOKA_BASE_URL}?#{options.map { |key, value|  "#{CGI::escape(key.to_s)}=#{CGI::escape(value.to_s)}"}.join("&")  }"
@@ -119,7 +120,10 @@ class GenericResource < ::ActiveFedora::Base
   end
 
   def zooming?
-    !rels_int.relationships(datastreams['content'], :foaf_zooming).first.blank?
+    zoom = rels_int.relationships(datastreams['content'], :foaf_zooming).first
+    return false if zoom.blank?
+    dsid = zoom.object.to_s.split('/')[-1]
+    return !!datastreams[dsid]
   end
   
   private

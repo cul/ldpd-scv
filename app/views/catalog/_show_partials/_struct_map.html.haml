@@ -3,8 +3,8 @@
 %div
   %h4=ng_xml['LABEL']
   %div.media-list
-    - ['1','2'].each do |pos|
-      - div = structure.divs_with_attribute(true, 'ORDER', pos).first
+    - divs = structure.divs_with_attribute(true, 'ORDER').sort {|a,b| a['ORDER'] <=> b['ORDER']}
+    - divs.each do |div|
       %div.media
         - thumb_url = div['pid'] ? thumbnail_path(div['pid']) : resolver_path(div['CONTENTIDS'], :action=>'thumbnails')
         - href = div['pid'] ? catalog_path(div['pid']) : resolver_path(div['CONTENTIDS'], :action=>'catalog')

@@ -18,7 +18,7 @@ class ContentAggregator < ::ActiveFedora::Base
     members = []
     r.collect {|hit| members << SolrDocument.new(hit) } unless r.blank?
     if members.length == 0
-      return {:asset=>"crystal/file.png",:mime=>'image/png'}
+      return {:asset=>"cul_scv_hydra/crystal/file.png",:mime=>'image/png'}
     else
       thumb = nil
       unless datastreams['structMetadata'].new?
@@ -27,7 +27,7 @@ class ContentAggregator < ::ActiveFedora::Base
         thumb =  thumb_from_members(members)
       end
     end
-    return thumb || {:asset=>"crystal/file.png",:mime=>'image/png'}
+    return thumb || {:asset=>"cul_scv_hydra/crystal/file.png",:mime=>'image/png'}
   end
 
   private
@@ -66,8 +66,7 @@ class ContentAggregator < ::ActiveFedora::Base
 
   def thumb_from_solr_doc(solr_doc)
     if solr_doc and (member =  ActiveFedora::Base.find(solr_doc.id, :cast=>true)).respond_to? :thumbnail_info
-      puts "thumb: " + (thumb = member.thumbnail_info).inspect
-      thumb
+      member.thumbnail_info
     else
       return nil
     end

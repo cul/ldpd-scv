@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 gem 'ruby-prof'
 gem "rails", '~> 3.2.6'
 gem 'memcache-client'
-gem 'unicorn'
+#gem 'thin'
 gem 'rack-handlers'
 gem 'sqlite3'
 group :passenger_dev, :passenger_test, :passenger_prod do
