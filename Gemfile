@@ -72,6 +72,7 @@ gem 'xml-simple'
 gem 'block_helpers'
 gem 'sanitize'
 group :development, :test do
+  gem 'capistrano', '~>2.x'
   gem 'yard'
   gem 'jettywrapper', ">= 1.4.1"
 #  gem 'ruby-debug19'
