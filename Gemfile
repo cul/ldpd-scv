@@ -10,7 +10,7 @@ group :passenger_dev, :passenger_test, :passenger_prod do
 end
 gem "blacklight", '4.7.0'
 
-gem 'authlogic', '~>3.1.0'
+gem 'authlogic', '~>3.4.2'
 gem 'authlogic_wind'
 gem 'arel'
 gem 'actionmailer'
