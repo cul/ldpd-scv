@@ -65,6 +65,7 @@ gem 'rsolr', '1.0.6' # Default to using the version required by Blacklight
 gem 'rsolr-ext' # Default to using the version required by Blacklight
 gem 'rubydora'
 gem 'RedCloth', '>=4.2.3'
+gem 'scrypt'
 gem 'solr-ruby' 
 gem 'sprockets'
 gem 'term-ansicolor'
