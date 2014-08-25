@@ -64,7 +64,7 @@ class BlacklightConfiguration
     config.add_facet_field "lib_name_sim", { 
       :label => "Names", :limit => 10, :sort => "index"}
     config.add_facet_field "lib_recipient_sim", :label => "RCP", :limit => 10, :sort => "index", :only=>"lib_name_sim"
-    config.add_facet_field "lib_date_sim", :label => "Dates", :limit => 10, :sort => "index"
+    config.add_facet_field "lib_date_dtsi", :label => "Dates", :limit => 10, :sort => "index"
     config.add_facet_field "lib_format_sim", :label => "Formats", :limit => 10, :sort => "index"
     config.add_facet_field "lib_collection_sim", :label => "Collections", :limit => 10, :sort => "index"
     config.add_facet_field "lib_shelf_sim", {
