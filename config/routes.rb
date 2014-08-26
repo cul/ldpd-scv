@@ -1,48 +1,47 @@
 Scv::Application.routes.draw do
 
-  Blacklight.add_routes(self)
+  root :to => "catalog#index"
+  blacklight_for :catalog
 
-  root :to => 'catalog#index'
-
-  resources :reports
+  resources :reports, only: :show
 
 
-  match '/download/fedora_content/:download_method/:uri/:block/:filename', 
-    :to => DownloadController.action(:fedora_content),
+  get '/download/fedora_content/:download_method/:uri/:block/:filename' => DownloadController.action(:fedora_content),
     :as => :fedora_content,
     :constraints => {
       :uri => /.+/,
       :filename => /.+/,
       :download_method => /(download|show|show_pretty)/
     }
-  match '/download/cache/:download_method/:uri/:block/:filename', 
-    :to => DownloadController.action(:cachecontent),
+  get '/download/cache/:download_method/:uri/:block/:filename' => DownloadController.action(:cachecontent),
     :as => :cache,
     :constraints => {
       :uri => /.+/,
       :filename => /.+/,
       :download_method => /(download|show|show_pretty)/
     }
-  get '/resolve/:action/:id',
-    :to => ResolveController.action(:get),
-    :as => :resolver,
-    :constraints => {
-      :id => /([^\/])+?/,
-      :action => /(catalog|thumbnails)/,
-      :format => //
-    }
-  match 'wind_logout', :to => 'welcome#logout'
-  match '/access_denied', :to => 'welcome#access_denied'
+
+  namespace :resolve do
+    resources :catalog, only: [:show], constraints: { id: /[^\?]+/ } do
+      resources :bytestreams, only: [:index, :show] do
+        get 'content'=> 'bytestreams#content'
+      end
+    end
+    resources :thumbs, only: [:show], constraints: { id: /[^\?]+/ }
+    resources :bytestreams, path: 'catalog/:catalog_id/bytestreams', only: [:index, :show], constraints: { id: /[^\/]+/ }
+  end
+
+  get '/access_denied' => 'welcome#access_denied'
   # match '/thumbnail/:id', :to => 'thumbnail#get'
-  resources :thumbnails
+  resources :thumbs, only: [:show]
   resource :report
   
-  match '/reports/preview/:category', :to => 'reports#preview', 
+  get '/reports/preview/:category' => 'reports#preview', 
     :category => /(by_collection)/
   
-  match ':controller(/:action(/:id))'
-  match ':controller/:action/:id.:format'
+  get ':controller(/:action(/:id))'
+  get ':controller/:action/:id.:format'
 
-  match '/login', :to =>'user_sessions#new', :as => 'new_user_session'
-  match '/wind_logout', :to =>'user_sessions#destroy', :as => 'destroy_user_session'
+  get '/login' =>'user_sessions#new', :as => 'new_user_session'
+  get '/wind_logout' =>'user_sessions#destroy', :as => 'destroy_user_session'
 end

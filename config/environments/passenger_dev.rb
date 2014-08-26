@@ -4,12 +4,13 @@ Scv::Application.configure do
 # The production environment is meant for finished, "live" apps.
 # Code is not reloaded between requests
 config.cache_classes = true
-config.cache_store = :mem_cache_store, 'scv-dev.cul.columbia.edu'
 
 # Full error reports are disabled and caching is turned on
-#config.action_controller.consider_all_requests_local = false
+#config.consider_all_requests_local = false
 config.action_controller.perform_caching             = true
-# config.action_view.cache_template_loading            = true
+config.action_view.cache_template_loading            = true
+
+config.eager_load = true
 
 # This line tells passenger we are serving under http://<server>/<app_name>/
 # config.action_controller.relative_url_root = "/scv_dev"
@@ -32,12 +33,14 @@ config.action_controller.perform_caching             = true
 # Enable threaded mode
 # config.threadsafe!
 
-config.action_mailer.delivery_method = :smtp
+config.action_mailer.delivery_method = :sendmail
 config.action_mailer.smtp_settings = {
-  :address => "localhost",
-  :domain => "bronte.cul.columbia.edu",
-   :port => 25
+  :location => "/usr/bin/sendmail",
+  :arguments => '-i -t'
 }
-config.active_support.deprecation = :log
+config.action_mailer.default_url_options = { :host => 'bronte.cul.columbia.edu' }
+config.active_support.deprecation = :notify
+# Use default logging formatter so that PID and timestamp are not suppressed.
+config.log_formatter = ::Logger::Formatter.new
 Haml::Template::options[:ugly] = true
 end

@@ -48,7 +48,8 @@ class DownloadController  < ActionController::Base
       @resource.ids_for_outbound(:has_model).each { |triple|
         @download.content_models << "info:fedora/#{triple}"
       }
-      dc_format = @resource.dc.term_values(:dc_format)
+      dc = @resource.datastreams['DC']
+      dc_format = dc.term_values(:dc_format)
       if dc_format and dc_format.length > 0
         @download.mime_type=dc_format.first
       end

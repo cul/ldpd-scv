@@ -1,8 +1,8 @@
 - #metadata_list = get_metadata_list(document)
-.container-fluid
-  .span8
+.row
+  .col-md-8
     = render :partial => "catalog/_show_partials/metadata_brief", :locals => {document: document, groups: true}
-  .span4
+  .col-md-4
     != "This is the default display."
     != document.inspect
 

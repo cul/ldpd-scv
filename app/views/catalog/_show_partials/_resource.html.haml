@@ -1,9 +1,9 @@
 // default partial to display solr document fields in catalog show view
 - #metadata_list = get_metadata_list(document)
 .container-fluid
-  .span6
+  .col-md-6
     = render :partial => "catalog/_show_partials/metadata_brief", :locals => {:document => document, groups: true}
-  .span6
+  .col-md-6
     = render :partial => "catalog/_show_partials/image/display_derivatives", :locals => {:document => document}
 - if zoomable?(document)
   = render :partial => "catalog/_screen_partials/zooming", :locals => {:document => document}

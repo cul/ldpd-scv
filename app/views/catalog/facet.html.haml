@@ -1,22 +1,13 @@
-%div.facet_extended_list
+%div.facet_pagination.top
+  = render :partial=>'facet_pagination'
   
-  - sidebar_items << capture do
-    %p= link_back_to_catalog 
-  %div.facet_pagination.top
+%div.modal-header
+  %button{:type=>'button', :class=>'ajax-modal-close close', :"data-dismiss"=>'modal', :"aria-hidden"=>'true'}!=x
+  %h3.modal-title=facet_field_label(@facet.field)
+%div.modal-body
+  %div.facet_extended_list
+    = render_facet_limit(@display_facet, layout: false)
+%div.modal-footer    
+  = render :partial=>'facet_prefix'
+  %div.facet_pagination.bottom
     = render :partial=>'facet_pagination'
-  %div.modal-header
-    %button{:type=>'button', :class=>'close', :"data-dismiss"=>'modal', :"aria-hidden"=>'true'}
-    %h3=facet_field_labels[params[:id]]
-  %div.modal-body
-    %div.facet_extended_list
-      %ul.facet_extended_list
-        - @pagination.items.each do |item|
-          %li
-            - if facet_in_params?( params[:id], item.value)
-              != render_selected_facet_value(params[:id], item)
-            - else
-              != render_facet_value(params[:id], item)
-  %div.modal-footer    
-    = render :partial=>'facet_prefix'
-    %div.facet_pagination.bottom
-      = render :partial=>'facet_pagination'

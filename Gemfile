@@ -1,47 +1,30 @@
 source 'http://rubygems.org'
 gem 'ruby-prof'
-gem "rails", '~> 3.2.6'
-gem 'memcache-client'
+gem 'rails', '4.0.4'
+gem 'actionpack-action_caching'
+gem 'dalli'
 #gem 'thin'
 gem 'rack-handlers'
 gem 'sqlite3'
-group :passenger_dev, :passenger_test, :passenger_prod do
-  gem 'mysql2'
-end
-gem "blacklight", '4.7.0'
+gem 'blacklight', '~> 5.4.0'
 
 gem 'authlogic', '~>3.4.2'
 gem 'authlogic_wind'
 gem 'arel'
 gem 'actionmailer'
 gem 'sass'
-gem 'sass-rails',   '~> 3.2.3'
-gem "bootstrap-sass"
-#gem 'compass'
-#gem 'compass-rails'
-gem 'jquery-rails'
+gem 'sass-rails', '~>4.0.2'
+gem 'bootstrap-sass', '>= 3.2'
+gem 'jquery-rails', '>= 3.0'
 gem 'jquery-ui-rails'
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-  gem 'uglifier', '>= 1.0.3'
-  gem "bootstrap-sass"
-#  gem 'compass-rails'
-end
 gem "unicode", :platforms => [:mri_18, :mri_19]
-gem "hydra-head", "~>6.5"
-# gem "active-fedora", '~>4.5.0'
-gem 'active-fedora', '~>6.1'
-gem 'active_fedora_finders', '~>0.3.0'
-gem "active_fedora_relsint", '~>0.3.0' # :git=>'git://github.com/projecthydra/active_fedora_relsint.git', :branch=>'master'
-gem 'active_fedora_streamable', '~>0.3.0'
+gem "hydra-head", "~>7"
+gem 'active_fedora_finders', '~>0.5.0'
+gem "active_fedora_relsint", :git=>'git://github.com/cul/active_fedora_relsint.git', :branch=>'master'
 gem 'columnize'
 gem 'crack'
 gem 'cul_image_props'
-gem 'cul_scv_hydra' , :git=>'git://github.com/cul/cul_scv_hydra.git', :branch=>'master'
-gem 'curb'
+gem 'cul_scv_hydra', :git=>'git://github.com/cul/cul_scv_hydra.git', :branch=>'master'
 gem 'database_cleaner'
 gem 'declarative_authorization', '0.5.3'
 gem 'diff-lcs'
@@ -61,13 +44,12 @@ gem 'rack'
 gem 'rack-test'
 gem 'rake'
 # gem 'rcov'
-gem 'rsolr', '1.0.6' # Default to using the version required by Blacklight
+gem 'rsolr' # Default to using the version required by Blacklight
 gem 'rsolr-ext' # Default to using the version required by Blacklight
 gem 'rubydora'
 gem 'RedCloth', '>=4.2.3'
 gem 'scrypt'
 gem 'solr-ruby' 
-gem 'sprockets'
 gem 'term-ansicolor'
 gem 'xml-simple'
 gem 'block_helpers'
@@ -76,15 +58,21 @@ group :development, :test do
   gem 'capistrano', '~>2.x'
   gem 'yard'
   gem 'jettywrapper', ">= 1.4.1"
-#  gem 'ruby-debug19'
-#  gem 'ruby-debug-base19'
   gem 'rspec', '>= 2.0.0'  
   gem 'rspec-rails', '>= 2.0.0' # rspec-rails 2.0.0 requires Rails 3.
   gem 'engine_cart'
   gem 'mocha'
   gem 'cucumber', '>=0.8.5'
-  gem 'cucumber-rails', '>=1.0.0'
+  gem 'cucumber-rails', '>=1.0.0', :require => false
   gem 'gherkin'
   gem 'factory_girl'
-  gem "rake"
+end
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+  gem 'coffee-rails'
+  gem 'uglifier', '>= 1.0.3'
+end
+group :passenger_dev, :passenger_test, :passenger_prod do
+  gem 'mysql2'
 end

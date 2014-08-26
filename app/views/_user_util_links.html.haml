@@ -1,18 +1,17 @@
 -# coding: utf-8
-.row-fluid
-  - if current_user
-    .pull-right.dropdown
-      %a.dropdown-toggle#user_links_label{:"data-toggle"=>"dropdown", :href=>"#"}
-        %span="My SCV [" + current_user.login + "]"
-        %i.icon-list
-      %ul.dropdown-menu{:role=>"menu", :"aria-labelledby"=>"user_links_label"}
-        - if current_user.last_search_url
-          %li= link_to('View your last search', catalog_index_path(current_user.last_search_url))
-        %li= link_to "Saved Searches", saved_searches_path
-        %li= link_to "Search History", search_history_path
-        %li= link_to('Bookmarked Items', bookmarks_path)
-        - if current_user.admin?
-          %li= link_to("Admin", :controller => :admin)
-        %li= link_to("Log Out", wind_logout_path)
-  - else
-    .pull-right= link_to 'Login', login_path 
+- if current_user
+  .btn-group.dropdown.pull-right
+    %button.dropdown-toggle.btn.btn-default#user_links-toggle{:"data-toggle"=>"dropdown", :type=>"button"}
+      %span="My SCV [" + current_user.login + "]"
+      %i.glyphicon.glyphicon-list
+    %ul.dropdown-menu.pull-right{:role=>"menu", :"aria-labelledby"=>"user_links-toggle"}
+      - if current_user.last_search_url
+        %li= link_to('View your last search', catalog_index_path(current_user.last_search_url))
+      %li= link_to "Saved Searches", saved_searches_path
+      %li= link_to "Search History", search_history_path
+      %li= link_to('Bookmarked Items', bookmarks_path)
+      - if current_user.admin?
+        %li= link_to("Admin", :controller => :admin)
+      %li= link_to("Log Out", destroy_user_session_path)
+- else
+  .pull-right= link_to 'Login', login_path 

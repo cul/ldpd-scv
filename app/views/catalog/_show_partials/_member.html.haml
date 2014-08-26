@@ -2,9 +2,9 @@
 %div.document.well
   %div.container-fluid
     %div.row-fluid
-      %div.span3.media
+      %div.col-md-3.media
         = render_document_partial(document, "thumbnail") unless document.nil?
-      %div.span9.container-fluid
+      %div.col-md-9.container-fluid
         %div.row-fluid
           - if !document.nil?
             %p.index_title!=link_to_clio(document)

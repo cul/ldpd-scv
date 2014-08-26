@@ -1,3 +1,4 @@
-@import 'bootstrap'
-@import 'bootstrap-responsive'
-@import 'blacklight/blacklight'
+@import "bootstrap-sprockets";
+@import 'bootstrap';
+
+@import 'blacklight/blacklight';

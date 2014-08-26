@@ -1,22 +1,25 @@
-require 'blacklight'
-require 'active-fedora'
-require 'declarative_authorization'
+# -*- encoding : utf-8 -*-
+require 'blacklight/catalog'
+require 'blacklight/solr'
+require 'blacklight/solr/request'
+require 'blacklight/solr/document'
+
 class CatalogController < ApplicationController
-  unloadable
-  include CatalogHelper
   include Blacklight::Catalog
-  include Blacklight::SolrHelper
+  include Hydra::Controller::ControllerBehavior
   include Cul::Scv::FacetExtras
+  include Cul::Scv::BlacklightConfiguration
+  include CatalogHelper
   
   configure_blacklight do |config|
-    Scv::BlacklightConfiguration.configure(config)
+    configure_for_scv(config)
   end
+
+  layout 'application'
   
   before_filter :require_staff
-  before_filter :search_session, :history_session
   before_filter :cache_docs,  :only=>[:index, :show]
   before_filter :af_object, :only=>[:show]
-  after_filter :set_additional_search_session_values, :only=>:index
   after_filter :uncache_docs, :only=>[:index, :show]
   
   # Whenever an action raises SolrHelper::InvalidSolrID, this block gets executed.

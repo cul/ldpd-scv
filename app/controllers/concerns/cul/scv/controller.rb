@@ -1,7 +1,7 @@
-module Cul
-  module Scv
-    module Controller
-    	  def current_user
+module Cul::Scv::Controller
+  extend ActiveSupport::Concern
+
+  def current_user
     return @current_user if defined?(@current_user)
     
     if current_user_session
@@ -84,6 +84,4 @@ module Cul
     @http_client
   end
 
-end
-end
 end

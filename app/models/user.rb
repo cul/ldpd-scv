@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   #end
   #before_create :set_personal_info_via_ldap
 
-  scope :admins, :conditions => {:admin => true}
+  scope :admins, -> {where :admin => true}
 
   acts_as_authentic do |c|
     c.validate_password_field = false

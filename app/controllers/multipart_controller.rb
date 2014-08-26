@@ -1,5 +1,4 @@
 class MultipartController < ApplicationController
-  unloadable
   include Blacklight::SolrHelper
 
   before_filter :require_staff

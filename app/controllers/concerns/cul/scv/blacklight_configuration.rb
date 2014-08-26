@@ -17,13 +17,14 @@ require 'blacklight'
 #   Blacklight.configure(:production) {}
 # 
 
-module Scv
-class BlacklightConfiguration
-  def self.dependent_facet(controller, config, display_facet)
+module Cul::Scv::BlacklightConfiguration
+  extend ActiveSupport::Concern
+  module ClassMethods
+  def dependent_facet(controller, config, display_facet)
     config[:only] and facet_in_params?(config[:only])
   end
 
-  def self.configure(config)
+  def configure_for_scv(config)
 
   #   Set up and register the default SolrDocument Marc extension
   #   SolrDocument.extension_parameters[:marc_source_field] = :marc_display

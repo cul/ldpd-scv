@@ -1,7 +1,7 @@
-- if paginate_params(@response).num_pages > 1
-  .navbar
-    .navbar-inner
-      .navbar-text
-        = paginate_rsolr_response @response, :outer_window => 2, :theme => 'scv'
+- if @response.total_pages > 1
+  .row.record-padding
+    .col-md-9
+      .pagination
+        = paginate @response, :outer_window => 2, :page_entries_info => page_entries_info(@response), :theme => 'scv'
         = render :partial => 'sort_widget'
         = render :partial => 'per_page_widget'

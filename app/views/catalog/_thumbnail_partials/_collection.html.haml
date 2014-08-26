@@ -4,4 +4,4 @@
 - href ||= url_to_document(document)
 %a.thumbnail.thumbnail-multipart.pull-left{:href=>href, :'data-counter'=>data_counter}
   .thumb-overlay
-    %img{:src=>thumbnail_path(document[:id]), :alt=>"", :class=>"media-object"}
+    %img{:src=>thumb_path(document[:id]), :alt=>"", :class=>"media-object"}

@@ -7,8 +7,11 @@
 - ## paginator:     the paginator that renders the pagination tags inside
 
 - ## Paginator now using the Bootstrap paginator class
-- text = render_pagination_info(@response)
-- paginator.render do
-  = prev_page_tag
-  %span!= " | " + text + " | "
-  = next_page_tag
+- if total_pages > 1
+  - paginator.render do
+    = prev_page_tag
+    %span
+      = " | "
+      = page_entries_info
+      = " | "
+    = next_page_tag

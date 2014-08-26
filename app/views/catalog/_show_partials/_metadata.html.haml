@@ -2,9 +2,9 @@
 - display ||= false
 - metadata ||= {}
 .metadata.container-fluid
-  .span8
+  .col-md-8
     %span.title_data="#{metadata[:title]} (#{metadata[:type]})"
-  .span4{:style=>"margin-left:0px;"}
+  .col-md-4{:style=>"margin-left:0px;"}
     = link_to "Show formatted #{metadata[:type]}", metadata[:show_url] 
     = "--"
     = link_to "Raw XML", metadata[:download_url] 

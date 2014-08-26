@@ -1,9 +1,6 @@
 # coding: utf-8
 module Scv
   module ApplicationHelperBehavior
-    def application_name
-      "Columbia University Libraries Staff Collection Viewer Prototype"
-    end
     # RSolr presumes one suggested word, this is a temporary fix
     def get_suggestions(spellcheck)
       words = []

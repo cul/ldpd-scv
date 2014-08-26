@@ -63,7 +63,7 @@ module Scv
       # .to_s is necessary otherwise the default return value is not always a string
       # using "_" as sep. to more closely follow the views file naming conventions
       # parameterize uses "-" as the default sep. which throws errors
-      display_type = document[blacklight_config.show.display_type]
+      display_type = document[blacklight_config.show.display_type_field]
       return 'default' unless display_type
       display_type = display_type.join(" ") if display_type.respond_to?(:join)
       "#{display_type.gsub("-"," ")}".parameterize("_").to_s

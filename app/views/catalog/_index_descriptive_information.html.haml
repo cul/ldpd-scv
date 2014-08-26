@@ -1,8 +1,8 @@
 -# coding: utf-8
 %div.container-fluid
-  %div.span3
+  %div.col-md-3
     = render_document_partial(document, :thumbnail)
-  %div.span9
+  %div.col-md-9
     %dl.defList
       - index_field_names.select { |f| document[f] }.each do |solr_fname|
         %dt= index_field_labels[solr_fname]

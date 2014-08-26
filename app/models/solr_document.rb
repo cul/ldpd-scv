@@ -2,16 +2,14 @@
 class SolrDocument 
 
   include Blacklight::Solr::Document
-  
-  # The following shows how to setup this blacklight document to display marc documents
-  extension_parameters[:marc_source_field] = :marc_ssm
-  extension_parameters[:marc_format_type] = :marcxml
+
+  # self.unique_key = 'id'
   
   # Email uses the semantic field mappings below to generate the body of an email.
-  use_extension( Blacklight::Solr::Document::Email )
+  SolrDocument.use_extension( Blacklight::Solr::Document::Email )
   
   # SMS uses the semantic field mappings below to generate the body of an SMS email.
-  use_extension( Blacklight::Solr::Document::Sms )
+  SolrDocument.use_extension( Blacklight::Solr::Document::Sms )
 
   # DublinCore uses the semantic field mappings below to assemble an OAI-compliant Dublin Core document
   # Semantic mappings of solr stored fields. Fields may be multi or
@@ -19,12 +17,6 @@ class SolrDocument
   # and Blacklight::Solr::Document#to_semantic_values
   # Recommendation: Use field names from Dublin Core
   use_extension( Blacklight::Solr::Document::DublinCore)    
-  field_semantics.merge!(    
-                         :title => "title_display_ssm",
-                         :author => "author_ssm",
-                         :language => "language_sim",
-                         :format => "lib_format_ssm"
-                         )
 
   def link_title(link_field = nil)
     begin

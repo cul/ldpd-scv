@@ -1,5 +1,4 @@
 class FolderController < ApplicationController
-  unloadable
 
   before_filter :require_staff
 

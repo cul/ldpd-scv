@@ -1,8 +1,8 @@
-#header-navbar-top.navbar
-.container-fluid
-  .row
-    .span8
-      %strong
-        = link_to "#{image_tag('logo.gif')} #{application_name}".html_safe, root_path
-    .span4.nav-collapse
-      = render :partial=>"/user_util_links"
+#header-navbar.navbar.navbar-default.navbar-static-top{role:"navigation"}
+  .container
+    .navbar-header
+      = link_to "#{image_tag('logo.gif')} #{application_name}".html_safe, root_path, class: "navbar2-brand"
+    = render :partial=>"/user_util_links"
+#search-navbar.navbar.navbar-default.navbar-static-top{role:"navigation"}
+  .container
+    = render_search_bar

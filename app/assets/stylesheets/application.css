@@ -9,8 +9,11 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require_tree .
- *= require 'blacklight'
+ *= require ./blacklight
+ *= require jquery-ui/all
+ *= require_tree './scv'
+ *= require accordion
+ *= require zooming_image
  */
 /* Global */
 .part-label:before {

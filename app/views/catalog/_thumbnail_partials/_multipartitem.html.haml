@@ -7,6 +7,6 @@
 %a{:href=>href, :'data-counter'=>data_counter, :class=>"thumbnail thumbnail#{multi} pull-left thumbnail-link"}
   - unless multi == '-single'
     .thumb-overlay
-      %img{:src=>thumbnail_path(document[:id]), :alt=>"", :class=>"media-object"}
+      %img{:src=>thumb_path(document[:id]), :alt=>"", :class=>"media-object"}
   - else
-    %img{:src=>thumbnail_path(document[:id]), :alt=>"", :class=>"media-object"}
+    %img{:src=>thumb_path(document[:id]), :alt=>"", :class=>"media-object"}

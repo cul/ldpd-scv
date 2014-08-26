@@ -1,4 +1,2 @@
-%div.pull-right.hidden-phone.dropdown{:style=>"padding-right:1em;"}
-  %div.constraint-widget
-    %span
-      = link_to t('blacklight.search.start_over'), url_for(:action=>'index'), :id=>"startOverLink"
+%span.btn-group.appliedFilter.constraint
+  = link_to t('blacklight.search.start_over'), url_for(:action=>'index'), :id=>"startOverLink", :class=>"btn btn-sm btn-default btn-disabled"

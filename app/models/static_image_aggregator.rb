@@ -1,12 +1,12 @@
 require "active-fedora"
 class StaticImageAggregator < ::ActiveFedora::Base
   extend ActiveModel::Callbacks
-  include ::ActiveFedora::Finders
+  include ::ActiveFedora::FinderMethods::RepositoryMethods
   include ::ActiveFedora::DatastreamCollections
   include ::Hydra::ModelMethods
-  include Cul::Scv::Hydra::ActiveFedora::Model::Common
-  include Cul::Scv::Hydra::ActiveFedora::Model::Aggregator
-  include Cul::Scv::LinkableResources
+  include Cul::Scv::Hydra::Models::Common
+  include Cul::Scv::Hydra::Models::Aggregator
+  include Cul::Scv::Hydra::Models::LinkableResources
   alias :file_objects :resources
   
   CUL_WIDTH = ActiveFedora::Predicates.short_predicate("http://purl.oclc.org/NET/CUL/RESOURCE/STILLIMAGE/BASIC/imageWidth")

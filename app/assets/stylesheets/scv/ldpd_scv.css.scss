@@ -1,42 +1,6 @@
 body {
 	color: #000;
 	background-color: #fff;
-	padding-top:0.5em;
-	font-size:12px;
-	line-height:16px;
-}
-
-.btn {	
- 	font-size:12px;
-	line-height:16px;
-}
-
-LABEL, INPUT, BUTTON, SELECT, TEXTAREA {	
- 	font-size:12px;
-	line-height:16px;
-}
-
-#facets H2 {
-	font-size: 1.5em;
-}
-
-#facets H3 {
-	font-size: 1.3em;
-}
-
-#facets H4 {
-	font-size: 1.2em;
-}
-
-#facets H5 {
-	font-size: 1.1em;
-}
-
-// the Start Over link
-div.constraint-widget {
-	position:relative;
-	display: inline-block;
-	margin: -5px 0 0 0;
 }
 
 a.thumbnail-single {
@@ -99,10 +63,6 @@ div.member-item > hr {
 dt,
 dd {
   line-height: 12px;
-}
-
-.show > .navbar {
-	margin-bottom: 0.25em;
 }
 
 form.bookmark_toggle {

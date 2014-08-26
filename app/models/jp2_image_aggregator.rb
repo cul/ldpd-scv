@@ -5,9 +5,9 @@ class JP2ImageAggregator < ::ActiveFedora::Base
   include ::ActiveFedora::DatastreamCollections
   include ::Hydra::ModelMethods
   include Cul::Fedora::UrlHelperBehavior
-  include Cul::Scv::Hydra::ActiveFedora::Model::Common
-  include Cul::Scv::Hydra::ActiveFedora::Model::Aggregator
-  include Cul::Scv::LinkableResources
+  include Cul::Scv::Hydra::Models::Common
+  include Cul::Scv::Hydra::Models::Aggregator
+  include Cul::Scv::Hydra::Models::LinkableResources
 
   has_datastream :name => "SOURCE", :type=>::ActiveFedora::Datastream, :mimeType=>"image/jp2", :controlGroup=>'E'
 

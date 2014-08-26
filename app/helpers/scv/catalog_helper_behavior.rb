@@ -1,11 +1,6 @@
-require 'rsolr'
-require 'blacklight'
-require 'cul'
-require 'active_support'
 module Scv
   module CatalogHelperBehavior
 
-    include Blacklight::CatalogHelperBehavior
     include Scv::ModsHelperBehavior
     include Cul::Fedora::UrlHelperBehavior
     include Scv::UrlHelperBehavior

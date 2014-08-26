@@ -1,20 +1,15 @@
-require "base64"
-require "blacklight"
-require "ruby-prof"
-require "action_view"
-# Filters added to this controller apply to all controllers in the application.
-# Likewise, all the methods added will be available for all controllers.
-
+# -*- encoding : utf-8 -*-
 class ApplicationController < ActionController::Base
+
   # Adds a few additional behaviors into the application controller 
   # Please be sure to implement current_user and user_session. Blacklight depends on 
   # these methods in order to perform user specific actions. 
 
-  unloadable
   include Blacklight::Controller
   include Cul::Scv::Controller
-  
-  layout "application"
+  include ApplicationHelper
+
+  layout false
 
   helper_method :user_session, :current_user, :fedora_config, :solr_config, :relative_root # share some methods w/ views via helpers
   helper :all # include all helpers, all the time

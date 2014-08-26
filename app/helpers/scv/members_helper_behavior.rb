@@ -24,7 +24,7 @@ module Scv
       end
       klass ||= GenericAggregator
       members = []
-      if klass.include? Cul::Scv::Hydra::ActiveFedora::Model::Aggregator
+      if klass.include? Cul::Scv::Hydra::Models::Aggregator
         agg = klass.load_instance_from_solr(document[:id],document)
         r = agg.parts(:response_format => format)
         members = r.collect {|hit| SolrDocument.new(hit) } unless r.blank?

@@ -14,7 +14,7 @@
     = csrf_meta_tags
     -  javascript_tag do
       = yield(:jstemplates)
-    = raw(render_head_content)
+    = content_for(:head)
   - bparms = {:class=>render_body_class}
   - if params[:q].to_s.empty? and params[:f].to_s.empty? and params[:id].nil?
     - bparms[:onload]="$('input#q').focus();"
@@ -23,11 +23,9 @@
 
     #ajax-modal.modal.hide.fade{:tabindex => -1}
 
-    #main-container.container
-      .row#search-found.hidden-phone
-        =topbar_items.join("").html_safe
+    #main-container.container-fluid
       .row
-        .span12
+        .col-md-12
           #main-flashes
             = render :partial=>'/flash_msg'
       .row

@@ -1,0 +1,25 @@
+- # local params:
+-   ## label 
+-   ## value
+-   ## options =>
+-   ##   :remove => url for a remove constraint link
+-   ##   :classes => array of classes to add to container span
+- options ||= {}
+- options[:escape_label] = true unless options.has_key?(:escape_label)
+- options[:escape_value] = true unless options.has_key?(:escape_value)
+
+%span.btn-group.appliedFilter.constraint{:class=> (options[:classes] ? options[:classes].join(" ") : "")}
+  %a.constraint-value.btn.btn-sm.btn-default.btn-disabled{href:'#'}
+    - unless label.blank?
+      %span.filterName
+        = options[:escape_label] ? h(label) : raw(label) 
+    - unless value.blank?
+      %span.filterValue
+        = options[:escape_value] ? h(value) : raw(value)
+  - unless options[:remove].blank?
+    - accessible_remove_label = content_tag :span, :class => 'sr-only' do
+      - if label.blank?
+        - t('blacklight.search.filters.remove.value', :value => (options[:escape_value] ? h(value) : value))
+      - else
+        - t('blacklight.search.filters.remove.label_value', :label => (options[:escape_label] ? h(label) : label), :value => (options[:escape_value] ? h(value) : value))
+    = link_to(content_tag(:span, '', class: 'glyphicon glyphicon-remove') + accessible_remove_label, options[:remove], :class=>'btn btn-default btn-sm remove dropdown-toggle', :alt=>'remove')

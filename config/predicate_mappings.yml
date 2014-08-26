@@ -48,8 +48,8 @@
   info:fedora/fedora-system:def/model#:
     :has_model: hasModel
   http://purl.oclc.org/NET/CUL/RESOURCE/STILLIMAGE/BASIC/:
-    :cul_image_width: imageWidth
-    :cul_image_length: imageLength
+    :image_width: imageWidth
+    :image_length: imageLength
   http://purl.oclc.org/NET/CUL/RESOURCE/STILLIMAGE/ASSESSMENT/:
     :x_sampling: xSamplingFrequency
     :y_sampling: ySamplingFrequency
@@ -68,5 +68,7 @@
     :foaf_image: image
     :foaf_thumbnail: thumbnail
     :foaf_zooming: zoomingImage
+    :foaf_depicts: depicts
+    :foaf_depiction: depiction
   http://www.w3.org/1999/02/22-rdf-syntax-ns#:
     :rdf_type: type
