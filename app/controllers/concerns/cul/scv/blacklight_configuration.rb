@@ -53,11 +53,11 @@ module Cul::Scv::BlacklightConfiguration
     # solr field values given special treatment in the show (single result) view
     config.show.html_title = 'title_display_ssm'
     config.show.heading = 'title_display_ssm'
-    config.show.display_type = :format_ssi
+    config.show.display_type_field = :format_ssi
 
     # solr field values given special treatment in the index (search results) view
     config.index.show_link = 'title_display_ssm'
-    config.index.record_display_type = :format_ssi
+    config.index.display_type_field = :format_ssi
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
@@ -191,6 +191,8 @@ module Cul::Scv::BlacklightConfiguration
     # If there are more than this many search results, no spelling ("did you 
     # mean") suggestion is offered.
     config[:spell_max] = 5
+
+    config.index.thumbnail_method = :thumbnail_url
   end
 end
 end

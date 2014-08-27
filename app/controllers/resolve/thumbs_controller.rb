@@ -131,6 +131,6 @@ class Resolve::ThumbsController < ApplicationController
 
   def show
     get_solr_response_for_app_id
-    redirect_to thumb_url(@document)
+    redirect_to thumbnail_url(@document)
   end
 end

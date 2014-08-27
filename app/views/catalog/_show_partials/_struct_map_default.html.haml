@@ -6,7 +6,7 @@
     - divs = structure.divs_with_attribute(true, 'ORDER').sort {|a,b| a['ORDER'] <=> b['ORDER']}
     - divs.each do |div|
       %div.media
-        - thumb_url = div['pid'] ? thumbnail_path(div['pid']) : resolver_path(div['CONTENTIDS'], :action=>'thumbnails')
+        - thumb_url = div['pid'] ? thumbnail_url(id: div['pid']) : resolver_path(div['CONTENTIDS'], :action=>'thumbnails')
         - href = div['pid'] ? catalog_path(div['pid']) : resolver_path(div['CONTENTIDS'], :action=>'catalog')
         %a{:href=>href, :class=>'pull-left'}
           %img{:src=>thumb_url, :class=>'media-object thumbnail'}

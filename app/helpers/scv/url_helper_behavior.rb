@@ -81,5 +81,10 @@ module Scv
       label = render_document_index_label object, opts
       link_to label, {:controller => :catalog, :id=>object.pid}, :'data-counter' => opts[:counter]
     end
+
+    def thumbnail_url(document)
+      @img_service ||= IMG_CONFIG['url']
+      "#{@img_service}/#{document[:id]}/scaled/200.jpg"
+    end
   end
 end
