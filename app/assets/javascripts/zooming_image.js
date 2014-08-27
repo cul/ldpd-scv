@@ -1,5 +1,3 @@
-//= require scv/zooming.js
-//= require ./openseadragon.min
-//= require ./djtilesource
-// Note: The Open and close links are pretty much identical.
-
+//= require zooming_image/zooming.js
+//= require zooming_image/openseadragon.min
+//= require zooming_image/djtilesource

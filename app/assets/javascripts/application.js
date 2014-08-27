@@ -17,6 +17,6 @@
 //= require bootstrap-sprockets
 //= require blacklight/blacklight
 //= require scv/filesystem.js
-// require_tree .
+//= require zooming_image 
 
 
