@@ -36,7 +36,6 @@ namespace :deploy do
 
   desc "Compile assets"
   task :assets do
-    #run "cd #{release_path}; RAILS_ENV=#{rails_env} bundle exec compass install bootstrap"
     run "cd #{release_path}; RAILS_ENV=#{rails_env} bundle exec rake db:migrate assets:clean assets:precompile"
   end
 
@@ -44,4 +43,5 @@ namespace :deploy do
 end
 
 
-after 'deploy:update_code', 'deploy:symlink_shared', 'deploy:assets'
+after 'deploy:update_code', 'deploy:symlink_shared'
+before 'deploy:create_symlink', 'deploy:assets'
