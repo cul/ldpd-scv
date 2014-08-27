@@ -25,7 +25,7 @@ module Scv
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
 
-    config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif zooming_image.js)
+    config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif zooming_image.js application.css application.js)
 
   end
 end
