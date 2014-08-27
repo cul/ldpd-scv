@@ -1,4 +1,4 @@
-module Cul::Scv::Resources::RelsIntBehavior
+module Cul::Scv::RelsIntBehavior
   extend ActiveSupport::Concern
   def resources_for_document(document=@document)
     model = document['active_fedora_model_ssi']
