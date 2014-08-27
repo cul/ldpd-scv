@@ -3,10 +3,12 @@ require 'blacklight/catalog'
 
 class Resolve::BytestreamsController < ApplicationController
 
+  include Blacklight::Configurable
   include Hydra::Controller::ControllerBehavior
   include Cul::Scv::RelsIntBehavior
   include Cul::Scv::Hydra::Resolver
-  include Scv::CatalogHelperBehavior
+  include Cul::Scv::BlacklightConfiguration
+  include CatalogHelper
   include ChildrenHelper
   caches_action :content, :expires_in => 7.days
 

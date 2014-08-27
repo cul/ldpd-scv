@@ -3,7 +3,9 @@ require 'blacklight/catalog'
 
 class Resolve::ThumbsController < ApplicationController
 
+  include Blacklight::Configurable
   include Hydra::Controller::ControllerBehavior
+  include Cul::Scv::BlacklightConfiguration
 
   # These before_filters apply the hydra access controls
   #before_filter :enforce_show_permissions, :only=>:show

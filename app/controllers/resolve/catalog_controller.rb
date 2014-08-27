@@ -3,8 +3,10 @@ require 'blacklight/catalog'
 
 class Resolve::CatalogController < ApplicationController
 
-  include Blacklight::Catalog
+  include Blacklight::Configurable
   include Hydra::Controller::ControllerBehavior
+  include Cul::Scv::BlacklightConfiguration
+  include CatalogHelper
 
   # These before_filters apply the hydra access controls
   #before_filter :enforce_show_permissions, :only=>:show
