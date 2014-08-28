@@ -82,9 +82,10 @@ module Scv
       link_to label, {:controller => :catalog, :id=>object.pid}, :'data-counter' => opts[:counter]
     end
 
-    def thumbnail_url(document)
+    def thumbnail_url(document, opts = {})
+      opts = {type: 'scaled', size: 200}.merge(opts)
       @img_service ||= IMG_CONFIG['url']
-      "#{@img_service}/#{document[:id]}/scaled/200.jpg"
+      "#{@img_service}/#{document[:id]}/#{opts[:type]}/#{opts[:size]}.jpg"
     end
   end
 end

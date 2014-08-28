@@ -5,6 +5,7 @@ class Resolve::BytestreamsController < ApplicationController
 
   include Blacklight::Configurable
   include Hydra::Controller::ControllerBehavior
+  include Cul::Scv::ApplicationIdBehavior
   include Cul::Scv::RelsIntBehavior
   include Cul::Scv::Hydra::Resolver
   include Cul::Scv::BlacklightConfiguration
@@ -37,7 +38,7 @@ class Resolve::BytestreamsController < ApplicationController
   end
 
   def index
-  	@response, @document = get_solr_response_for_app_id(params[:catalog_id])
+  	@response, @document = get_solr_response_for_dc_id(params[:catalog_id])
     respond_to do |format|
       format.any do 
         render json: resources_for_document, layout: false
@@ -46,7 +47,7 @@ class Resolve::BytestreamsController < ApplicationController
   end
 
   def show
-  	@response, @document = get_solr_response_for_app_id(params[:catalog_id])
+  	@response, @document = get_solr_response_for_dc_id(params[:catalog_id])
   	doc = resources_for_document.select {|x| x[:id].split('/')[-1] == params[:id]}
   	doc = doc.first || {}
     respond_to do |format|
@@ -57,7 +58,7 @@ class Resolve::BytestreamsController < ApplicationController
   end
 
   def content
-    @response, @document = get_solr_response_for_app_id(params[:catalog_id])
+    @response, @document = get_solr_response_for_dc_id(params[:catalog_id])
     if @document.nil?
       render :status => 401
     end

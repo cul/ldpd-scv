@@ -3,6 +3,8 @@ Scv::Application.routes.draw do
   root :to => "catalog#index"
   blacklight_for :catalog
 
+  resources :previews, only: :show, constraints: { id: /[^\?]+/ }
+
   resources :reports, only: :show
 
 
