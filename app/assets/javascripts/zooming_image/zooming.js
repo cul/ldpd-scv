@@ -10,12 +10,6 @@ function init_map(_rft) {
   var metadata = new OpenLayers.Layer.OpenURL.Metadata(metadataUrl, setMetadata); // callbacks will actually use metadata
 
 }
-function init_seadragon(_rft, _showNav) {
-  var ts = new OpenSeadragon.DjTileSource("http://iris.cul.columbia.edu:8888/view/", _rft);
-  var viewer = new OpenSeadragon.Viewer("map", undefined, '/assets/seadragon/');
-  viewer.showNavigator = _showNav;
-  viewer.openTileSource(ts);
-}
 function debugHash(object,label){
   debug = label + "[\n";
   for (name in object){

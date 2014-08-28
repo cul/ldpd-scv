@@ -31,7 +31,6 @@ module Scv
       if memoize and @linkable_resources
         return @linkable_resources
       end
-      klass = ActiveFedora::SolrService.class_from_solr_document(document)
       obj = ActiveFedora::Base.find(document[:id], :cast=>true)
       linkable_resources = []
       # obj = klass.load_instance_from_solr(document[:id],document)
@@ -232,8 +231,12 @@ module Scv
         resources = get_resources(document)
         resources.each do |resource|
           if resource[:mime_type] =~ /\/jp2$/
-            parts = resource[:url].split('/')
-            zoomable = "info:fedora/#{parts[-4]}/#{parts[-2]}"
+            if resource[:url]
+              parts = resource[:url].split('/')
+              zoomable = "info:fedora/#{parts[-4]}/#{parts[-2]}"
+            elsif resource[:uri]
+              zoomable = "info:fedora/#{resource[:uri]}/#{resource[:block]}"
+            end                
           end
         end
       end

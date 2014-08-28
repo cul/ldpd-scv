@@ -60,9 +60,6 @@ class CatalogController < ApplicationController
 
   def show
     @response, @document = get_solr_response_for_doc_id
-    if zoomable?(@document)
-          extra_head_content << [stylesheet_tag(openlayers_css, :media=>'all'), javascript_tag(zooming_js)]
-    end
 
     respond_to do |format|
       format.html {setup_next_and_previous_documents}
