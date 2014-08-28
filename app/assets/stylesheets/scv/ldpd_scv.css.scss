@@ -19,7 +19,7 @@ a.thumbnail-multipart {
 	height: 200px;
 	width: 200px;
 	overflow: hidden;
-	background-image: url('/assets/crystal/kmultiple.png');
+	background-image: url(asset_path('crystal/kmultiple.png'));
 	background-size: contain;
 }
 
