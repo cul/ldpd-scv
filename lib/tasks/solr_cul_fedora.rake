@@ -156,10 +156,14 @@ namespace :cul do
      task :delete => :configure do
         delete_array = []
         deletes = 0
-        open(ENV['PID_LIST']) do |blob|
-          blob.each {|line| delete_array << line.strip}
+        if ENV['PID']
+          delete_array << ENV['PID']
         end
-
+        if ENV['PID_LIST']
+          open(ENV['PID_LIST']) do |blob|
+            blob.each {|line| delete_array << line.strip}
+          end
+        end
         delete_array.each do |id|
           logger.info "delete: #{id}"
           ActiveFedora::SolrService.instance.conn.delete_by_id(id)
