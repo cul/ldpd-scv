@@ -13,10 +13,8 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui/core
-// Required by Blacklight
 //= require bootstrap-sprockets
 //= require blacklight/blacklight
 //= require scv/filesystem.js
-//= require zooming_image 
 
 

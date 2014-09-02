@@ -61,13 +61,13 @@ module Cul::Scv::BlacklightConfiguration
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
-    config.add_facet_field "lib_project_sim", :label => "Projects", :limit => 10, :sort => "index"
-    config.add_facet_field "lib_name_sim", { 
+    config.add_facet_field ActiveFedora::SolrService.solr_name('lib_project_short', :symbol), :label => "Projects", :limit => 10, :sort => "index"
+    config.add_facet_field ActiveFedora::SolrService.solr_name('lib_name', :facetable), { 
       :label => "Names", :limit => 10, :sort => "index"}
     config.add_facet_field "lib_recipient_sim", :label => "RCP", :limit => 10, :sort => "index", :only=>"lib_name_sim"
     config.add_facet_field "lib_date_dtsi", :label => "Dates", :limit => 10, :sort => "index"
-    config.add_facet_field "lib_format_sim", :label => "Formats", :limit => 10, :sort => "index"
-    config.add_facet_field "lib_collection_sim", :label => "Collections", :limit => 10, :sort => "index"
+    config.add_facet_field ActiveFedora::SolrService.solr_name('lib_format', :facetable), :label => "Formats", :limit => 10, :sort => "index"
+    config.add_facet_field ActiveFedora::SolrService.solr_name('lib_collection', :facetable), :label => "Collections", :limit => 10, :sort => "index"
     config.add_facet_field "lib_shelf_sim", {
       :label => "Sublocation",
       :limit => 10,
@@ -81,9 +81,9 @@ module Cul::Scv::BlacklightConfiguration
 #      sort: "index",
 #      show: true
 #    }
-    config.add_facet_field "lib_repo_sim", :label => "Repositories", :limit => 10, :sort => "index"
+    config.add_facet_field ActiveFedora::SolrService.solr_name('lib_repo_short', :symbol), :label => "Repositories", :limit => 10, :sort => "index"
     config.add_facet_field "subject_topic_sim", :label => "Topics", :limit => 10, :sort => "index"
-    config.add_facet_field "language_sim", :label => "Languages", :limit => 10, :sort => "index"
+    config.add_facet_field ActiveFedora::SolrService.solr_name('language_language_term_text', :symbol), :label => "Languages", :limit => 10, :sort => "index"
     config.add_facet_field "subject_geo_sim", :label => "Regions", :limit => 10, :sort => "index"
     config.add_facet_field "subject_era_sim", :label => "Eras", :limit => 10, :sort => "index"
 
@@ -99,18 +99,18 @@ module Cul::Scv::BlacklightConfiguration
     # handler defaults, or have no facets.
     #config.default_solr_params[:'facet.field'] = config.facet_fields.keys
 
-    config.add_index_field "title_display_ssm", :label => "Title:"
+    config.add_index_field ActiveFedora::SolrService.solr_name('title_display', :displayable, type: :string), :label => "Title:"
     config.add_index_field "title_vern_ssm", :label => "Title:"
-    config.add_index_field "lib_name_ssm", :label => "Names:"
-    config.add_index_field "lib_repo_ssm", :label => "Repository:"
-    config.add_index_field "lib_collection_sim", :label => "Collection:"
+    config.add_index_field ActiveFedora::SolrService.solr_name('lib_name', :displayable, type: :string), :label => "Names:"
+    config.add_index_field ActiveFedora::SolrService.solr_name('lib_repo_long', :symbol, type: :string), :label => "Repository:"
+    config.add_index_field ActiveFedora::SolrService.solr_name('lib_collection', :displayable), :label => "Collection:"
     config.add_index_field "author_ssm", :label => "Author:"
     config.add_index_field "author_vern_ssm", :label => "Author:"
-    config.add_index_field "lib_format_ssm", :label => "Format:"
+    config.add_index_field ActiveFedora::SolrService.solr_name('lib_format', :displayable), :label => "Format:"
     config.add_index_field "format_ssim", :label => "Routing:"
-    config.add_index_field "clio_ssm", :label => "CLIO Id:"
+    config.add_index_field ActiveFedora::SolrService.solr_name('clio', :displayable), :label => "CLIO Id:"
     config.add_index_field "extent_ssm", :label => "Extent:"
-    config.add_index_field "lib_project_ssm", :label => "Project:"
+    config.add_index_field ActiveFedora::SolrService.solr_name('lib_project_full', :symbol), :label => "Project:"
     config.add_index_field "published_ssm", :label => "Published:"
     config.add_index_field "object_ssm", :label => "In Fedora:"
     config.add_index_field "cul_member_of_ssim"
@@ -122,16 +122,17 @@ module Cul::Scv::BlacklightConfiguration
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display 
-    config.add_show_field "title_display_ssm", :label=>"Title:"
+    config.add_show_field ActiveFedora::SolrService.solr_name('title_display', :displayable, type: :string), :label=>"Title:"
     config.add_show_field "title_vern_ssm", :label=>"Title:"
     config.add_show_field "subtitle_ssm", :label=>"Subtitle:"
     config.add_show_field "subtitle_vern_ssm", :label=>"Subtitle:"
+    config.add_show_field ActiveFedora::SolrService.solr_name('identifier', :symbol), :label => 'Identifier', :separator => '; '
     config.add_show_field "author_ssm", :label=>"Author:"
     config.add_show_field "author_vern_ssm", :label=>"Author:"
     config.add_show_field "lib_format_ssm", :label=>"Format:"
     config.add_show_field "format_ssim", :label=>"Routing:"
-    config.add_show_field "lib_collection_ssm", :label=>"Collection:"
-    config.add_show_field "lib_repo_ssm", :label=>"Repository:"
+    config.add_show_field ActiveFedora::SolrService.solr_name('lib_collection', :displayable), :label=>"Collection:"
+    config.add_show_field ActiveFedora::SolrService.solr_name('lib_repo_full', :symbol, type: :string), :label=>"Repository:"
     config.add_show_field "url_fulltext_ssm", :label=>"URL:"
     config.add_show_field "url_suppl_ssm", :label=>"More Information:"
     config.add_show_field "material_type_ssm", :label=>"Physical Description:"
