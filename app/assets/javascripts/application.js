@@ -12,9 +12,9 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require jquery-ui/core
-//= require bootstrap-sprockets
 //= require blacklight/blacklight
+//= require bootstrap-sprockets
+//= require jquery.ui.all
 //= require scv/filesystem.js
 
 

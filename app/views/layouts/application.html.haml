@@ -23,7 +23,7 @@
   %body#doc{bparms}
     = render :partial => 'shared/header_navbar'
 
-    #ajax-modal.modal.hide.fade{:tabindex => -1}
+    = render partial: 'shared/ajax_modal'
 
     #main-container.container-fluid
       .row

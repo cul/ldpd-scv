@@ -73,7 +73,7 @@ GEM
       request_store (~> 1.0)
     authlogic_wind (0.4.0)
       authlogic
-    blacklight (5.4.0)
+    blacklight (5.5.3)
       bootstrap-sass (~> 3.0)
       deprecation
       kaminari (~> 0.13)
@@ -186,16 +186,16 @@ GEM
       childprocess
       i18n
       logger
-    jquery-rails (3.1.1)
+    jquery-rails (3.1.0)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    jquery-ui-rails (5.0.0)
-      railties (>= 3.2.16)
+    jquery-ui-rails (4.0.4)
+      railties (>= 3.1.0)
     json (1.8.1)
     json-ld (1.1.6)
       rdf (~> 1.1, >= 1.1.4)
     json_pure (1.8.1)
-    kaminari (0.16.1)
+    kaminari (0.15.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     linkeddata (1.1.1)
@@ -432,7 +432,7 @@ DEPENDENCIES
   arel
   authlogic (~> 3.4.2)
   authlogic_wind
-  blacklight (~> 5.4.0)
+  blacklight (~> 5.5.0)
   block_helpers
   bootstrap-sass (>= 3.2)
   capistrano (~> 2.x)
@@ -459,6 +459,7 @@ DEPENDENCIES
   jquery-rails (>= 3.0)
   jquery-ui-rails
   json_pure (> 1.4.3)
+  kaminari (= 0.15.1)
   loggable
   mime-types
   mocha

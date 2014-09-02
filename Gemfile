@@ -6,8 +6,9 @@ gem 'dalli'
 #gem 'thin'
 gem 'rack-handlers'
 gem 'sqlite3'
-gem 'blacklight', '~> 5.4.0'
-
+gem 'blacklight', '~> 5.5.0'
+# pegging kaminari to fix a paging bug introduced in 0.16.0
+gem 'kaminari', '0.15.1'
 gem 'authlogic', '~>3.4.2'
 gem 'authlogic_wind'
 gem 'arel'

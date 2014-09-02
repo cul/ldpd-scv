@@ -1,13 +1,14 @@
+
 %div.facet_pagination.top
   = render :partial=>'facet_pagination'
   
 %div.modal-header
-  %button{:type=>'button', :class=>'ajax-modal-close close', :"data-dismiss"=>'modal', :"aria-hidden"=>'true'}!=x
+  %button{:type=>'button', :class=>'ajax-modal-close close', :"data-dismiss"=>'modal', :"aria-hidden"=>'true'}!='x'
   %h3.modal-title=facet_field_label(@facet.field)
 %div.modal-body
   %div.facet_extended_list
     = render_facet_limit(@display_facet, layout: false)
-%div.modal-footer    
+%div.modal-footer
   = render :partial=>'facet_prefix'
   %div.facet_pagination.bottom
     = render :partial=>'facet_pagination'
