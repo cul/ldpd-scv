@@ -61,9 +61,10 @@ module Scv
       else
         if document["clio_s"] and document["clio_s"].length > 0
           clio_id = document["clio_s"][0]
+          clio_id.sub!(/^CLIO_/,'') if clio_id
         end
       end
-      clio_id ? "http://clio.cul.columbia.edu:7018/vwebv/holdingsInfo?bibId=#{clio_id}" : false
+      clio_id ? "http://clio.columbia.edu/catalog/#{clio_id}" : false
     end
        
 
