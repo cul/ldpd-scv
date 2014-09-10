@@ -193,11 +193,11 @@ module Scv
 
     def abbreviate_url(url)
       if url.length > 50
-        server = url.match(/^http\:\/\/[\w.]+(\:\d+)?/)
+        server = url.match(/^https?\:\/\/([\w]+\.)+[\w]+(\:\d+)?/)
         path = url[server.length .. url.length]
         path = path.split(/\//)
         new_path = '/' + path.pop
-        while (path.length > 0 && new_path.length + server.length < 46)
+        while (path.length > 0 && new_path.length + server.length + path[-1].length < 46)
           new_path = '/' + path.pop + new_path
         end
         url = "#{server}/...#{new_path}"
