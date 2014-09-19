@@ -1,4 +1,12 @@
 module Scv::ChildrenHelperBehavior
+
+  def url_for_children_data(per_page=nil)
+    opts = {id: params[:id], controller: :children}
+    opts[:per_page] = per_page || 4
+    opts[:protocol] = (request.ssl?) ? 'https' : 'http'
+    url_for(opts)
+  end
+
   def document_children_from_model(opts={})
     # get the model class
     klass = @document['active_fedora_model_ssi'].constantize
@@ -28,14 +36,10 @@ module Scv::ChildrenHelperBehavior
   end
 
   def child_from_solr(doc)
-    title_field = nil
-    begin
-      fl << (title_field = document_show_link_field).to_s
-    rescue
-    end
+    title_field = document_show_link_field ? document_show_link_field.to_s : nil
     opts = {controller: :thumbs, id: doc['id'], action: :show}
     opts[:only_path] = true
-    child = {id: doc['id'], thumbnail: url_for(opts)}
+    child = {id: doc['id'], thumbnail: thumbnail_url(opts)}
     opts[:controller] = :screen_images
     child[:screen] = url_for(opts)
     if title_field

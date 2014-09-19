@@ -8,19 +8,11 @@ GIT
       activesupport (>= 3.2.0, < 5.0)
 
 GIT
-  remote: git://github.com/cul/cul_scv_hydra.git
-  revision: efa32dfe5b4d8ca155a53c68e06ce8920406e0f4
+  remote: git@github.com:meh/ruby-thread.git
+  revision: ccaa4d590003047ac457dfa2477fb446fea25765
   branch: master
   specs:
-    cul_scv_hydra (0.16.8)
-      active-fedora (~> 7.0.2)
-      active_fedora_finders (>= 0.5.0)
-      active_fedora_relsint
-      blacklight
-      cul_image_props
-      httpclient
-      hydra-head (~> 7)
-      mods
+    thread (0.2.0)
 
 GEM
   remote: http://rubygems.org/
@@ -73,7 +65,7 @@ GEM
       request_store (~> 1.0)
     authlogic_wind (0.4.0)
       authlogic
-    blacklight (5.5.3)
+    blacklight (5.5.4)
       bootstrap-sass (~> 3.0)
       deprecation
       kaminari (~> 0.13)
@@ -82,7 +74,7 @@ GEM
       rsolr (~> 1.0.6)
     block_helpers (0.3.3)
       activesupport (>= 2.0)
-    bootstrap-sass (3.2.0.1)
+    bootstrap-sass (3.2.0.2)
       sass (~> 3.2)
     builder (3.1.4)
     cancancan (1.9.2)
@@ -125,6 +117,15 @@ GEM
       rails (>= 3, < 5)
     cul_image_props (0.3.5)
       nokogiri
+    cul_scv_hydra (0.17.1)
+      active-fedora (~> 7.0.2)
+      active_fedora_finders (>= 0.5.0)
+      active_fedora_relsint
+      blacklight
+      cul_image_props
+      httpclient
+      hydra-head (~> 7)
+      mods
     daemons (1.1.9)
     dalli (2.7.2)
     database_cleaner (1.3.0)
@@ -162,7 +163,7 @@ GEM
       json (~> 1.8)
       multi_xml (>= 0.5.2)
     httpclient (2.1.6.1)
-    hydra-access-controls (7.2.0)
+    hydra-access-controls (7.2.1)
       active-fedora (~> 7.0)
       activesupport
       blacklight (~> 5.3)
@@ -170,14 +171,14 @@ GEM
       deprecation
       om (~> 3.0, >= 3.0.7)
       sass-rails
-    hydra-core (7.2.0)
+    hydra-core (7.2.1)
       block_helpers
-      hydra-access-controls (= 7.2.0)
+      hydra-access-controls (= 7.2.1)
       jettywrapper (>= 1.4.1)
       rails (>= 3.2.3, < 5)
-    hydra-head (7.2.0)
-      hydra-access-controls (= 7.2.0)
-      hydra-core (= 7.2.0)
+    hydra-head (7.2.1)
+      hydra-access-controls (= 7.2.1)
+      hydra-core (= 7.2.1)
       rails (>= 3.2.6)
     i18n (0.6.11)
     iso-639 (0.2.5)
@@ -282,7 +283,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.3.2)
-    rdf (1.1.5.1)
+    rdf (1.1.6)
     rdf-aggregate-repo (1.1.0)
       rdf (>= 1.1)
     rdf-isomorphic (1.1.0)
@@ -296,10 +297,10 @@ GEM
       rdf-xsd (~> 1.1)
     rdf-n3 (1.1.2)
       rdf (~> 1.1, >= 1.1.5)
-    rdf-rdfa (1.1.3.2)
+    rdf-rdfa (1.1.4)
       haml (~> 4.0)
       htmlentities (~> 4.3)
-      rdf (~> 1.1)
+      rdf (~> 1.1, >= 1.1.6)
       rdf-xsd (~> 1.1)
     rdf-rdfxml (1.1.1)
       rdf (~> 1.1)
@@ -442,7 +443,7 @@ DEPENDENCIES
   cucumber (>= 0.8.5)
   cucumber-rails (>= 1.0.0)
   cul_image_props
-  cul_scv_hydra!
+  cul_scv_hydra (~> 0.17.1)
   dalli
   database_cleaner
   declarative_authorization (= 0.5.3)
@@ -487,6 +488,7 @@ DEPENDENCIES
   solr-ruby
   sqlite3
   term-ansicolor
+  thread!
   uglifier (>= 1.0.3)
   unicode
   xml-simple

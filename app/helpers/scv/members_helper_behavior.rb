@@ -15,7 +15,7 @@ module Scv
       return [false,docs.length]
     end
 
-    def get_members(document, format=:solr)
+    def get_members(document, format=:solr, rows=100)
       memoize = (@document and document[:id] == @document[:id])
       return @members if memoize and not @members.nil?
       klass = false
@@ -26,7 +26,7 @@ module Scv
       members = []
       if klass.include? Cul::Scv::Hydra::Models::Aggregator
         agg = klass.load_instance_from_solr(document[:id],document)
-        r = agg.parts(:response_format => format)
+        r = agg.parts(response_format: format, rows: rows)
         members = r.collect {|hit| SolrDocument.new(hit) } unless r.blank?
       end
       @members = members if memoize

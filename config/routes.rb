@@ -7,6 +7,8 @@ Scv::Application.routes.draw do
 
   resources :reports, only: :show
 
+  resources :children, path: 'catalog/:parent_id/children', only: [:index, :show]
+
 
   get '/download/fedora_content/:download_method/:uri/:block/:filename' => DownloadController.action(:fedora_content),
     :as => :fedora_content,
