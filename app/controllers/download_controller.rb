@@ -95,21 +95,23 @@ class DownloadController  < ActionController::Base
       size ||= ds.dsSize
       size ||= rels_int_size(@resource, dsid)
       size ||= rels_ext_size(@resource, dsid)
-      unless size and size.to_i > 0
-        response.headers["Transfer-Encoding"] = "chunked"
-      else
+      if size and size.to_i > 0
         response.headers["Content-Length"] = size
       end
-#      self.response_body = ds.stream
       parms = {:dsid=>dsid, :pid=>pid}
-      self.response_body = Enumerator.new do |blk|
-        repo = ActiveFedora::Base.connection_for_pid(pid)
-        repo.datastream_dissemination(parms) do |res|
+      bytes = 0
+      repo = ActiveFedora::Base.connection_for_pid(pid)
+      repo.datastream_dissemination(parms) do |res|
+        begin
           res.read_body do |seg|
-            blk << seg
+            response.stream.write seg
+            bytes += seg.length
           end
+        ensure
+          response.stream.close
         end
       end
+
     
     end
   end
