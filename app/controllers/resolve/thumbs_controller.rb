@@ -7,6 +7,7 @@ class Resolve::ThumbsController < ApplicationController
   include Hydra::Controller::ControllerBehavior
   include Cul::Scv::BlacklightConfiguration
   include Cul::Scv::ApplicationIdBehavior
+  include Scv::UrlHelperBehavior
 
   # These before_filters apply the hydra access controls
   #before_filter :enforce_show_permissions, :only=>:show
@@ -120,7 +121,11 @@ class Resolve::ThumbsController < ApplicationController
    end
 
   def show
-    get_solr_response_for_app_id
+    begin
+      get_solr_response_for_dc_id
+    rescue Blacklight::Exceptions::InvalidSolrID=>e
+      get_solr_response_for_app_id
+    end
     redirect_to thumbnail_url(@document)
   end
 end

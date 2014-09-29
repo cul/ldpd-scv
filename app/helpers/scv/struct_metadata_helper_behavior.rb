@@ -68,13 +68,20 @@ module Scv
       end
       
       map = {}
-      members.each do |doc|
-        ids = (Array(doc[:identifier_ssim]) + Array(doc[:dc_identifier_ssim])).uniq
+      members.each do |member|
+        ids = ((member[:identifier_ssim] || []) + (member[:dc_identifier_ssim] || []))
+        ids.uniq!
+        ids.delete(member[:id])
         node_map.each do |cid, node|
           if ids.include? cid
-            node['pid'] = doc[:id]
-            map[doc[:id]] = doc
+            node['pid'] = member[:id]
+            map[member[:id]] = member
+            Rails.logger.info("Mapped child node in structMap: '#{member[:id]}'' -> '#{cid}'")
+            break
           end
+        end
+        if map[member[:id]].nil?
+          Rails.logger.info("Unmapped child node in structMap: #{ids.inspect}")
         end
       end
       [ds, map]

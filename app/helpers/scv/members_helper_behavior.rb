@@ -15,9 +15,11 @@ module Scv
       return [false,docs.length]
     end
 
-    def get_members(document, format=:solr, rows=100)
+    def get_members(document, format=:solr, rows=nil)
       memoize = (@document and document[:id] == @document[:id])
       return @members if memoize and not @members.nil?
+      rows ||= (document[:active_fedora_model_ssi] == 'ContentAggregator') ?
+        1000 : 10
       klass = false
       document[:has_model_ssim].each do |model|
         klass ||= ActiveFedora::Model.from_class_uri(model)

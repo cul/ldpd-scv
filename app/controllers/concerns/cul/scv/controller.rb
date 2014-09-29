@@ -49,7 +49,7 @@ module Cul::Scv::Controller
       unless current_user.cul_staff
         redirect_to access_denied_url  
       end
-    else
+    elsif !Rails.env.eql?('development')
       store_location
       redirect_to new_user_session_path
       return false

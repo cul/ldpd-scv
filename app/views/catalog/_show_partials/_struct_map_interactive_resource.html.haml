@@ -3,11 +3,11 @@
 %div
   %h4=ng_xml['LABEL']
   %div.media-list
-    - divs = structure.divs_with_attribute(true, 'ORDER').sort {|a,b| a['ORDER'] <=> b['ORDER']}
+    - divs = structure.divs_with_attribute(true, 'ORDER').sort {|a,b| a['ORDER'].to_i <=> b['ORDER'].to_i}
     - divs.each do |div|
       %div.media
-        - thumb_url = div['pid'] ? thumbnail_url(id: div['pid']) : resolver_path(div['CONTENTIDS'], :action=>'thumbnails')
-        - href = div['pid'] ? catalog_path(div['pid']) : resolver_path(div['CONTENTIDS'], :action=>'catalog')
+        - thumb_url = div['pid'] ? thumbnail_url(id: div['pid']) : resolve_thumb_path(div['CONTENTIDS'], :action=>'thumbnails')
+        - href = div['pid'] ? catalog_path(div['pid']) : resolve_catalog_path(div['CONTENTIDS'], :action=>'catalog')
         %a{:href=>href, :class=>'pull-left'}
           %img{:src=>thumb_url, :class=>'media-object thumbnail'}
         .media-body
@@ -15,3 +15,5 @@
           - if div['pid']
             = render :partial => "catalog/_show_partials/metadata_brief", :locals => {:document => m_map[div['pid']], :link=>true}
             = render :partial => "catalog/_show_partials/image/display_derivatives", :locals => {:document => m_map[div['pid']]}
+          - else
+            = div.inspect

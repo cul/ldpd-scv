@@ -27,13 +27,19 @@ module Scv
         puts "document was nil?"
         return []
       end
-      memoize = document == @document
+      memoize = (document == @document)
       if memoize and @linkable_resources
         return @linkable_resources
       end
-      obj = ActiveFedora::Base.find(document[:id], :cast=>true)
       linkable_resources = []
-      # obj = klass.load_instance_from_solr(document[:id],document)
+      obj = nil
+      begin
+        klass = document[:active_fedora_model_ssi].constantize
+        obj = klass.load_instance_from_solr(document[:id],document)
+      rescue Exception => e
+        Rails.logger.warn(e.message)
+        obj = ActiveFedora::base.find(document[:id], cast: true)
+      end
       if (obj.respond_to? :linkable_resources)
         linkable_resources = obj.linkable_resources
       else
