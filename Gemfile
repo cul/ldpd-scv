@@ -25,7 +25,7 @@ gem "active_fedora_relsint", :git=>'git://github.com/cul/active_fedora_relsint.g
 gem 'columnize'
 gem 'crack'
 gem 'cul_image_props'
-gem 'cul_scv_hydra', '~>0.17.1'
+gem 'cul_scv_hydra', '~>0.18.1'
 gem 'database_cleaner'
 gem 'declarative_authorization', '0.5.3'
 gem 'diff-lcs'
