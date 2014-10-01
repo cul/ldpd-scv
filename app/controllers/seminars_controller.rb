@@ -4,16 +4,18 @@ require 'blacklight/solr'
 require 'blacklight/solr/request'
 require 'blacklight/solr/document'
 
-class CatalogController < ApplicationController
+class SeminarsController < ApplicationController
   include Blacklight::Catalog
   include Hydra::Controller::ControllerBehavior
   include Cul::Scv::FacetExtras
   include Cul::Scv::BlacklightConfiguration
   include Cul::Scv::CatalogBehavior
   include CatalogHelper
-  
+
+  self.solr_search_params_logic += [:show_only_seminars]
+
   configure_blacklight do |config|
-    configure_for_scv(config)
+    configure_for_seminars(config)
   end
 
   layout 'application'
@@ -32,6 +34,15 @@ class CatalogController < ApplicationController
   # The index action will more than likely throw this one.
   # Example, when the standard query parser is used, and a user submits a "bad" query.
   rescue_from RSolr::Error::Http, :with => :rsolr_request_error
-  
+
+  def initialize(*args)
+    super(*args)
+    self.class.parent_prefixes << 'catalog' # haaaaaaack to not reproduce templates
+  end
+
+  def show_only_seminars solr_parameters, user_parameters
+  	solr_parameters[:fq] ||= []
+  	solr_parameters[:fq] << "publisher_ssim:info\\:fedora\\/project\\:usem"
+  end
 
 end

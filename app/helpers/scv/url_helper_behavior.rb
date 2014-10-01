@@ -1,13 +1,13 @@
 module Scv
   module UrlHelperBehavior
-    def url_to_document(doc)
-      url_for_opts = {:controller => :catalog, :action => :show}
+    def url_to_document(doc, opts={})
+      url_for_opts = {:controller => :catalog, :action => :show}.merge(opts)
       if doc.is_a? ActiveFedora::Base
         url_for_opts[:id] = (doc.pid)
       else
         url_for_opts[:id] = (doc[:id])
       end
-      url_for url_for_opts
+      url_for(url_for_opts)
     end
     
     def onclick_to_document(document, formdata = {})
@@ -33,7 +33,7 @@ module Scv
     end
 
     def link_to_mash(doc, opts={:label=>nil, :counter => nil, :results_view => true})
-      opts[:label] = blacklight_config.index.show_link.to_sym unless opts[:label]
+      opts[:label] ||= blacklight_config.index.show_link.to_sym
   # blacklight render_document_index_label will not handle a Symbol key appropriately for a Hash/Mash, and must have a proc
       if opts[:label].instance_of? Symbol
         old_label = opts[:label]
@@ -45,13 +45,13 @@ module Scv
     def link_to_previous_document(doc)
       label="<i class=\"icon-chevron-left\"></i> Previous".html_safe
       return "<a href=\"\" class=\"prev\" rel=\"prev\">#{label}</a>" if doc == nil
-      link_to label, doc, :class=>"prev", :rel=>'prev', :'data-counter' => session[:search][:counter].to_i - 1
+      link_to label, url_for_document(doc), :class=>"prev", :rel=>'prev', :'data-counter' => session[:search][:counter].to_i - 1
     end
 
     def link_to_next_document(doc)
       label="Next <i class=\"icon-chevron-right\"></i>".html_safe
       return "<a href=\"\" class=\"next\" rel=\"next\">#{label}</a>" if doc == nil
-      link_to label, doc, :class=>"next", :rel=>'next', :'data-counter' => session[:search][:counter].to_i + 1
+      link_to label, url_for_document(doc), :class=>"next", :rel=>'next', :'data-counter' => session[:search][:counter].to_i + 1
     end
 
     def url_to_clio(document)
@@ -77,10 +77,12 @@ module Scv
       end
     end
 
-    def link_to_object(object, opts={:label=>nil, :counter => nil, :results_view => true})
-      label ||= lambda { |doc, opts| doc[blacklight_config[:index][:show_link].to_s]}
+    def link_to_object(object, opts={})
+      controller = opts.delete(:controller) || :catalog
+      opts = {label: nil, counter: nil, results_view: true}.merge(opts)
+      opts[:label] ||= lambda { |doc, opts| doc[blacklight_config[:index][:show_link].to_s]}
       label = render_document_index_label object, opts
-      link_to label, {:controller => :catalog, :id=>object.pid}, :'data-counter' => opts[:counter]
+      link_to label, {controller: controller, id:object.pid}, :'data-counter' => opts[:counter]
     end
 
     def thumbnail_url(document, opts = {})

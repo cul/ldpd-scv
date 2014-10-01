@@ -4,7 +4,7 @@
     = (document_counter + 1 + @response.params[:start].to_i).to_s + '. '
   - else
     = "\u2022 "
-  = link_to_mash(document, :label=>document_show_link_field, :counter => (document_counter + 1 + @response.params[:start].to_i)) + ((document.link_title(document_show_link_field).match(/\.$/)) ? '' : '.')
+  = link_to_mash(document, label:document_show_link_field, counter: (document_counter + 1 + @response.params[:start].to_i), controller: controller_name) + ((document.link_title(document_show_link_field).match(/\.$/)) ? '' : '.')
   - groups = get_groups(document)
 - if groups.length > 0
   %p.from_groups
