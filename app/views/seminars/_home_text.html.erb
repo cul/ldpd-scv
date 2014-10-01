@@ -1,0 +1,17 @@
+<% # coding: utf-8 %>
+<% if block = ContentBlock.find_by_title("Home Page") -%>
+  <%= sanitize block.data %>
+<% else -%>
+
+  <h3>University Seminars Digital Archive Alpha</h3>
+
+  <p><em>You may browse via the facets on the left or enter keywords above to search the entire repository.</em></p>
+  <p>The University Seminars Digital Archive (Alpha) is built on the Staff Collection Viewer (SCV) framework to provide a window into the Seminars' digitized records.</p><p> The digitized content is tracked in and served from our Fedora Digital Repository using the <a href="http://projectblacklight.org/">Blacklight</a> open source software product, which has been configured to accommodate searching of <a href="http://www.loc.gov/standards/mods/userguide/">MODS</a>-formatted metadata and the display of single and multipart digital items.</p>
+  <p>For more information, see:</p>
+  <ul>
+    <li><a href="https://wiki.cul.columbia.edu/display/scv">Fedora Staff Collection Viewer Wiki</a></li>
+  </ul>
+  <p><em>For questions not answered here, please email: <a mailto="scv@libraries.cul.columbia.edu">scv@libraries.cul.columbia.edu</a></em></p>
+  <p>The University  Seminars Digital Archive Alpha was launched in October 2014</p>
+  <p>The Fedora Staff Collection Viewer was developed by Libraries Digital Program Division.  A beta version was launched in March 2011; version 1.0 in April 2011.</p>
+<% end -%>

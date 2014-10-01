@@ -49,7 +49,9 @@ module Scv
       # date
       xml.xpath("/mods:mods/mods:originInfo",ns).each do |node|
         DATE_TAGS.each do |tag|
-          node.xpath("./mods:#{tag}",ns).each do |date|
+          nodes = node.xpath("./mods:#{tag}[not(@point)]",ns)
+          nodes ||= node.xpath("./mods:#{tag}",ns)
+          nodes.each do |date|
             value = get_mods_date_details(date)
             if date.attributes["point"]
               details << ["Date / #{date.attr("point")}:",value]
@@ -62,7 +64,9 @@ module Scv
       # this is a patch for bad CSS data pending a refresh
       xml.xpath("/mods:mods/originInfo",ns).each do |node|
         DATE_TAGS.each do |tag|
-          node.xpath("./mods:#{tag}",ns).each do |date|
+          nodes = node.xpath("./mods:#{tag}[not(@point)]",ns)
+          nodes ||= node.xpath("./mods:#{tag}",ns)
+          nodes.each do |date|
             value = get_mods_date_details(date)
             if date.attributes["point"]
               details << ["Date / #{date.attr("point")}:",value]

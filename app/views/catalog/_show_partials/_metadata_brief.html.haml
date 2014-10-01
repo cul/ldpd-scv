@@ -2,16 +2,16 @@
 - link ||= false
 %dl.dl-horizontal
   - if (groups ||= false)
-    = render :partial => "catalog/_show_partials/groups", :locals => {:document => document}
+    = render_document_partial document, "groups"
   %dt="Title:"
   %dd= (link)? (link_to_mash document) : document.link_title(document_show_link_field)
   %dt="ID:"
-  - if document[:identifier_ssm]
-    - if document[:identifier_ssm].is_a? Array
-      - document[:identifier_ssm].each do |value|
+  - if document[:identifier_ssim]
+    - if document[:identifier_ssim].is_a? Array
+      - document[:identifier_ssim].each do |value|
         %dd= value
     - else
-      %dd= document[:identifier_ssm]
+      %dd= document[:identifier_ssim]
   - else
     %dd= document["id"]
   - if document[:access_condition_ssm]

@@ -9,8 +9,5 @@
           - if !document.nil?
             %p.index_title!=link_to_clio(document)
           = render :partial => "catalog/_show_partials/metadata_brief", :locals => {:document => document, :link => true} unless document.nil?
-          %dl.dl-horizontal
-            %dt="Metadata:"
-            %dd!= get_metadata_list(document,true).collect { |x| link_to "#{x[:type]}", x[:show_url]}.join(", ")
         %div.row-fluid
           = render :partial => "catalog/_show_partials/#{document[:dc_type_ssm].first.underscore}/display_derivatives", :locals => {:document => document} unless document.nil?

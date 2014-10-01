@@ -14,6 +14,6 @@
           %h5.media-heading=div['LABEL']
           - if div['pid']
             = render :partial => "catalog/_show_partials/metadata_brief", :locals => {:document => m_map[div['pid']], :link=>true}
-            = render :partial => "catalog/_show_partials/image/display_derivatives", :locals => {:document => m_map[div['pid']]}
+            = render :partial => "catalog/_show_partials/still_image/display_derivatives", :locals => {:document => m_map[div['pid']]}
           - else
             = div.inspect

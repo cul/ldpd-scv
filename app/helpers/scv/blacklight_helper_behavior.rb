@@ -4,6 +4,10 @@ module Scv
     extend Deprecation
     include Hydra::BlacklightHelperBehavior
 
+    def application_name
+      return blacklight_config.application_name if blacklight_config.application_name
+      super
+    end
     # RSolr presumes one suggested word, this is a temporary fix
     def get_suggestions(spellcheck)
       words = []
@@ -22,6 +26,32 @@ module Scv
         end
       end
       words
+    end
+
+    ##
+    # A list of document partial templates to try to render for a document
+    #
+    # The partial names will be interpolated with the following variables:
+    #   - action_name: (e.g. index, show)
+    #   - index_view_type: (the current view type, e.g. list, gallery)
+    #   - format: the document's format (e.g. book) 
+    #
+    # @see #render_document_partial
+    def document_partial_path_templates
+      # first, the legacy template names for backwards compatbility
+      # followed by the new, inheritable style
+      # finally, a controller-specific path for non-catalog subclasses
+      @partial_path_templates ||= [
+        "%{action_name}_%{index_view_type}_%{format}",
+        "%{action_name}_%{index_view_type}_default",
+        "%{action_name}_%{format}",
+        "%{action_name}_default",
+        "#{controller_name}/%{action_name}_%{format}",
+        "#{controller_name}/_%{action_name}_partials/%{format}",
+        "#{controller_name}/_%{action_name}_partials/default",
+        "catalog/%{action_name}_%{format}",
+        "catalog/_%{action_name}_partials/%{format}",
+        "catalog/_%{action_name}_partials/default"]
     end
 
     def render_document_partial(doc, action_name, locals={})

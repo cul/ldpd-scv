@@ -1,7 +1,7 @@
 #header-navbar.navbar.navbar-default.navbar-static-top{role:"navigation"}
   .container
     .navbar-header
-      = link_to "#{image_tag('logo.gif')} #{application_name}".html_safe, root_path, class: "navbar2-brand"
+      = link_to "#{image_tag('logo.gif')} #{application_name}".html_safe, search_action_path, class: "navbar2-brand"
     = render :partial=>"/user_util_links"
 #search-navbar.navbar.navbar-default.navbar-static-top{role:"navigation"}
   .container

@@ -1,6 +1,6 @@
 %dl.dl-horizontal
   - if (groups ||= false)
-    = render :partial => "catalog/_show_partials/groups", :locals => {:document => document}
+    = render_document_partial(document, "groups") unless document.nil?
   - metadata[:details].each do |name, value|
     %dt= name
     %dd!= value

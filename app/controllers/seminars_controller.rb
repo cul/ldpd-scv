@@ -42,7 +42,10 @@ class SeminarsController < ApplicationController
 
   def show_only_seminars solr_parameters, user_parameters
   	solr_parameters[:fq] ||= []
-  	solr_parameters[:fq] << "publisher_ssim:info\\:fedora\\/project\\:usem"
+    solr_parameters[:fq] << "publisher_ssim:info\\:fedora\\/project\\:usem"
+    unless user_parameters[:show_file_assets] == 'true'
+      solr_parameters[:fq] << '-active_fedora_model_ssi:GenericResource'
+    end
   end
 
 end

@@ -39,7 +39,12 @@ module Scv
         old_label = opts[:label]
         opts[:label] = lambda { |doc, opts| Array(doc[old_label]).first}
       end
-      link_to_document SolrDocument.new(doc), opts
+      doc = SolrDocument.new(doc)
+      label = render_document_index_label doc, opts
+      link_url = (doc['active_fedora_model_ssi'].eql? 'GenericResource') ?
+        url_for_document(doc, show_file_assets: true) :
+        url_for_document(doc)
+      link_to label, link_url, document_link_params(doc, opts)
     end
 
     def link_to_previous_document(doc)

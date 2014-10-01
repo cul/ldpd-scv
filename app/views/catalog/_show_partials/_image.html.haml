@@ -4,5 +4,5 @@
   .col-md-6
     = render :partial => "catalog/_show_partials/metadata_brief", :locals => {document: document, groups: true}
   .col-md-6
-    = render :partial => "catalog/_show_partials/image/display_derivatives", :locals => {:document => document}
-= render :partial => "catalog/_screen_partials/image", :locals => {:document => document}
+    = render :partial => "catalog/_show_partials/still_image/display_derivatives", :locals => {:document => document}
+= render :partial => "catalog/_screen_partials/still_image", :locals => {:document => document}

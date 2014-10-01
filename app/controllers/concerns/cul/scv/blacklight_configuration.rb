@@ -217,6 +217,7 @@ module Cul::Scv::BlacklightConfiguration
   def configure_for_seminars(config)
 
     configure_common(config)
+    config.application_name = "University Seminars Digital Archive Alpha"
     (config.index.route ||= {}).merge!(controller: :seminars)
     (config.show.route ||= {}).merge!(controller: :seminars)
     configure_seminars_facets(config)

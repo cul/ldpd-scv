@@ -1,0 +1,7 @@
+-# coding: utf-8
+- label ||= document[:index_type_label_ssi]
+- document_counter ||= -1
+- data_counter = (document_counter + 1 + @response.params[:start].to_i)
+- href ||= url_to_document(document)
+%a.thumbnail.pull-left{:href=>href, :'data-counter'=>data_counter}
+  %img{:src=>asset_url('crystal/document.png'), :class=>"media-object"}
