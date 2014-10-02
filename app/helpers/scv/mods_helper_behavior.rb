@@ -78,7 +78,7 @@ module Scv
       end
       # notes
       notes = []
-      xml.css("note").each do |node|
+      xml.xpath("//mods:note",ns).each do |node|
         if node.attributes["displayLabel"] == "Provenance"
           details << ["Provenance:", node.content]
         else
