@@ -27,5 +27,7 @@ module Scv
 
     config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif zooming_image.js)
 
+    require "#{config.root}/lib/james_monkeys"
+
   end
 end

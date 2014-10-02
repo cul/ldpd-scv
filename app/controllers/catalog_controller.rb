@@ -18,7 +18,7 @@ class CatalogController < ApplicationController
 
   layout 'application'
   
-  before_filter :require_staff
+  before_filter :require_roles
   before_filter :cache_docs,  :only=>[:index, :show]
   before_filter :af_object, :only=>[:show]
   after_filter :uncache_docs, :only=>[:index, :show]
@@ -33,5 +33,8 @@ class CatalogController < ApplicationController
   # Example, when the standard query parser is used, and a user submits a "bad" query.
   rescue_from RSolr::Error::Http, :with => :rsolr_request_error
   
+  def self.authorized_roles
+    @authorized_roles ||= ROLES_CONFIG[:catalog]
+  end
 
 end

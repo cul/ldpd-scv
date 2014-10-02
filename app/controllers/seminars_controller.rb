@@ -36,8 +36,7 @@ class SeminarsController < ApplicationController
   rescue_from RSolr::Error::Http, :with => :rsolr_request_error
 
   def self.authorized_roles
-    #TODO move the role spec into config
-    @authorized_roles ||= ["staff:scv.cul.columbia.edu","sh3040:users.scv.cul.columbia.edu"]
+    @authorized_roles ||= ROLES_CONFIG[:seminars]
   end
 
   def initialize(*args)

@@ -65,15 +65,15 @@ module Cul::Scv::BlacklightConfiguration
     config.add_facet_field ActiveFedora::SolrService.solr_name('lib_project_short', :symbol), :label => "Projects", :limit => 10, :sort => "index"
     config.add_facet_field ActiveFedora::SolrService.solr_name('lib_name', :facetable), { 
       :label => "Names", :limit => 10, :sort => "index"}
-    config.add_facet_field "lib_recipient_sim", :label => "RCP", :limit => 10, :sort => "index", :only=>"lib_name_sim"
-    config.add_facet_field "lib_date_dtsi", :label => "Dates", :limit => 10, :sort => "index"
+    config.add_facet_field ActiveFedora::SolrService.solr_name("lib_recipient",:facetable), :label => "RCP", :limit => 10, :sort => "index", :only=>"lib_name_sim"
+    config.add_facet_field ActiveFedora::SolrService.solr_name("lib_date",:dateable), :label => "Dates", :limit => 10, :sort => "index"
     config.add_facet_field ActiveFedora::SolrService.solr_name('lib_format', :facetable), :label => "Formats", :limit => 10, :sort => "index"
     config.add_facet_field ActiveFedora::SolrService.solr_name('lib_collection', :facetable), :label => "Collections", :limit => 10, :sort => "index"
-    config.add_facet_field "lib_shelf_sim", {
+    config.add_facet_field ActiveFedora::SolrService.solr_name("lib_shelf",:facetable), {
       :label => "Sublocation",
       :limit => 10,
       :sort => "index",
-      :only => "lib_collection_sim"
+      :only => ActiveFedora::SolrService.solr_name('lib_collection', :facetable)
     }
 ## field cannot be the nameof another facet!
 #    config.add_facet_field "collection_pivot", {
@@ -83,12 +83,14 @@ module Cul::Scv::BlacklightConfiguration
 #      show: true
 #    }
     config.add_facet_field ActiveFedora::SolrService.solr_name('lib_repo_short', :symbol), :label => "Repositories", :limit => 10, :sort => "index"
-    config.add_facet_field "subject_topic_sim", :label => "Topics", :limit => 10, :sort => "index"
+    config.add_facet_field ActiveFedora::SolrService.solr_name("subject_topic",:facetable), :label => "Topics", :limit => 10, :sort => "index"
     config.add_facet_field ActiveFedora::SolrService.solr_name('language_language_term_text', :symbol), :label => "Languages", :limit => 10, :sort => "index"
-    config.add_facet_field "subject_geo_sim", :label => "Regions", :limit => 10, :sort => "index"
-    config.add_facet_field "subject_era_sim", :label => "Eras", :limit => 10, :sort => "index"
+    config.add_facet_field ActiveFedora::SolrService.solr_name("subject_geo",:facetable), :label => "Regions", :limit => 10, :sort => "index"
+    config.add_facet_field ActiveFedora::SolrService.solr_name("subject_era",:facetable), :label => "Eras", :limit => 10, :sort => "index"
+    config.add_facet_field ActiveFedora::SolrService.solr_name("dc_type",:facetable), :label => "DC Types", :limit => 10, :sort => "index"
 
     if !Rails.env.eql?"passenger_prod"
+      config.add_facet_field "active_fedora_model_ssi", :label => "Model", :limit => 10
       config.add_facet_field "format_ssi", :label => "Routed As", :limit => 10
       config.add_facet_field "descriptor_ssi", :label => "Metadata Type", :limit => 10
     end
