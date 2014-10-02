@@ -20,7 +20,7 @@ class SeminarsController < ApplicationController
 
   layout 'application'
   
-  before_filter :require_staff
+  before_filter :require_roles
   before_filter :cache_docs,  :only=>[:index, :show]
   before_filter :af_object, :only=>[:show]
   after_filter :uncache_docs, :only=>[:index, :show]
@@ -34,6 +34,11 @@ class SeminarsController < ApplicationController
   # The index action will more than likely throw this one.
   # Example, when the standard query parser is used, and a user submits a "bad" query.
   rescue_from RSolr::Error::Http, :with => :rsolr_request_error
+
+  def self.authorized_roles
+    #TODO move the role spec into config
+    @authorized_roles ||= ["staff:scv.cul.columbia.edu","sh3040:users.scv.cul.columbia.edu"]
+  end
 
   def initialize(*args)
     super(*args)

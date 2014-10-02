@@ -76,7 +76,24 @@ module Cul::Scv::Controller
       return false
     end
   end
-  
+
+  def require_roles
+    if current_user
+      okay = false
+      roles = self.class.authorized_roles
+      current_user.roles.each do |role|
+        okay ||= roles.include?(role.role_sym.to_s)
+      end
+      unless okay
+        redirect_to access_denied_url  
+      end
+    elsif !Rails.env.eql?('development')
+      store_location
+      redirect_to new_user_session_path
+      return false
+    end
+  end
+
   def http_client
     unless @http_client
       @http_client ||= HTTPClient.new
