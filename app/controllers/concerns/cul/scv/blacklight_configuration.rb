@@ -280,30 +280,21 @@ module Cul::Scv::BlacklightConfiguration
       }
     end
 
-    config.add_search_field("search_title_info_search_title_teim") do |field|
+    config.add_search_field("title_teim") do |field|
       field.label = 'Title'
       field.solr_parameters = {
         :qt=>"title_search",
-        :qf=>["search_title_info_search_title_teim"],
+        :qf=>["title_teim"],
         :"spellcheck.dictionary" => "title"
       }
     end
 
     config.add_search_field("lib_name_teim") do |field|
-      field.label = 'Name'
+      field.label = 'Seminar'
       field.solr_parameters = {
         :qt=>"name_search",
         :qf=>["lib_name_teim"],
         :"spellcheck.dictionary" => "name"
-      }
-    end
-
-    config.add_search_field("clio_sim") do |field|
-      field.label = 'CLIO ID'
-      field.solr_parameters = {
-        :qt=>"clio_search",
-        :qf=>["clio_sim"],
-        :"spellcheck.dictionary" => "clio"
       }
     end
 
