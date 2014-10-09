@@ -14,4 +14,4 @@
         %li= link_to("Admin", :controller => :admin)
       %li= link_to("Log Out", destroy_user_session_path)
 - else
-  .pull-right= link_to 'Login', login_path 
+  .pull-right= link_to 'Login', new_user_session_path 
