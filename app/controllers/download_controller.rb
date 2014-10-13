@@ -36,7 +36,7 @@ class DownloadController  < ActionController::Base
     response.headers.merge! dl_hdrs
     ds_parms = {:pid => params[:uri], :dsid => params[:block]}
     response.headers["Last-Modified"] = Time.now.to_s
-    obj.datastreams[params[:block]].stream(self)
+    obj.datastreams[params[:block]].stream(response)
   end
 
   def download_from_params
