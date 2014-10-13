@@ -50,12 +50,11 @@ module Cul::Scv::BlacklightConfiguration
     config[:unique_key] = :id
 
     # solr field values given special treatment in the show (single result) view
-    config.show.html_title = 'title_display_ssm'
-    config.show.heading = 'title_display_ssm'
+    config.show.title_field = 'title_display_ssm'
     config.show.display_type_field = :format_ssi
 
     # solr field values given special treatment in the index (search results) view
-    config.index.show_link = 'title_display_ssm'
+    config.index.title_field = 'title_display_ssm'
     config.index.display_type_field = :format_ssi
   end
 
