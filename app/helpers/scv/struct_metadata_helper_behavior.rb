@@ -68,6 +68,7 @@ module Scv
       end
       
       map = {}
+      Rails.logger.warn("No members for doc #{doc[:id]}") unless members.size > 0
       members.each do |member|
         ids = ((member[:identifier_ssim] || []) + (member[:dc_identifier_ssim] || []))
         ids.uniq!
@@ -81,7 +82,7 @@ module Scv
           end
         end
         if map[member[:id]].nil?
-          Rails.logger.info("Unmapped child node in structMap: #{ids.inspect}")
+          Rails.logger.warn("Unmapped child node in structMap: #{ids.inspect}")
         end
       end
       [ds, map]

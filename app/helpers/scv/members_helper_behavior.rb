@@ -18,18 +18,27 @@ module Scv
     def get_members(document, format=:solr, rows=nil)
       memoize = (@document and document[:id] == @document[:id])
       return @members if memoize and not @members.nil?
-      rows ||= (document[:active_fedora_model_ssi] == 'ContentAggregator') ?
-        1000 : 10
       klass = false
+      if (document[:active_fedora_model_ssi] == 'ContentAggregator')
+        rows = 1000
+      else
+        rows = 10
+      end
+      if document[:active_fedora_model_ssi]
+        klass = document[:active_fedora_model_ssi].constantize
+      end
       document[:has_model_ssim].each do |model|
         klass ||= ActiveFedora::Model.from_class_uri(model)
       end
       klass ||= GenericAggregator
-      members = []
+      #members = []
       if klass.include? Cul::Scv::Hydra::Models::Aggregator
         agg = klass.load_instance_from_solr(document[:id],document)
         r = agg.parts(response_format: format, rows: rows)
         members = r.collect {|hit| SolrDocument.new(hit) } unless r.blank?
+      else
+        Rails.logger.warn("requested members from #{klass}, which is not a Cul::Scv::Hydra::Models::Aggregator")
+        return []
       end
       @members = members if memoize
       members
