@@ -257,5 +257,26 @@ namespace :util do
     o.add_relationship(type_pred, RDF::URI.new("http://purl.oclc.org/NET/CUL/Resource"))
     o.save
   end
+  desc "iterate over a file of fedora uri's, checking the CONTENT dsLocations"
+  task :correct_type => :configure do
+    fpath = ENV['LIST']
+    IO.foreach(fpath) do |objuri|
+      objuri.strip!
+      begin
+        obj = ActiveFedora::Base.find(objuri)
+        if obj.is_a? ContentAggregator
+          dc = obj.datastreams['DC']
+          unless dc.term_values(:dc_type).eql? ["InteractiveResource"]
+            dc.update_values([:dc_type] => "InteractiveResource")
+            dc.content_will_change!
+            obj.save
+          end
+        end
+      rescue => error
+        logger.error "error #{objuri} -> #{error}"
+        logger.info error.backtrace.join "\n"
+      end
+    end
+  end
 end
 end

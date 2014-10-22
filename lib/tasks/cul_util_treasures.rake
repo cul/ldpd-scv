@@ -205,6 +205,24 @@ namespace :cul do
           end
         end
       end
+      task :tiffs => :environment do
+        csv = ENV['CSV'] || 'treasures_broken.csv'
+        open(csv) do |blob|
+          blob.each do |line|
+            line = line.strip
+            parts = line.split(',')
+            # "cagg","gr","note","match"
+            old = ActiveFedora::Base.find(parts[1])
+            new_gr = ActiveFedora::Base.find(parts[-1])
+            cagg = ActiveFedora::Base.find(parts[0])
+            old.remove_relationship(:cul_member_of, cagg.internal_uri)
+            old.add_relationship(:foaf_depicts, cagg.internal_uri)
+            old.save
+            new_gr.add_relationship(:cul_member_of, cagg.internal_uri)
+            new_gr.save
+          end
+        end
+      end
     end
   end
 end

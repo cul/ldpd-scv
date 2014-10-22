@@ -1,7 +1,7 @@
 require 'cul'
 require 'nokogiri'
 require 'rsolr-ext'
-
+require 'thread/pool'
 
 class SolrCollection
   attr_reader :pid, :solr
@@ -84,10 +84,9 @@ def logger
 end
 
 namespace :cul do
- namespace :scv do
-   namespace :solr do
-# for each collection, the task needs to fetch the unlimited count, and then work through the pages
-# for development, we should probably just hard-code a sheet of data urls
+  namespace :scv do
+    namespace :users do
+
      desc "load the fedora configuration"
      task :configure => :environment do
        env = ENV['RAILS_ENV'] ? ENV['RAILS_ENV'] : 'development'
@@ -121,6 +120,16 @@ namespace :cul do
            u.delete
          }
        end
+     end
+    end
+    namespace :solr do
+
+     desc "load the fedora configuration"
+     task :configure => :environment do
+       env = ENV['RAILS_ENV'] ? ENV['RAILS_ENV'] : 'development'
+       yaml = YAML::load(File.open("config/fedora_ri.yml"))[env]
+       ENV['RI_URL'] ||= yaml['riurl'] 
+       ENV['RI_QUERY'] ||= yaml['riquery'] 
      end
 
      desc "optimize solr index"
@@ -174,7 +183,6 @@ namespace :cul do
      end
      desc "index objects from a CUL fedora repository"
      task :index => :configure do
-       delete_array = []
        urls_to_scan = case
        when ENV['PID_LIST']
          url_array = []
@@ -189,17 +197,7 @@ namespace :cul do
          collection = SolrCollection.new(collection_pid,solr_url)
          url_array = collection.paths.dup
        when ENV['PID']
-         logger.info "indexing pid #{ENV['PID']}"
-         pid = ENV['PID']
-         obj = BagAggregator.search_repo(identifier: pid) || BagAggregator.find(pid)
-         raise "could not find object #{pid}" if obj.nil?
-         pid = obj.pid
-         fedora_uri = URI.parse(ENV['RI_URL'])
-         # < adding collections
-         solr_url = ENV['SOLR'] || Blacklight.solr_config[:url]
-         collection = SolrCollection.new(pid,solr_url)
-         # adding collections >
-         url_array = [pid]
+         url_array = ENV['PID'].split(',')
        when ENV['SAMPLE_DATA']
          File.read(File.join(Rails.root,"test","sample_data","cul_fedora_index.json"))
        when ENV['JSON']
@@ -211,8 +209,7 @@ namespace :cul do
 
        logger.info "#{url_array.size} URLs to scan."
 
-       successes = 0
-       errors = 0
+       
 
        solr_url = ENV['SOLR'] || Blacklight.solr_config[:url]
        logger.info "Using Solr at: #{solr_url}"
@@ -221,27 +218,90 @@ namespace :cul do
        logger.info "indexing documents into index: #{url_array.length}"
        ActiveFedora::SolrService.instance.conn.commit
        show_error = true
+       ctr = 0
+       results = {}
+       pool = Thread.pool(2)
+       [GenericResource.name, ContentAggregator.name, BagAggregator.name ]
+
        url_array.each do |pid|
-         begin
-            base_obj = ActiveFedora::Base.find(pid, :cast=>true)
-            base_obj.send :update_index
-            successes += 1
-            delete_array.delete(pid)
-            logger.info "index: #{pid} #{successes + errors} of #{url_array.length}"
-         rescue Exception => e
-           errors += 1
-           logger.error "error: #{pid} #{e.message} #{successes + errors} of #{url_array.length}"
-            if show_error
-              puts e.backtrace
-              show_error = false
-            end
+         ctr += 1
+
+         pool.process(pid, ctr, url_array.length, results) do |id, current, total, r_cache|
+           begin
+             base_obj = ActiveFedora::Base.find(id, :cast=>true)
+             ActiveFedora::SolrService.add(base_obj.to_solr, softCommit: false)
+             if ctr % 100 == 0
+               ActiveFedora::SolrService.instance.conn.commit
+             end
+             r_cache[id] = :success
+             logger.info "index: #{id} #{current} of #{total}"
+           rescue Exception => e
+             r_cache[id] = :error
+             logger.error "error: #{id} #{current} of #{total} : #{e.message}"
+             logger.warn(e.backtrace.join("\n"))
+             begin
+              ActiveFedora::SolrService.instance.conn.delete_by_id(id)
+              logger.info "deleted: #{id} on error"
+             rescue Exception => e
+              logger.warn "delete failed: #{id} on error"
+             end
+           end
          end
        end
+       pool.shutdown
        ActiveFedora::SolrService.instance.conn.commit
-
-       logger.info "#{successes} URLs scanned successfully; #{errors} errors."
+       
+      successes = 0
+      errors = 0
+      results.each {|id, result| (result == :success) ? successes += 1 : errors += 1 }
+      logger.info "#{successes} URLs scanned successfully; #{errors} errors."
 
      end
-   end
- end
+      task :reindex => :configure do
+        solr_query = {'dc_type_teim' => 'interactiveresource', 'fl' => 'id', 'rows' => 50}
+        response = ActiveFedora::SolrService.instance.conn.find(solr_query)
+        ctr = 0
+        total = 0
+        results = {}
+        [GenericResource.name, ContentAggregator.name, BagAggregator.name ]
+        while docs = response.docs and !docs.empty?
+          pool = Thread.pool(2)
+          url_array = docs.map {|doc| doc['id']}
+          total += url_array.length
+          docs = []
+          url_array.each do |pid|
+            ctr += 1
+
+            pool.process(pid, ctr, total, results) do |id, current, total, r_cache|
+              begin
+                base_obj = ActiveFedora::Base.find(id, :cast=>true)
+                docs << base_obj.to_solr
+              rescue Exception => e
+                r_cache[id] = :error
+                logger.error "error: #{id} #{current} of #{total} : #{e.message}"
+                logger.warn(e.backtrace.join("\n"))
+                begin
+                 ActiveFedora::SolrService.instance.conn.delete_by_id(id)
+                 logger.info "deleted: #{id} on error"
+                rescue Exception => e
+                 logger.warn "delete failed: #{id} on error"
+                end
+              end
+            end
+          end
+          pool.shutdown
+          ActiveFedora::SolrService.instance.conn.add(docs)
+          ActiveFedora::SolrService.instance.conn.commit
+          docs.each {|doc| results[doc[:id]] = :success}
+          logger.info "indexed #{ctr} of #{total}"
+          response = ActiveFedora::SolrService.instance.conn.find(solr_query)
+        end
+        
+        successes = 0
+        errors = 0
+        results.each {|id, result| (result == :success) ? successes += 1 : errors += 1 }
+        logger.info "#{successes} URLs scanned successfully; #{errors} errors."
+      end
+    end
+  end
 end
