@@ -91,13 +91,14 @@ class DownloadController  < ActionController::Base
       ds_parms = {:pid => params[:uri], :dsid => dsid}
       response.headers["Last-Modified"] = Time.now.to_s
       ds = Rubydora::Datastream.new(@resource.inner_object, dsid)
-      size = params[:file_size] || params['file_size']
-      size ||= ds.dsSize
-      size ||= rels_int_size(@resource, dsid)
+      size = rels_int_size(@resource, dsid)
       size ||= rels_ext_size(@resource, dsid)
+      size ||= params[:file_size] || params['file_size']
+      size ||= ds.dsSize
       if size and size.to_i > 0
-        response.headers["Content-Length"] = size
+        response.headers["Content-Length"] = [size]
       end
+      response.headers["Content-Type"] = ds.mimeType
       parms = {:dsid=>dsid, :pid=>pid}
       bytes = 0
       repo = ActiveFedora::Base.connection_for_pid(pid)
