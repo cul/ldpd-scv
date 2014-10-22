@@ -1,0 +1,8 @@
+<div id="openseadragon1" style="width: 800px; height: 600px;"></div>
+<script type="text/javascript">
+    var viewer = OpenSeadragon({
+        id: "openseadragon1",
+        prefixUrl: "/assets/openseadragon/",
+        tileSources: "https://repository-cache.cul.columbia.edu/iiif/1.1/<%= params[:id] %>/info.json"
+    });
+</script>

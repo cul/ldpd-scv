@@ -1,9 +1,0 @@
-- resource_list = get_resources(document)
-- web_resources = resource_list.select { |x| !(x[:mime_type].include?("tif") or x[:mime_type].include?("jp2"))}
-- web_resources.sort! {|x,y| x[:width].to_i <=> y[:width].to_i}
-- if web_resources.length > 0
-  - resource = web_resources.last
-  - img_url = cache_path("show", resource)
-  %img{:src=>img_url,:style=>"width:100%"}
-- else
-  %st="Missing image."
