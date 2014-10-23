@@ -1,8 +1,8 @@
-set :rails_env, "ludwig_prod"
-set :domain,      "ludwig.cul.columbia.edu"
-set :deploy_to,   "/opt/passenger/scv/"
+set :rails_env, "scv_prod"
+set :domain,      "rossini.cul.columbia.edu"
+set :application, "scv_prod"
+set :deploy_to,   "/opt/passenger/#{application}/"
 set :user, "deployer"
-set :branch, "ludwig_prod"
 set :scm_passphrase, "Current user can full owner domains."
 
 role :app, domain

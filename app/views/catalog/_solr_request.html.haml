@@ -1,4 +1,4 @@
-- unless Rails.env == 'passenger_prod'
+- unless Rails.env == 'scv_prod'
   - @footer = capture_haml do
     %div.solrQuery= URI.decode(@response.header.inspect)
     %div.solrQuery

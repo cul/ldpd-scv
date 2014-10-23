@@ -1,8 +1,8 @@
-set :rails_env, "pass_test"
+set :rails_env, "scv_test"
 set :domain,      "berlioz.cul.columbia.edu"
-set :deploy_to,   "/opt/passenger/scv_test/"
+set :application, "scv_test"
+set :deploy_to,   "/opt/passenger/#{application}/"
 set :user, "deployer"
-set :branch, "pass_test"
 set :scm_passphrase, "Current user can full owner domains."
 
 role :app, domain

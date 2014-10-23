@@ -23,5 +23,5 @@
     - else
       = render_document_index
 
-    - unless Rails.env == 'passenger_prod'
+    - unless Rails.env == 'scv_prod'
       = render :partial=>'solr_request'

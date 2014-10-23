@@ -88,7 +88,7 @@ module Cul::Scv::BlacklightConfiguration
     config.add_facet_field ActiveFedora::SolrService.solr_name("subject_era",:facetable), :label => "Eras", :limit => 10, :sort => "index"
     config.add_facet_field ActiveFedora::SolrService.solr_name("dc_type",:facetable), :label => "DC Types", :limit => 10, :sort => "index"
 
-    if !Rails.env.eql?"passenger_prod"
+    if !Rails.env.eql?"scv_prod"
       config.add_facet_field "active_fedora_model_ssi", :label => "Model", :limit => 10
       config.add_facet_field "format_ssi", :label => "Routed As", :limit => 10
       config.add_facet_field "descriptor_ssi", :label => "Metadata Type", :limit => 10

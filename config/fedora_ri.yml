@@ -1,12 +1,12 @@
-passenger_prod: &PROD
+scv_prod: &PROD
     riurl: https://repository.cul.columbia.edu:8443/fedora
     riquery: "select $member from <#ri> where walk ($obj <cul:memberOf> <fedora:%s> and $member <cul:memberOf> $obj)"
     collections: "prd.custord;ldpd.spanishchildren;burke_lindq;ldpd.treasures;ldpd.russianpages;starr.cpg;cul.osamabinladen;http://libraries.columbia.edu/ohro/aggregation"
-passenger_test: &TEST
+scv_test: &TEST
     riurl: https://sayers.cul.columbia.edu:8443/fedora
     riquery: "select $member from <#ri> where walk ($obj <cul:memberOf> <fedora:%s> and $member <cul:memberOf> $obj)"
     collections: "prd.custord;ldpd.spanishchildren;burke_lindq;ldpd.treasures;ldpd.russianpages;starr.cpg;cul.osamabinladen;http://libraries.columbia.edu/ohro/aggregation"
-passenger_dev: *TEST
+scv_dev: *TEST
 test: *TEST
 development: *TEST
 production: *PROD

@@ -6,7 +6,7 @@
   %div#document{:class=>"document #{render_document_class}", :itemscope=>nil, :itemtype=>@document.itemtype}
     %div(:id="doc_#{@document[:id].to_s.parameterize}")
       = render_document_partials @document, blacklight_config.view_config(:show).partials
-  - unless Rails.env == 'passenger_prod'
+  - unless Rails.env == 'scv_prod'
     = render :partial=>'solr_request'
 
 

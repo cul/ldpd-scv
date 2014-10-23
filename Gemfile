@@ -75,6 +75,6 @@ group :assets do
   gem 'coffee-rails'
   gem 'uglifier', '>= 1.0.3'
 end
-group :passenger_dev, :passenger_test, :passenger_prod do
+group :scv_dev, :scv_test, :scv_prod do
   gem 'mysql2'
 end
