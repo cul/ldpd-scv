@@ -11,10 +11,10 @@ class DownloadController  < ActionController::Base
   before_filter :require_staff
   filter_access_to :fedora_content, :attribute_check => true,
                    :model => nil, :load_method => :download_from_params
-  caches_action :cachecontent, :expires_in => 7.days,
-    :cache_path => proc { |c|
-      c.params
-    }
+#  caches_action :cachecontent, :expires_in => 7.days,
+#    :cache_path => proc { |c|
+#      c.params
+#    }
 
   def download_headers(opts)
     opts = opts.merge({:method => :head})
