@@ -15,6 +15,7 @@
 //= require blacklight/blacklight
 //= require bootstrap-sprockets
 //= require jquery.ui.all
+//= require_tree ./colorbox
 //= require scv/filesystem.js
 
 
