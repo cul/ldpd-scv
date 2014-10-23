@@ -11,7 +11,7 @@ class Resolve::BytestreamsController < ApplicationController
   include Cul::Scv::BlacklightConfiguration
   include CatalogHelper
   include ChildrenHelper
-  caches_action :content, :expires_in => 7.days
+  #caches_action :content, :expires_in => 7.days
 
   respond_to :json
 
