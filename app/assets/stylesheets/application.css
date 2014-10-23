@@ -13,5 +13,4 @@
  *= require jquery.ui.all
  *= require_tree './scv'
  *= require accordion
- *= require zooming_image
  */
