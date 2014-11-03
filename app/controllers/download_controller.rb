@@ -40,7 +40,7 @@ class DownloadController  < ActionController::Base
   end
 
   def download_from_params
-    unless defined?(@download)
+    @download ||= begin
       pid = params[:uri]
       dsid = params[:block]
       @resource = GenericResource.find(pid)
@@ -53,6 +53,7 @@ class DownloadController  < ActionController::Base
       if dc_format and dc_format.length > 0
         @download.mime_type=dc_format.first
       end
+      @download
     end
     params[:object] = @download
   end
@@ -61,7 +62,7 @@ class DownloadController  < ActionController::Base
     text_result = nil
     pid = params[:uri]
     dsid = params[:block]
-    @resource = GenericResource.find(pid) unless defined?(@resource)
+    @resource ||= GenericResource.find(pid)
     dl_hdrs = {}
     dl_hdrs["Content-Type"] = @resource.datastreams[dsid].mimeType || 'binary/octet-stream'
 
@@ -88,7 +89,6 @@ class DownloadController  < ActionController::Base
       response.headers["Content-Type"] = "text/plain; charset=utf-8"
       render :text => text_result
     else
-      ds_parms = {:pid => params[:uri], :dsid => dsid}
       response.headers["Last-Modified"] = Time.now.to_s
       ds = Rubydora::Datastream.new(@resource.inner_object, dsid)
       size = rels_int_size(@resource, dsid)
@@ -99,21 +99,14 @@ class DownloadController  < ActionController::Base
         response.headers["Content-Length"] = [size]
       end
       response.headers["Content-Type"] = ds.mimeType
-      parms = {:dsid=>dsid, :pid=>pid}
-      bytes = 0
+
       repo = ActiveFedora::Base.connection_for_pid(pid)
-      repo.datastream_dissemination(parms) do |res|
-        begin
-          res.read_body do |seg|
-            response.stream.write seg
-            bytes += seg.length
-          end
-        ensure
-          response.stream.close
+      repo.datastream_dissemination(dl_opts) do |res|
+        res.read_body do |seg|
+          response.stream.write seg
         end
       end
-
-    
+      response.stream.close
     end
   end
 
