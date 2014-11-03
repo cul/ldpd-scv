@@ -47,7 +47,7 @@ gem 'rake'
 # gem 'rcov'
 gem 'rsolr' # Default to using the version required by Blacklight
 gem 'rsolr-ext' # Default to using the version required by Blacklight
-gem 'rubydora'
+gem 'rubydora', '>=1.8.0'
 gem 'RedCloth', '>=4.2.3'
 gem 'scrypt'
 gem 'solr-ruby' 
