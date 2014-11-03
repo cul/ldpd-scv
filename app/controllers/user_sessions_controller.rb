@@ -45,4 +45,8 @@ class UserSessionsController < ApplicationController
       redirect_to :action => "index", :controller => :catalog
     end      
   end
+
+  def wind_logout_url
+    "https://#{UserSession.wind_host}/logout?passthrough=1&destination=" + root_url
+  end
 end
