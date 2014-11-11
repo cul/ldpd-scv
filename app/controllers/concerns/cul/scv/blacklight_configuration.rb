@@ -159,7 +159,10 @@ module Cul::Scv::BlacklightConfiguration
     config.add_show_field "published_vern_ssm", :label=> "Published:"
     config.add_show_field "lc_callnum_ssm", :label=> "Call number:"
     config.add_show_field "object_ssm", :label=> "In Fedora:"
-    config.add_show_field "isbn_ssim", :label=> "ISBN:"
+    config.add_show_field ActiveFedora::SolrService.solr_name('dc_identifier', :facetable)
+    config.add_show_field ActiveFedora::SolrService.solr_name('dc_format', :displayable)
+    config.add_show_field ActiveFedora::SolrService.solr_name('dc_source', :displayable)
+    config.add_show_field ActiveFedora::SolrService.solr_name('dc_type', :displayable)
 
   # "fielded" search configuration. Used by pulldown among other places.
     config.add_search_field("all_text_teim") do |field|

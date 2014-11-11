@@ -22,8 +22,8 @@ SCV.Filesystem.modalPreview = function(dataId){
   $.colorbox({
     href: '/previews/' + encodeURIComponent(dataId),
     className: 'cul-no-colorbox-title-bar',
-    height:"500px",
-    width:"700px",
+    height:"800px",
+    width:"800px",
     maxHeight:"90%",
     maxWidth:"90%",
     opacity:".6",

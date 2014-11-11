@@ -1,4 +1,15 @@
 -# encoding: utf-8
 #preview.container.show
-  .col-md-12
-    %img{:src=>thumbnail_url(@document, size: 768), :alt=>"", :style=>"max-width:100%;max-height:100%;"}
+  .row
+    %dl
+      %dt="Repository ID"
+      %dd!=link_to(@document[:id],catalog_path(@document[:id]))
+      %dt="Identifiers"
+      - (@document.fetch("identifier_ssim",[]) + @document.fetch("dc_identifier_ssim",[])).select{|x| x != @document[:id]}.uniq.each do |x|
+        %dd=x
+      %dt="Containers"
+      - @document.fetch("cul_member_of_ssim",[]).collect {|x| y = x.split('/')[1]; link_to(y, catalog_path(y))}.each do |x|
+        %dd!=x
+  .row
+    %span.col-md-12
+      %img{:src=>thumbnail_url(@document, size: 768), :alt=>"", :style=>"max-width:100%;max-height:100%;"}

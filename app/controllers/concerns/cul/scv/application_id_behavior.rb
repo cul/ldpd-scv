@@ -17,6 +17,8 @@ module Cul::Scv::ApplicationIdBehavior
     id.gsub!('/','\/')
     p = blacklight_config.default_document_solr_params.merge(extra_controller_params)
     p[:fq] = "identifier_ssim:#{(id)}"
+    p[:fl] ||= '*'
+    #p[:qt] ||= blacklight_config.document_solr_request_handler
     solr_response = find(blacklight_config.document_solr_path, p)
     raise Blacklight::Exceptions::InvalidSolrID.new(id) if solr_response.docs.empty?
     document = SolrDocument.new(solr_response.docs.first, solr_response)
@@ -31,6 +33,8 @@ module Cul::Scv::ApplicationIdBehavior
     id.gsub!(':','\:')
     id.gsub!('/','\/')
     p[:fq] = "dc_identifier_ssim:#{(id)}"
+    p[:fl] ||= '*'
+    #p[:qt] ||= blacklight_config.document_solr_request_handler
     solr_response = find(blacklight_config.document_solr_path, p)
     raise Blacklight::Exceptions::InvalidSolrID.new(id) if solr_response.docs.empty?
     document = SolrDocument.new(solr_response.docs.first, solr_response)

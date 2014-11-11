@@ -1,0 +1,24 @@
+!!! 5
+%html{:xmlns=>"http://www.w3.org/1999/xhtml", :lang=>'en', :class => 'no-js'}
+
+  %head
+    %meta{"charset"=>"utf-8"}
+    %meta{"http-equiv"=>"Content-Type","content"=>"text/html; charset=utf-8"}
+    %meta{"name"=>"HandheldFriendly", "content"=>"True"}
+    %meta{"name"=>"viewport", "content"=>"width=device-width,initial-scale=1.0"}
+    %title=(@page_title || application_name)
+    %link{:href=>url_for(:controller=>'catalog',:action => 'opensearch', :format => 'xml', :only_path => false), :title=>application_name, :type=>"application/opensearchdescription+xml", :rel=>"search"}
+    
+    = stylesheet_link_tag "application"
+    = javascript_include_tag "application"
+    = javascript_include_tag "openseadragon"
+    = csrf_meta_tags
+    -  javascript_tag do
+      = yield(:jstemplates)
+    = content_for(:head)
+  - bparms = {:class=>render_body_class}
+  - if params[:q].to_s.empty? and params[:f].to_s.empty? and params[:id].nil?
+    - bparms[:onload]="$('input#q').focus();"
+  %body#preview{bparms}
+    #preview-container
+      = yield

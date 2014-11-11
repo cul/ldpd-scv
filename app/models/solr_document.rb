@@ -1,4 +1,6 @@
 # -*- encoding : utf-8 -*-
+#TODO: Why doesn't this module get autoloaded?
+require 'blacklight/solr/document'
 class SolrDocument 
 
   include Blacklight::Solr::Document

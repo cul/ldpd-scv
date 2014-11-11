@@ -28,6 +28,7 @@ class PreviewsController < ApplicationController
   def show
     @response, @document = get_solr_response_for_dc_id
 
-    render layout: false
+    render layout: 'preview'
+    puts @document.inspect
   end
 end
