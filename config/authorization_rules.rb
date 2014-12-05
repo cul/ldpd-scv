@@ -8,6 +8,16 @@ authorization do
       #if_attribute :content_models => does_not_contain {"info:fedora/ldpd:RestrictedResource"}
     end
   end
+  role :download_seminars do
+    has_permission_on :download do
+      to :fedora_content
+      if_attribute :publisher => is {["info:fedora/project:usem"]}
+    end
+    has_permission_on :download do
+      to :fedora_content
+      if_attribute :context => is {'seminars'}
+    end
+  end
   role :download_all do
     has_permission_on :download do
       to :fedora_content
@@ -53,5 +63,11 @@ authorization do
   end
   role :"spd1:users.scv.cul.columbia.edu" do
     includes :download_all
+  end
+  role :"sh3040:users.scv.cul.columbia.edu" do
+    includes :download_seminars
+  end
+  role :"ga2030:users.scv.cul.columbia.edu" do
+    includes :download_seminars
   end
 end

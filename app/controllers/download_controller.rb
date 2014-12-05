@@ -8,7 +8,7 @@ class DownloadController  < ActionController::Base
   helper :all # include all helpers, all the time
   before_filter :check_new_session #, :af_solr_init
 
-  before_filter :require_staff
+  before_filter :require_user
   filter_access_to :fedora_content, :attribute_check => true,
                    :model => nil, :load_method => :download_from_params
 #  caches_action :cachecontent, :expires_in => 7.days,
@@ -29,14 +29,18 @@ class DownloadController  < ActionController::Base
   def cachecontent
     response.headers.delete "Cache-Control"
     obj = GenericResource.find(params[:uri])
-    dsid = params[:block]
-    dl_hdrs = download_headers({:pid=>params[:uri], :dsid=>params[:block]})
-    dl_hdrs["Content-Type"] = obj.datastreams[dsid].mimeType || 'binary/octet-stream'
-    dl_hdrs["Content-Disposition"] = "inline; filename=""#{CGI.escapeHTML(params[:filename].to_s)}"""
-    response.headers.merge! dl_hdrs
-    ds_parms = {:pid => params[:uri], :dsid => params[:block]}
-    response.headers["Last-Modified"] = Time.now.to_s
-    obj.datastreams[params[:block]].stream(response)
+    if permitted_to? :fedora_content, obj, {:context => :download}
+      dsid = params[:block]
+      dl_hdrs = download_headers({:pid=>params[:uri], :dsid=>params[:block]})
+      dl_hdrs["Content-Type"] = obj.datastreams[dsid].mimeType || 'binary/octet-stream'
+      dl_hdrs["Content-Disposition"] = "inline; filename=""#{CGI.escapeHTML(params[:filename].to_s)}"""
+      response.headers.merge! dl_hdrs
+      ds_parms = {:pid => params[:uri], :dsid => params[:block]}
+      response.headers["Last-Modified"] = Time.now.to_s
+      obj.datastreams[params[:block]].stream(response)
+    else
+      redirect_to access_denied_url
+    end
   end
 
   def download_from_params
@@ -44,10 +48,7 @@ class DownloadController  < ActionController::Base
       pid = params[:uri]
       dsid = params[:block]
       @resource = GenericResource.find(pid)
-      @download = DownloadObject.new
-      @resource.ids_for_outbound(:has_model).each { |triple|
-        @download.content_models << "info:fedora/#{triple}"
-      }
+      @download = download_object_for(@resource)
       dc = @resource.datastreams['DC']
       dc_format = dc.term_values(:dc_format)
       if dc_format and dc_format.length > 0
@@ -63,6 +64,11 @@ class DownloadController  < ActionController::Base
     pid = params[:uri]
     dsid = params[:block]
     @resource ||= GenericResource.find(pid)
+    @download ||=download_object_for(@resource)
+    unless permitted_to? :fedora_content, @download, {:context => :download}
+      redirect_to access_denied_url
+      return
+    end
     dl_hdrs = {}
     dl_hdrs["Content-Type"] = @resource.datastreams[dsid].mimeType || 'binary/octet-stream'
 
@@ -126,13 +132,12 @@ class DownloadController  < ActionController::Base
   end
 
 
-  class DownloadObject
-    attr_reader :content_models, :mime_type
-    attr_writer :mime_type
-    def initialize ()
-      @content_models = []
-      @mime_type = nil
-    end
+  def download_object_for(generic_resource)
+    opts = {}
+    opts[:mime_type] = generic_resource.datastreams['content'].mimeType
+    opts[:content_models] = generic_resource.relationships(:has_model).collect {|rel| rel.to_s}
+    opts[:publisher] = generic_resource.relationships(:publisher).collect {|rel| rel.to_s}
+    Cul::Scv::DownloadProxy.new(opts)
   end
 end
 

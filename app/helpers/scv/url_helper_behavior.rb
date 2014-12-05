@@ -42,8 +42,8 @@ module Scv
       doc = SolrDocument.new(doc)
       label = render_document_index_label doc, opts
       link_url = (doc['active_fedora_model_ssi'].eql? 'GenericResource') ?
-        url_for_document(doc, show_file_assets: true) :
-        url_for_document(doc)
+        url_for_document(doc, show_file_assets: true, controller: :current) :
+        url_for_document(doc, controller: :current)
       link_to label, link_url, document_link_params(doc, opts)
     end
 
