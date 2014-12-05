@@ -9,10 +9,10 @@ GIT
 
 GIT
   remote: git://github.com/cul/cul_scv_hydra.git
-  revision: 9782664e61e81ea14af6e5beaeda88e200a0f7f3
+  revision: a87517a17d63f1ebc338334af431127c265bbd11
   branch: master
   specs:
-    cul_scv_hydra (0.19.2)
+    cul_scv_hydra (0.19.5)
       active-fedora (~> 7.0)
       active_fedora_finders (>= 0.5.0)
       active_fedora_relsint
@@ -112,6 +112,7 @@ GEM
       xpath (~> 2.0)
     childprocess (0.5.5)
       ffi (~> 1.0, >= 1.0.11)
+    cliver (0.3.2)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -148,8 +149,6 @@ GEM
       haml (~> 4.0)
       rdf (~> 1.1)
       sxp (~> 0.1, >= 0.1.3)
-    engine_cart (0.4.0)
-      rails
     equivalent-xml (0.5.1)
       nokogiri (>= 1.4.3)
     erubis (2.7.0)
@@ -232,12 +231,9 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    metaclass (0.0.4)
     mime-types (1.25.1)
     mini_portile (0.6.0)
     minitest (4.7.5)
-    mocha (1.1.0)
-      metaclass (~> 0.0.1)
     mods (0.0.23)
       iso-639
       nokogiri
@@ -271,6 +267,11 @@ GEM
       activesupport
       nokogiri (>= 1.4.2)
       solrizer (~> 3.3)
+    poltergeist (1.5.1)
+      capybara (~> 2.1)
+      cliver (~> 0.3.1)
+      multi_json (~> 1.0)
+      websocket-driver (>= 0.2.0)
     polyglot (0.3.5)
     rack (1.5.2)
     rack-handlers (0.7.0)
@@ -338,6 +339,8 @@ GEM
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
       rspec-mocks (~> 3.0.0)
+    rspec-collection_matchers (1.1.2)
+      rspec-expectations (>= 2.99.0.beta1)
     rspec-core (3.0.4)
       rspec-support (~> 3.0.0)
     rspec-expectations (3.0.4)
@@ -424,6 +427,7 @@ GEM
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     unicode (0.4.4.1)
+    websocket-driver (0.4.0)
     xml-simple (1.1.4)
     xpath (2.0.0)
       nokogiri (~> 1.3)
@@ -445,6 +449,7 @@ DEPENDENCIES
   block_helpers
   bootstrap-sass (>= 3.2)
   capistrano (~> 2.x)
+  capybara
   coffee-rails
   columnize
   crack
@@ -456,7 +461,6 @@ DEPENDENCIES
   database_cleaner
   declarative_authorization (= 0.5.3)
   diff-lcs
-  engine_cart
   factory_girl
   gherkin
   haml
@@ -471,13 +475,13 @@ DEPENDENCIES
   kaminari (= 0.15.1)
   loggable
   mime-types
-  mocha
   multipart-post
   mysql
   mysql2
   net-ldap (>= 0.1.1)
   nokogiri
   om (>= 1.4.0)
+  poltergeist
   rack
   rack-handlers
   rack-test
@@ -486,6 +490,7 @@ DEPENDENCIES
   rsolr
   rsolr-ext
   rspec (>= 2.0.0)
+  rspec-collection_matchers
   rspec-rails (>= 2.0.0)
   ruby-prof
   rubydora (>= 1.8.0)

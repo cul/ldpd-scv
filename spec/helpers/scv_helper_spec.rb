@@ -2,6 +2,11 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require 'catalog_helper'
 describe Scv::CatalogHelperBehavior do
 
+  before do
+    af_config = {time_zone: "America/New_York", datastreams_root: '/foo'}
+    allow(ActiveFedora.config).to receive(:credentials).and_return af_config
+  end
+
   describe "#zoomable?" do
     before(:all) do
       class TestRig
@@ -26,8 +31,11 @@ describe Scv::CatalogHelperBehavior do
       ds.stub(:controlGroup).and_return('M')
       ds.stub(:dsCreateDate).and_return(Time.parse('2013-05-25T01:43:20.684Z'))
       ds.stub(:dsid).and_return('zoom')
+      ds.stub(:mimeType).and_return('image/jp2')
       ds.stub(:dsLocation).and_return('ldpd:137915+zoom+zoom.0')
+      allow(Cul::Fedora).to receive(:ds_for_uri).with('zoom').and_return(ds)
       document = {id: 'foo:bar', has_model_ssim: []}.with_indifferent_access
+      document[:rels_int_profile_ssm] = [{zoom: {format: ['image/jp2']}}.to_json]
       actual = TestRig.new.zoomable?(document)
       expect(actual).to eql 'file:/foo/2013/0524/21/43/ldpd_137915+zoom+zoom.0'
     end
@@ -37,8 +45,11 @@ describe Scv::CatalogHelperBehavior do
       ds.stub(:controlGroup).and_return('E')
       ds.stub(:dsCreateDate).and_return(Time.parse('2013-05-25T01:43:20.684Z'))
       ds.stub(:dsid).and_return('zoom')
+      ds.stub(:mimeType).and_return('image/jp2')
       ds.stub(:dsLocation).and_return('foo')
+      allow(Cul::Fedora).to receive(:ds_for_uri).with('zoom').and_return(ds)
       document = {id: 'foo:bar', has_model_ssim: []}.with_indifferent_access
+      document[:rels_int_profile_ssm] = [{zoom: {format: ['image/jp2']}}.to_json]
       actual = TestRig.new.zoomable?(document)
       expect(actual).to eql 'file:foo'
     end

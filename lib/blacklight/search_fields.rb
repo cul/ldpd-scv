@@ -25,21 +25,21 @@
 #
 ##
 module Blacklight::SearchFields
-  extend ActiveSupport::Memoizable
 
   # Looks up search field config list from config[:search_fields], and
   # 'normalizes' all field config hashes using normalize_config method. 
   # Memoized for efficiency of normalization. 
   def search_field_list
-    normalized = config[:search_fields].collect {|obj| normalize_config(obj)}
+    @normalized ||= begin
+      normalized = config[:search_fields].collect {|obj| normalize_config(obj)}
 
-    if (duplicates = normalized.collect{|h| h[:key]}.uniq!)
-      raise "Duplicate keys found in search_field config: #{duplicates.inspect}"
+      if (duplicates = normalized.collect{|h| h[:key]}.uniq!)
+        raise "Duplicate keys found in search_field config: #{duplicates.inspect}"
+      end
+      
+      normalized
     end
-    
-    normalized
   end
-  memoize :search_field_list
 
   # Returns suitable argument to options_for_select method, to create
   # an html select based on #search_field_list. Skips search_fields
@@ -62,7 +62,6 @@ module Blacklight::SearchFields
   def default_search_field
     config[:default_search_field] || search_field_list[0]
   end
-  memoize :default_search_field
 
   # Shortcut for commonly needed operation, look up display
   # label for the key specified. Returns "Keyword" if a label

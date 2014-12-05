@@ -25,6 +25,7 @@ gem "active_fedora_relsint", :git=>'git://github.com/cul/active_fedora_relsint.g
 gem 'columnize'
 gem 'crack'
 gem 'cul_image_props'
+#gem 'cul_scv_hydra', :path=>'/Users/ba2213/Github/cul_scv_hydra' #'~>0.18.1'
 gem 'cul_scv_hydra', :git=>'git://github.com/cul/cul_scv_hydra.git', :branch=>'master' #'~>0.18.1'
 gem 'database_cleaner'
 gem 'declarative_authorization', '0.5.3'
@@ -58,12 +59,13 @@ gem 'sanitize'
 gem 'thread', :git=>'git@github.com:meh/ruby-thread.git', :branch=>'master'
 group :development, :test do
   gem 'capistrano', '~>2.x'
+  gem 'capybara'
   gem 'yard'
   gem 'jettywrapper', ">= 1.4.1"
   gem 'rspec', '>= 2.0.0'  
   gem 'rspec-rails', '>= 2.0.0' # rspec-rails 2.0.0 requires Rails 3.
-  gem 'engine_cart'
-  gem 'mocha'
+  gem 'rspec-collection_matchers'
+  gem 'poltergeist'
   gem 'cucumber', '>=0.8.5'
   gem 'cucumber-rails', '>=1.0.0', :require => false
   gem 'gherkin'

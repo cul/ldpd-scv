@@ -6,11 +6,24 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'app','helpers'))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'app','models'))
 libs = File.expand_path(File.dirname(__FILE__) + '/../lib/*.rb')
+require File.expand_path("../../config/environment", __FILE__)
 require 'blacklight'
 require 'cul_scv_hydra'
-require 'engine_cart'
-EngineCart.load_application!
 require 'rspec/rails'
+require 'rspec/collection_matchers'
+require 'capybara/rspec'
+require 'capybara/poltergeist'
+
+
+Capybara.javascript_driver = :poltergeist
+
+Capybara.register_driver :poltergeist do |app|
+  options = {}
+
+  options[:timeout] = 120 if RUBY_PLATFORM == "java"
+
+  Capybara::Poltergeist::Driver.new(app, options)
+end
 
 RSpec.configure do |config|
   # == Mock Framework
