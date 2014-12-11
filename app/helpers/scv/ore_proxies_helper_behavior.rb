@@ -17,7 +17,7 @@ module Scv
         proxies.each do |proxy|
           file = files.detect {|f| f['identifier_ssim'].include?(proxy['proxyFor_ssi'])}
           if file
-            rels_int = file['rels_int_profile_tesim'].first
+            rels_int = file.fetch('rels_int_profile_tesim',[]).first
             props = rels_int ? JSON.load(rels_int) : {}
             props = props["#{proxy_uri}/content"] || {}
             props['extent'] ||= file['extent_ssim'] if file['extent_ssim']
