@@ -134,7 +134,7 @@ class DownloadController  < ActionController::Base
 
   def download_object_for(generic_resource)
     opts = {}
-    opts[:mime_type] = generic_resource.datastreams['content'].mimeType
+    opts[:mime_type] = generic_resource.datastreams['content'].mimeType if generic_resource.datastreams['content']
     opts[:content_models] = generic_resource.relationships(:has_model).collect {|rel| rel.to_s}
     opts[:publisher] = generic_resource.relationships(:publisher).collect {|rel| rel.to_s}
     Cul::Scv::DownloadProxy.new(opts)
