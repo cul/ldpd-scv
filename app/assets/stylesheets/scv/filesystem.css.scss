@@ -5,6 +5,15 @@ UL.file-system, UL.file-system UL {
   margin: 0;
 }
 
+SPAN.fs-directory {
+	padding: 0px;
+	padding-left: 20px;
+	margin: 0;
+	white-space: nowrap;
+	background: url(asset_path('filesystem/directory.png')) left top no-repeat;
+}
+
+
 UL.file-system LI {
 	list-style: none;
 	padding: 0px;

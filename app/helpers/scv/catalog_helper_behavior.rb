@@ -3,6 +3,7 @@ module Scv
 
     include Scv::ModsHelperBehavior
     include Cul::Fedora::UrlHelperBehavior
+    include Scv::OreProxiesHelperBehavior
     include Scv::UrlHelperBehavior
     include Scv::StructMetadataHelperBehavior
     include Scv::MembersHelperBehavior

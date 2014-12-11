@@ -43,6 +43,9 @@ Scv::Application.routes.draw do
   get '/reports/preview/:category' => 'reports#preview', 
     :category => /(by_collection)/
   
+  get '/catalog/:id/proxies' => 'catalog#show', as: :root_proxies
+  get '/catalog/:id/proxies/*proxy_id' => 'catalog#show', as: :proxy
+
   get ':controller(/:action(/:id))'
   get ':controller/:action/:id.:format'
 

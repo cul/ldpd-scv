@@ -9,11 +9,12 @@ GIT
 
 GIT
   remote: git://github.com/cul/cul_scv_hydra.git
-  revision: a87517a17d63f1ebc338334af431127c265bbd11
-  branch: master
+  revision: e4d9374ba9163b4e0ac0c3f502ea7cde762c240d
+  branch: ore_proxy
   specs:
-    cul_scv_hydra (0.19.5)
+    cul_scv_hydra (0.19.4)
       active-fedora (~> 7.0)
+      active-triples (~> 0.2.2)
       active_fedora_finders (>= 0.5.0)
       active_fedora_relsint
       blacklight

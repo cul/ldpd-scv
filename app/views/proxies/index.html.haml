@@ -1,0 +1,27 @@
+-# coding: utf-8
+#sidebar.col-md-3.col-sm-4
+  = render 'search_sidebar'
+#content.col-md-9.col-sm-8  
+  - unless has_search_parameters?
+    = render 'home'
+  - else
+    %h2.sr-only.top-content-title=t('blacklight.search.search_results_header')
+    - @page_title = t('blacklight.search.title', :application_name => application_name)
+    - content_for(:head) do
+      = render_opensearch_response_metadata
+      = auto_discovery_link_tag(:rss, url_for(params.merge(:format => 'rss')), :title => t('blacklight.search.rss_feed') )
+      = auto_discovery_link_tag(:atom, url_for(params.merge(:format => 'atom')), :title => t('blacklight.search.atom_feed') )
+
+    = render 'search_header'
+
+    %h2.sr-only= t('blacklight.search.search_results')
+
+    - if @response.empty?
+      = render 'zero_results'
+    - elsif render_grouped_response?
+      = render_grouped_document_index
+    - else
+      = render_document_index
+
+    - unless Rails.env == 'scv_prod'
+      = render :partial=>'solr_request'

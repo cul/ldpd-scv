@@ -1,2 +1,6 @@
-- cache(struct_metadata_file_system_cache_key(document)) do
-  = struct_metadata_file_system(document)
+- #cache(struct_metadata_file_system_cache_key(document)) do
+- breadcrumbs().each_with_index do |breadcrumb, ix|
+  - unless ix == 0
+    !="&#187;"
+  = breadcrumb
+= proxies_file_system()

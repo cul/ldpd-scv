@@ -181,49 +181,28 @@ namespace :util do
       end
     end
   end
-  desc "iterate over a file of fedora uri's, checking the CONTENT dsLocations"
+  desc "iterate over a file of fedora uri's, checking the content dsLocations"
   task :correct_resources => :configure do
-    fpath = ENV['LIST']
+    fpath = ENV['list']
     yield unless fpath and File.exist? fpath
-    dsid = "CONTENT"
-    bad_path = /\/fstore\/ldpd\/mellon-audio-pres\/final\//
-    good_path = '/fstore/archive/ldpd/preservation/mellon_audio_2010/data/'
     IO.foreach(fpath) do |objuri|
       objuri.strip!
+      pid = objuri.split(' ')[0]
       begin
-        resource = Resource.load_instance(objuri)
-        obj_changed = false
-        # ensure that we have RestrictedResource cModel
-        old_models = resource.ids_for_outbound :has_model
-        unless old_models.include? "ldpd:RestrictedResource"
-          resource.add_relationship(:has_model, "info:fedora/ldpd:RestrictedResource")
-          new_models = resource.ids_for_outbound(:has_model).inspect
-          obj_changed = (old_models != new_models)
-          logger.info "updated cModels -> #{new_models.inspect}" if obj_changed
+        resource = ActiveFedora::Base.find(pid)
+        if resource.is_a? GenericResource
+          ds = resource.datastreams['content']
+          if ds.dsLocation =~ /#/
+            ds.dsLocation = ds.dsLocation.gsub(/#/,'%23')
+          end
+          if ds.mimeType =~ /^image/
+            unless resource.datastreams['DC'].term_values(:dc_type).include? 'StillImage'
+              resource.datastreams['DC'].update_values([:dc_type]=>['StillImage'])
+              resource.datastreams['DC'].content_will_change!
+            end
+          end
         end
-        # create a Rubydora datastream, so that we're not snagged by no content
-        rds = Rubydora::Datastream.new(resource.inner_object, dsid)
-        dsLocation = rds.dsLocation.dup if rds.dsLocation
-        dsLocation ||= "<ERROR: MISSING>"
-        logger.info "#{objuri} -> #{dsLocation}"
-        ds_changed = false
-        if dsLocation =~ bad_path
-          dsLocation.sub! bad_path, good_path
-          rds.dsLocation = dsLocation
-          ds_changed = true
-          logger.info "changed #{objuri}.dsLocation -> #{rds.dsLocation}"
-        end
-        if rds.dsState == 'I'
-          rds.dsState = 'A'
-          logger.info "changed #{objuri}.dsState -> #{rds.dsState}"
-          ds_changed = true
-        end
-        if ds_changed
-          rds.save
-        end
-        if obj_changed
-          resource.save
-        end
+        resource.save
       rescue => error
         logger.error "error #{objuri} -> #{error}"
         logger.info error.backtrace.join "\n"
@@ -268,6 +247,20 @@ namespace :util do
           dc = obj.datastreams['DC']
           unless dc.term_values(:dc_type).eql? ["InteractiveResource"]
             dc.update_values([:dc_type] => "InteractiveResource")
+            dc.content_will_change!
+            obj.save
+          end
+        end
+        if obj.is_a? GenericResource
+          dc = obj.datastreams['DC']
+          content = obj.datastreams['content']
+          if content.mimeType =~ /image/ and not dc.term_values(:dc_type).eql? ["StillImage"]
+            dc.update_values([:dc_type] => "StillImage")
+            dc.content_will_change!
+            obj.save
+          end
+          if content.mimeType =~ /image/ and not dc.term_values(:dc_format).eql? [content.mimeType]
+            dc.update_values([:dc_format] => content.mimeType)
             dc.content_will_change!
             obj.save
           end

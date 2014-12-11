@@ -110,13 +110,15 @@ namespace :cul do
                 logger.warn("SKIP #{pid} no source")
                 next
               end
-              id = source.split('/')[-1].sub(/\.tif$/,'')
+              id = source.split(/\/data\//)[-1]
+              id = "apt://columbia.edu/burke_lindq/data/#{id}"
               pid = part['id']
               unless !ids or !id or ids.include? id
                 gr = GenericResource.find(pid, cast: true)
                 dc = gr.datastreams['DC']
                 unless dc.term_values(:dc_identifier).include? id
-                  dc.update_indexed_attributes([:dc_identifier=>-1]=>id)
+                  vals = dc.term_values(:dc_identifier) + [id]
+                  dc.update_indexed_attributes([:dc_identifier]=>vals)
                   dc.changed_attributes[:content] = true
                   gr.save
                   logger.info("SUCCESS #{pid} id: #{id}")

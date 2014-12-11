@@ -61,7 +61,13 @@ module Scv
       document_partial_path_templates.each do |str|
         partial = (str % partial_name_parms)
         if has_partial? partial
-          return render :partial => partial, :locals=>locals
+          begin
+            return render :partial => partial, :locals=>locals
+          rescue Exception => e
+            puts e.message
+            puts e.backtrace.join("\n")
+            puts doc.inspect
+          end
         end
       end
       return ''
