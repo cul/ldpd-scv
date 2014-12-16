@@ -1,8 +1,11 @@
 require 'rubydora'
 module Cul
 module Fedora
-  require 'cul/fedora/url_helper_behavior'
-  require 'cul/fedora/object'
+
+  autoload :UrlHelperBehavior, 'cul/fedora/url_helper_behavior'
+  autoload :Aggregators, 'cul/fedora/aggregators'
+  autoload :Objects, 'cul/fedora/objects'
+
   module RubydoraPatch
   # This module is just to patch Rubydora to make use of a streaming block
   # and to allow use of a head request here

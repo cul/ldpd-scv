@@ -15,7 +15,7 @@ SCV.Filesystem.fileHandler = function(){
 SCV.Filesystem.bindHandlers = function() {
   window.console.log("bindHandlers")
   //$('LI.fs-directory A').bind('click', SCV.Filesystem.folderHandler);
-  $('LI.fs-file A').bind('click', SCV.Filesystem.fileHandler);
+  $('LI.fs-file A.preview').bind('click', SCV.Filesystem.fileHandler);
 }
 SCV.Filesystem.modalPreview = function(dataId){
 
