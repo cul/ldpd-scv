@@ -2,7 +2,7 @@
 - resource_list = get_resources(document)
 - if resource_list
   - resource_list.each do |resource|
-    - if permitted_to? :fedora_content, Cul::Fedora::MimeDummy.new(resource), {:context => :download}
+    - if permitted_to? :fedora_content, Cul::Scv::DownloadProxy.new(resource.merge(context: controller_name)), {:context => :download}
       %object{data: uri_from_resource_parms(resource, "show"), type: resource[:mime_type], width: '100%', height: '1000px'}
         %p
           ="Required plugin appears to be missing. "
