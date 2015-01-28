@@ -1,12 +1,13 @@
 require File.expand_path('../boot', __FILE__)
 require 'rails/all'
+require 'cul_omniauth'
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
 module Scv
   class Application < Rails::Application
-
+    include Cul::OmniAuth::FileConfigurable
     config.generators do |g|
       g.template_engine :haml
     end

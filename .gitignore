@@ -6,6 +6,7 @@ config/solr.yml
 config/roles.yml
 config/*.sphinx.conf
 config/s3_credentials.yml
+config/cas.yml
 secret_token.rb
 *~
 *.cache
