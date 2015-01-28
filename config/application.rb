@@ -6,7 +6,7 @@ Bundler.require(*Rails.groups)
 
 module Scv
   class Application < Rails::Application
-
+    include Cul::Omniauth::FileConfigurable
     config.generators do |g|
       g.template_engine :haml
     end
