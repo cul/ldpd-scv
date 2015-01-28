@@ -3,10 +3,10 @@ require 'rails/all'
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
-
+require 'cul_omniauth'
 module Scv
   class Application < Rails::Application
-
+    include Cul::Omniauth::FileConfigurable
     config.generators do |g|
       g.template_engine :haml
     end

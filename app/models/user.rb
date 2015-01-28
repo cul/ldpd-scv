@@ -2,13 +2,9 @@ require 'securerandom'
 class User < ActiveRecord::Base
 # Connects this user object to Blacklights Bookmarks and Folders. 
   include Blacklight::User
-  include AuthlogicWind::ActsAsAuthentic
+  include Cul::Omniauth::Users
   has_and_belongs_to_many :roles
   before_create :set_personal_info_via_ldap
-  #before_validation(:on => :create) do
-  #  self.send :set_personal_info_via_ldap
-  #end
-  #before_create :set_personal_info_via_ldap
 
   scope :admins, -> {where(admin: true)}
 

@@ -11,23 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140320000000) do
+ActiveRecord::Schema.define(version: 20150129170513) do
 
-  create_table "bookmarks", force: true do |t|
-    t.integer  "user_id",       null: false
-    t.string   "document_id"
-    t.string   "title"
+  create_table "bookmarks", force: :cascade do |t|
+    t.integer  "user_id",                   null: false
+    t.string   "document_id",   limit: 255
+    t.string   "title",         limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "user_type"
-    t.string   "document_type"
+    t.string   "user_type",     limit: 255
+    t.string   "document_type", limit: 255
   end
 
   add_index "bookmarks", ["user_id"], name: "index_bookmarks_on_user_id"
 
-  create_table "content_blocks", force: true do |t|
-    t.string   "title",      null: false
-    t.integer  "user_id",    null: false
+  create_table "content_blocks", force: :cascade do |t|
+    t.string   "title",      limit: 255, null: false
+    t.integer  "user_id",                null: false
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -35,9 +35,27 @@ ActiveRecord::Schema.define(version: 20140320000000) do
 
   add_index "content_blocks", ["title"], name: "index_content_blocks_on_title"
 
-  create_table "reports", force: true do |t|
-    t.string   "name",         null: false
-    t.string   "category",     null: false
+  create_table "models", force: :cascade do |t|
+    t.string   "email",                  default: "", null: false
+    t.string   "encrypted_password",     default: "", null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          default: 0,  null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "models", ["email"], name: "index_models_on_email", unique: true
+  add_index "models", ["reset_password_token"], name: "index_models_on_reset_password_token", unique: true
+
+  create_table "reports", force: :cascade do |t|
+    t.string   "name",         limit: 255, null: false
+    t.string   "category",     limit: 255, null: false
     t.datetime "generated_on"
     t.integer  "user_id"
     t.text     "options"
@@ -48,15 +66,15 @@ ActiveRecord::Schema.define(version: 20140320000000) do
 
   add_index "reports", ["category"], name: "index_reports_on_category"
 
-  create_table "roles", force: true do |t|
-    t.string   "role_sym",   null: false
+  create_table "roles", force: :cascade do |t|
+    t.string   "role_sym",   limit: 255, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "roles", ["role_sym"], name: "index_roles_on_role_sym", unique: true
 
-  create_table "roles_users", id: false, force: true do |t|
+  create_table "roles_users", id: false, force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "role_id", null: false
   end
@@ -64,18 +82,18 @@ ActiveRecord::Schema.define(version: 20140320000000) do
   add_index "roles_users", ["role_id"], name: "index_roles_users_on_role_id"
   add_index "roles_users", ["user_id"], name: "index_roles_users_on_user_id"
 
-  create_table "searches", force: true do |t|
+  create_table "searches", force: :cascade do |t|
     t.text     "query_params"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "user_type"
+    t.string   "user_type",    limit: 255
   end
 
   add_index "searches", ["user_id"], name: "index_searches_on_user_id"
 
-  create_table "sessions", force: true do |t|
-    t.string   "session_id", null: false
+  create_table "sessions", force: :cascade do |t|
+    t.string   "session_id", limit: 255, null: false
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -84,44 +102,49 @@ ActiveRecord::Schema.define(version: 20140320000000) do
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at"
 
-  create_table "taggings", force: true do |t|
+  create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"
     t.integer  "taggable_id"
-    t.string   "taggable_type"
+    t.string   "taggable_type", limit: 255
     t.datetime "created_at"
   end
 
   add_index "taggings", ["tag_id"], name: "index_taggings_on_tag_id"
   add_index "taggings", ["taggable_id", "taggable_type"], name: "index_taggings_on_taggable_id_and_taggable_type"
 
-  create_table "tags", force: true do |t|
-    t.string "name"
+  create_table "tags", force: :cascade do |t|
+    t.string "name", limit: 255
   end
 
-  create_table "users", force: true do |t|
-    t.string   "first_name"
-    t.string   "last_name"
+  create_table "users", force: :cascade do |t|
+    t.string   "first_name",             limit: 255
+    t.string   "last_name",              limit: 255
     t.boolean  "admin"
-    t.string   "login",                             null: false
-    t.string   "wind_login"
-    t.string   "email"
-    t.string   "crypted_password"
-    t.string   "persistence_token"
-    t.integer  "login_count",       default: 0,     null: false
+    t.string   "login",                  limit: 255,                 null: false
+    t.string   "wind_login",             limit: 255
+    t.string   "email",                  limit: 255
+    t.string   "encrypted_password",     limit: 255
+    t.string   "persistence_token",      limit: 255
+    t.integer  "sign_in_count",                      default: 0,     null: false
     t.text     "last_search_url"
-    t.datetime "last_login_at"
+    t.datetime "last_sign_in_at"
     t.datetime "last_request_at"
-    t.datetime "current_login_at"
-    t.string   "last_login_ip"
-    t.string   "current_login_ip"
+    t.datetime "current_sign_in_at"
+    t.string   "last_sign_in_ip",        limit: 255
+    t.string   "current_sign_in_ip",     limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "cul_staff",         default: false
+    t.boolean  "cul_staff",                          default: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
   end
 
+  add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["last_request_at"], name: "index_users_on_last_request_at"
   add_index "users", ["login"], name: "index_users_on_login"
   add_index "users", ["persistence_token"], name: "index_users_on_persistence_token"
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   add_index "users", ["wind_login"], name: "index_users_on_wind_login"
 
 end
