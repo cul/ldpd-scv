@@ -49,6 +49,7 @@ namespace :deploy do
     run "ln -nfs #{deploy_to}shared/app_config.yml #{release_path}/config/app_config.yml"
     run "ln -nfs #{deploy_to}shared/role_map_#{rails_env}.yml #{release_path}/config/role_map_#{rails_env}.yml"
     run "ln -nfs #{deploy_to}shared/roles.yml #{release_path}/config/roles.yml"
+    run "ln -nfs #{deploy_to}shared/cas.yml #{release_path}/config/cas.yml"
     run "mkdir -p #{release_path}/db"
     run "ln -nfs #{deploy_to}shared/#{rails_env}.sqlite3 #{release_path}/db/#{rails_env}.sqlite3"
   end

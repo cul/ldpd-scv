@@ -2,6 +2,7 @@ Scv::Application.routes.draw do
 
   root :to => "catalog#index"
   blacklight_for :catalog, :seminars
+  devise_for :users, :controllers => { :omniauth_callbacks => "users/omni_auth_callbacks" }
 
   resources :previews, only: :show, constraints: { id: /[^\?]+/ }
 
@@ -49,6 +50,11 @@ Scv::Application.routes.draw do
   get ':controller(/:action(/:id))'
   get ':controller/:action/:id.:format'
 
-  get '/login' =>'user_sessions#new', :as => 'new_user_session'
-  get '/wind_logout' =>'user_sessions#destroy', :as => 'destroy_user_session'
+  devise_scope :user do
+    match 'login', :via=> [:get, :post], :to => 'user_sessions#create', :as => 'new_user_session'
+    match 'logout', :via=> [:get, :delete], :to => 'user_sessions#destroy', :as => 'destroy_user_session'
+  end
+
+resources :user_sessions, as: :sessions
+
 end
