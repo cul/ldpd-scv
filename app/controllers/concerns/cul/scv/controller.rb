@@ -87,12 +87,10 @@ module Cul::Scv::Controller
       unless okay
         redirect_to access_denied_url  
       end
-    elsif !Rails.env.eql?('development')
-      store_location
-      redirect_to new_user_session_path
-      return false
     else
-      return Rails.env.eql?('development')
+      store_location
+      redirect_to user_omniauth_authorize_path(provider: :wind)
+      return false
     end
   end
 

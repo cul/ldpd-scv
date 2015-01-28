@@ -12,6 +12,6 @@
       %li= link_to('Bookmarked Items', bookmarks_path)
       - if current_user.admin?
         %li= link_to("Admin", :controller => :admin)
-      %li= link_to("Log Out", destroy_user_session_path)
+      %li= link_to("Log Out", destroy_user_session_path(provider: :wind))
 - else
-  .pull-right= link_to 'Login', new_user_session_path 
+  .pull-right= link_to 'Login', user_omniauth_authorize_path(provider: :wind) 

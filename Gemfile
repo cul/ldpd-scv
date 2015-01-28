@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 gem 'ruby-prof'
-gem 'rails', '4.0.4'
+gem 'rails', '~>4.1'
 gem 'actionpack-action_caching'
 gem 'dalli'
 #gem 'thin'
@@ -25,8 +25,10 @@ gem "active_fedora_relsint", :git=>'git://github.com/cul/active_fedora_relsint.g
 gem 'columnize'
 gem 'crack'
 gem 'cul_image_props'
-gem 'cul_scv_hydra', :git=>'git://github.com/cul/cul_scv_hydra.git', :branch=>'ore_proxy'
-#gem 'cul_scv_hydra', :git=>'git://github.com/cul/cul_scv_hydra.git', :branch=>'master' #'~>0.18.1'
+#gem 'cul_scv_hydra', :path=>'/Users/ba2213/Github/cul_scv_hydra'
+gem 'cul_scv_hydra', '~>0.20.1'
+gem 'cul_omniauth', :git=>'git://github.com/cul/cul_omniauth.git', :branch=>'master'
+gem 'devise'
 gem 'database_cleaner'
 gem 'declarative_authorization', '0.5.3'
 gem 'diff-lcs'
@@ -71,6 +73,7 @@ group :development, :test do
   gem 'gherkin'
   gem 'factory_girl'
 end
+gem 'thin', group: :development
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do

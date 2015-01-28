@@ -8,10 +8,11 @@ class ApplicationController < ActionController::Base
   include Blacklight::Controller
   include Cul::Scv::Controller
   include ApplicationHelper
-
+  include Devise::Controllers::Helpers
   layout false
-
-  helper_method :user_session, :current_user, :fedora_config, :solr_config, :relative_root # share some methods w/ views via helpers
+  devise_group :user, contains: [:user, :admin]
+  # share some methods w/ views via helpers
+  helper_method :fedora_config, :solr_config, :relative_root
   helper :all # include all helpers, all the time
   before_filter :check_new_session #, :af_solr_init
 
