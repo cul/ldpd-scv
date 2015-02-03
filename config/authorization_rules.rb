@@ -1,5 +1,5 @@
 authorization do
-  role :"staff:scv.cul.columbia.edu" do
+  role :"staff:cul.columbia.edu" do
     has_permission_on :download do
       to :fedora_content
       if_attribute :mime_type => is_not {"image/tiff"}
@@ -40,34 +40,34 @@ authorization do
     includes :download_tiff
   end
   # user permissions
-  role :"ba2213:users.scv.cul.columbia.edu" do
+  role :"ba2213:users.cul.columbia.edu" do
     includes :download_all
   end
-  role :"dortiz0:users.scv.cul.columbia.edu" do
+  role :"dortiz0:users.cul.columbia.edu" do
     includes :download_tiff
   end
-  role :"ds2057:users.scv.cul.columbia.edu" do
+  role :"ds2057:users.cul.columbia.edu" do
     includes :download_tiff
   end
-  role :"eh2124:users.scv.cul.columbia.edu" do
+  role :"eh2124:users.cul.columbia.edu" do
     includes :download_tiff
   end
-  role :"ejs2121:users.scv.cul.columbia.edu" do
+  role :"ejs2121:users.cul.columbia.edu" do
     includes :download_tiff
   end
-  role :"jeg2:users.scv.cul.columbia.edu" do
+  role :"jeg2:users.cul.columbia.edu" do
     includes :download_tiff
   end
-  role :"la2272:users.scv.cul.columbia.edu" do
+  role :"la2272:users.cul.columbia.edu" do
     includes :download_tiff
   end
-  role :"spd1:users.scv.cul.columbia.edu" do
+  role :"spd1:users.cul.columbia.edu" do
     includes :download_all
   end
-  role :"sh3040:users.scv.cul.columbia.edu" do
+  role :"sh3040:users.cul.columbia.edu" do
     includes :download_seminars
   end
-  role :"ga2030:users.scv.cul.columbia.edu" do
+  role :"ga2030:users.cul.columbia.edu" do
     includes :download_seminars
   end
 end

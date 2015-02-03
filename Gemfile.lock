@@ -94,7 +94,7 @@ GEM
     authlogic_wind (0.4.0)
       authlogic
     bcrypt (3.1.9)
-    blacklight (5.5.4)
+    blacklight (5.7.2)
       bootstrap-sass (~> 3.0)
       deprecation
       kaminari (~> 0.13)
@@ -503,7 +503,7 @@ DEPENDENCIES
   arel
   authlogic (~> 3.4.2)
   authlogic_wind
-  blacklight (~> 5.5.0)
+  blacklight (~> 5.7.2)
   block_helpers
   bootstrap-sass (>= 3.2)
   capistrano (~> 2.x)

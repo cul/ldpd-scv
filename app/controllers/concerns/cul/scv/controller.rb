@@ -1,17 +1,6 @@
 module Cul::Scv::Controller
   extend ActiveSupport::Concern
 
-  def current_user
-    return @current_user if defined?(@current_user)
-    
-    if current_user_session
-      @current_user = current_user_session.user
-    else
-      @current_user = false
-    end
-    @current_user
-  end
-
   def store_location
     session[:return_to] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}"
   end
@@ -19,12 +8,6 @@ module Cul::Scv::Controller
   def redirect_back_or_default(default)
     redirect_to(session[:return_to] || default)
     session[:return_to] = nil
-  end
-
-
-  def current_user_session
-    return @user_session if defined?(@user_session)
-    @user_session = UserSession.find
   end
 
   protected
@@ -39,7 +22,7 @@ module Cul::Scv::Controller
   def require_user
     unless current_user
       store_location
-      redirect_to new_user_session_path
+      redirect_to user_omniauth_authorize_path(provider: :wind)
       return false
     end
   end
@@ -51,7 +34,7 @@ module Cul::Scv::Controller
       end
     elsif !Rails.env.eql?('development')
       store_location
-      redirect_to new_user_session_path
+      redirect_to user_omniauth_authorize_path(provider: :wind)
       return false
     end
   end
@@ -63,7 +46,7 @@ module Cul::Scv::Controller
       end
     else
       store_location
-      redirect_to new_user_session_path
+      redirect_to user_omniauth_authorize_path(provider: :wind)
       return false
     end
   end

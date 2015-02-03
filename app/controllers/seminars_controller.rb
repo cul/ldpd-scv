@@ -41,7 +41,7 @@ class SeminarsController < ApplicationController
 
   def initialize(*args)
     super(*args)
-    self.class.parent_prefixes << 'catalog' # haaaaaaack to not reproduce templates
+    self._prefixes << 'catalog' # haaaaaaack to not reproduce templates
   end
 
   def show_only_seminars solr_parameters, user_parameters
