@@ -9,8 +9,7 @@ class DownloadController  < ActionController::Base
   before_filter :check_new_session #, :af_solr_init
 
   before_filter :require_user
-  filter_access_to :fedora_content, :attribute_check => true,
-                   :model => nil, :load_method => :download_from_params
+
 #  caches_action :cachecontent, :expires_in => 7.days,
 #    :cache_path => proc { |c|
 #      c.params
@@ -43,29 +42,14 @@ class DownloadController  < ActionController::Base
     end
   end
 
-  def download_from_params
-    @download ||= begin
-      pid = params[:uri]
-      dsid = params[:block]
-      @resource = GenericResource.find(pid)
-      @download = download_object_for(@resource)
-      dc = @resource.datastreams['DC']
-      dc_format = dc.term_values(:dc_format)
-      if dc_format and dc_format.length > 0
-        @download.mime_type=dc_format.first
-      end
-      @download
-    end
-    params[:object] = @download
-  end
   def fedora_content
     dl_opts = {:pid=>params[:uri], :dsid=>params[:block]}
     text_result = nil
     pid = params[:uri]
     dsid = params[:block]
     @resource ||= GenericResource.find(pid)
-    @download ||=download_object_for(@resource)
-    unless permitted_to? :fedora_content, @download, {:context => :download}
+    @download ||=download_object_for(@resource,context: :catalog)
+    unless can? :download, @download
       redirect_to access_denied_url
       return
     end
@@ -132,8 +116,7 @@ class DownloadController  < ActionController::Base
   end
 
 
-  def download_object_for(generic_resource)
-    opts = {}
+  def download_object_for(generic_resource,opts={})
     opts[:mime_type] = generic_resource.datastreams['content'].mimeType if generic_resource.datastreams['content']
     opts[:content_models] = generic_resource.relationships(:has_model).collect {|rel| rel.to_s}
     opts[:publisher] = generic_resource.relationships(:publisher).collect {|rel| rel.to_s}

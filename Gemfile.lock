@@ -87,12 +87,6 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.3.6)
     arel (6.0.0)
-    authlogic (3.4.2)
-      activerecord (>= 3.2)
-      activesupport (>= 3.2)
-      request_store (~> 1.0)
-    authlogic_wind (0.4.0)
-      authlogic
     bcrypt (3.1.9)
     blacklight (5.7.2)
       bootstrap-sass (~> 3.0)
@@ -161,7 +155,6 @@ GEM
     daemons (1.1.9)
     dalli (2.7.2)
     database_cleaner (1.3.0)
-    declarative_authorization (0.5.3)
     deprecation (0.1.0)
       activesupport
     devise (3.4.1)
@@ -379,7 +372,6 @@ GEM
       rdf (~> 1.1, >= 1.1.4)
     rdf-xsd (1.1.2)
       rdf (~> 1.1)
-    request_store (1.1.0)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
     rest-client (1.7.2)
@@ -501,11 +493,10 @@ DEPENDENCIES
   active_fedora_finders (~> 0.5.0)
   active_fedora_relsint!
   arel
-  authlogic (~> 3.4.2)
-  authlogic_wind
   blacklight (~> 5.7.2)
   block_helpers
   bootstrap-sass (>= 3.2)
+  cancan
   capistrano (~> 2.x)
   capybara
   coffee-rails
@@ -518,7 +509,6 @@ DEPENDENCIES
   cul_scv_hydra (~> 0.20.1)
   dalli
   database_cleaner
-  declarative_authorization (= 0.5.3)
   devise
   diff-lcs
   factory_girl

@@ -4,8 +4,8 @@ module Cul::Scv
     def initialize(opts = {})
       self.mime_type = opts[:mime_type]
       self.context = opts[:context]
-      self.content_models = opts[:content_models]
-      self.publisher = opts[:publisher]
+      self.content_models = opts[:content_models] || []
+      self.publisher = opts[:publisher] || []
     end
     def to_h
       return {

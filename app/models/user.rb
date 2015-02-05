@@ -8,10 +8,6 @@ class User < ActiveRecord::Base
 
   scope :admins, -> {where(admin: true)}
 
-  acts_as_authentic do |c|
-    c.validate_password_field = false
-  end
-
   def to_s
     if first_name
       first_name.to_s + ' ' + last_name.to_s
@@ -59,6 +55,9 @@ class User < ActiveRecord::Base
     end
   end
   def role_symbols
-    self.roles.collect {|r| r.role_sym.to_sym}
+    self.roles.collect {|r| r.to_sym}
+  end
+  def role? role_sym
+    role_symbols.detect {|sym| (sym.eql? role_sym.to_sym) || Role.role(sym).include?(role_sym)}
   end
 end

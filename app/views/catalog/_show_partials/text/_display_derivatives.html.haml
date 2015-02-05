@@ -8,7 +8,7 @@
     - resource_list.each do |resource|
       %tr
         %td=resource[:mime_type]
-        - if permitted_to? :fedora_content, Cul::Scv::DownloadProxy.new(resource.merge(context: controller_name)), {:context => :download}
+        - if can? :download, Cul::Scv::DownloadProxy.new(resource.merge(context: controller_name))
           %td
             - if resource[:mime_type].match(/tiff$/) or resource[:mime_type].match(/wav$/) or resource[:mime_type].match(/jp2$/)
               = link_to "[Download]", uri_from_resource_parms(resource, "download")

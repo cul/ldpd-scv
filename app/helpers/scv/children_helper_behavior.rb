@@ -63,7 +63,6 @@ module Scv::ChildrenHelperBehavior
         base_rft.sub!(/^info\:fedora\/datastreams/,ActiveFedora.config.credentials[:datastreams_root])
         base_rft = 'file:' + base_rft unless base_rft =~ /(file|https?)\:\//
         child[:rft_id] = CGI.escape(base_rft)
-        puts rels_int.inspect
         child[:width] ||= rels_int["info:fedora/#{child[:id]}/#{zoom}"].fetch('image_width',[0]).first.to_i
         child[:length] ||= rels_int["info:fedora/#{child[:id]}/#{zoom}"].fetch('image_length',[0]).first.to_i
       end

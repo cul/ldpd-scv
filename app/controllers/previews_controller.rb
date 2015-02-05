@@ -29,7 +29,6 @@ class PreviewsController < ApplicationController
     @response, @document = get_solr_response_for_dc_id
 
     render layout: 'preview'
-    puts @document.inspect
   end
 
   def self.authorized_roles
