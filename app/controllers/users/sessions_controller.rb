@@ -16,10 +16,6 @@ class Users::SessionsController < Devise::SessionsController
     end      
   end
 
-  def wind_logout_url
-    "https://#{UserSession.wind_host}/logout?passthrough=1&destination=" + root_url
-  end
-
   protected
 
   def auth_hash

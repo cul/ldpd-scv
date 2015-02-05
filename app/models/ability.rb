@@ -3,32 +3,52 @@ class Ability
 
   def initialize(user)
     @user = user || User.new # guest user, what about SSL/IP?
-    if @user.role? :"staff:cul.columbia.edu"
-      can :download, Cul::Scv::DownloadProxy do |proxy|
-        proxy.context.to_sym == :catalog &&
-        !(proxy.mime_type.eql?("image/tiff"))
+    Ability.config.select {|role,config| user.role? role }.each do |role, config|
+      if config[:can]
+        config[:can].each do |action, conditions|
+          if conditions.blank?
+            can action, :all
+          else
+            can action, Cul::Scv::DownloadProxy do |proxy|
+              r = true
+              unless conditions[:if].blank?
+                conditions[:if].each do |property, comparison|
+                  comparison.each do |op, value|
+                    r &= (proxy.send property).send(op, value)
+                  end
+                end
+              end
+              unless conditions[:unless].blank?
+                conditions[:unless].each do |property, comparison|
+                  comparison.each do |op, value|
+                    r &= !(proxy.send property).send(op, value)
+                  end
+                end
+              end
+              r
+            end
+          end
+        end
       end
     end
-    if @user.role? :download_tiff
-      can :download, Cul::Scv::DownloadProxy do |proxy|
-        proxy.context.to_sym == :catalog &&
-        proxy.mime_type.eql?("image/tiff")
-      end
+  end
+
+  def self.config
+    @role_proxy_config ||= begin
+      root = (Rails.root.blank?) ? '.' : Rails.root
+      path = File.join(root,'config','roles.yml')
+      _opts = YAML.load_file(path)
+      all_config = _opts.fetch("_all_environments", {})
+      env_config = _opts.fetch(Rails.env, {})
+      all_config.merge(env_config).recursive_symbolize_keys!
     end
-    if @user.role? :download_wav
-      can :download, Cul::Scv::DownloadProxy do |proxy|
-        proxy.context.to_sym == :catalog &&
-        proxy.mime_type.eql?("audio/x-wav")
+  end
+
+  config.each do |k,v|
+    if v[:includes]
+      v[:includes].each do |included|
+        Role.role(k).includes(included.to_sym)
       end
-    end
-    if @user.role? :download_seminars
-      can :download, Cul::Scv::DownloadProxy do |proxy|
-        proxy.publisher.include?("info:fedora/project:usem") ||
-        proxy.context.to_sym == :seminars
-      end
-    end
-    if @user.role? :download_all
-      can :download, Cul::Scv::DownloadProxy
     end
   end
 

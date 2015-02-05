@@ -39,6 +39,7 @@ Scv::Application.routes.draw do
   end
 
   get '/access_denied' => 'welcome#access_denied'
+  get '/logged_out' => 'welcome#logout'
   # match '/thumbnail/:id', :to => 'thumbnail#get'
   resources :thumbs, only: [:show]
   resource :report

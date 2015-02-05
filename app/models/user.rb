@@ -35,7 +35,9 @@ class User < ActiveRecord::Base
 
     return self
   end
-
+  def password
+    SecureRandom.hex[0...20]
+  end
   def self.set_staff!(unis = [])
     unis.each do |uni|
       if (u = User.find_by_login(uni))
@@ -58,6 +60,7 @@ class User < ActiveRecord::Base
     self.roles.collect {|r| r.to_sym}
   end
   def role? role_sym
+    return true if role_sym.eql? :*
     role_symbols.detect {|sym| (sym.eql? role_sym.to_sym) || Role.role(sym).include?(role_sym)}
   end
 end
