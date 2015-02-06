@@ -1,6 +1,7 @@
 -# coding: utf-8
 - resource_list = get_resources(document)
 - if resource_list
+  - proxy_opts = {context: controller_name,publisher: document.fetch(:publisher_ssim, [])}
   %table.table.table-bordered
     %tr
       %th MIME Type
@@ -12,7 +13,7 @@
         %td=resource[:mime_type]
         %td=resource[:dimensions]
         %td=resource[:size]
-        - if can? :download, Cul::Scv::DownloadProxy.new(resource.merge(context: controller_name))
+        - if can? :download, Cul::Scv::DownloadProxy, Cul::Scv::DownloadProxy.new(resource.merge(proxy_opts))
           %td
             - if resource[:mime_type].match(/tiff$/) or resource[:mime_type].match(/wav$/) or resource[:mime_type].match(/jp2$/)
               = link_to "[Download]", uri_from_resource_parms(resource, "download")

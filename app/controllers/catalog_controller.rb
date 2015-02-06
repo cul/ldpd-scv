@@ -19,10 +19,11 @@ class CatalogController < ApplicationController
   layout 'application'
   
   # only requiring roles on :index and :show to allow track action
-  before_filter :require_roles, :only=>[:index, :show]
-  before_filter :cache_docs,  :only=>[:index, :show]
-  before_filter :af_object, :only=>[:show]
-  after_filter :uncache_docs, :only=>[:index, :show]
+  before_filter :authenticate_user!, only:[:index, :show]
+  before_filter :require_roles, only:[:index, :show]
+  before_filter :cache_docs,  only:[:index, :show]
+  before_filter :af_object, only:[:show]
+  after_filter :uncache_docs, only:[:index, :show]
   
   # Whenever an action raises SolrHelper::InvalidSolrID, this block gets executed.
   # Hint: the SolrHelper #get_solr_response_for_doc_id method raises this error,
@@ -35,6 +36,18 @@ class CatalogController < ApplicationController
   rescue_from RSolr::Error::Http, :with => :rsolr_request_error
 
   def home
-    index
+    (@response, @document_list) = get_search_results({})
+
+    respond_to do |format|
+      format.html { }
+      format.rss  { render :layout => false }
+      format.atom { render :layout => false }
+      format.json do
+        render json: render_search_results_as_json
+      end
+
+      additional_response_formats(format)
+      document_export_formats(format)
+    end
   end
 end

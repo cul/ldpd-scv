@@ -13,7 +13,7 @@ module Cul::Scv::Controller
   protected
 
   def check_new_session
-    if(params[:new_session])
+    if(current_user && params[:new_session])
       current_user.set_personal_info_via_ldap
       current_user.save
     end
@@ -73,9 +73,14 @@ module Cul::Scv::Controller
   end
 
   def redirect_to_login
-    redirect_to user_omniauth_authorize_path(provider: omniauth_provider_key)
+    redirect_to user_omniauth_authorize_path(provider: omniauth_provider_key, url:session[:return_to])
   end
 
+  def access_denied
+    flash[:notice] = "You not permitted to access this page"
+    redirect_to root_url
+    return false
+  end
   def http_client
     unless @http_client
       @http_client ||= HTTPClient.new

@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   include ApplicationHelper
   include Devise::Controllers::Helpers
   layout false
-  devise_group :user, contains: [:user, :admin]
+  devise_group :user, contains: [:user]
   # share some methods w/ views via helpers
   helper_method :fedora_config, :solr_config, :relative_root
   helper :all # include all helpers, all the time

@@ -42,8 +42,4 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   end
 
-  def raw_info(strategy, options, ticket, user_info)
-    puts ticket.inspect
-    puts user_info.inspect
-  end
 end

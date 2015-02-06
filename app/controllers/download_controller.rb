@@ -49,7 +49,7 @@ class DownloadController  < ActionController::Base
     dsid = params[:block]
     @resource ||= GenericResource.find(pid)
     @download ||=download_object_for(@resource,context: :catalog)
-    unless can? :download, @download
+    unless can? :download, Cul::Scv::DownloadProxy, @download
       redirect_to access_denied_url
       return
     end

@@ -17,10 +17,6 @@ class Users::SessionsController < Devise::SessionsController
     end
   end
 
-  def a2fter_sign_out_path_for(resource_or_scope)
-    logged_out_path
-  end
-
   protected
 
   def auth_hash
