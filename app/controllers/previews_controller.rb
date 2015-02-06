@@ -31,7 +31,4 @@ class PreviewsController < ApplicationController
     render layout: 'preview'
   end
 
-  def self.authorized_roles
-    @authorized_roles ||= ROLES_CONFIG[:catalog]
-  end
 end

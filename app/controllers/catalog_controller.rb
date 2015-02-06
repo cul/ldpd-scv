@@ -34,8 +34,7 @@ class CatalogController < ApplicationController
   # Example, when the standard query parser is used, and a user submits a "bad" query.
   rescue_from RSolr::Error::Http, :with => :rsolr_request_error
 
-  def self.authorized_roles
-    @authorized_roles ||= ROLES_CONFIG[:catalog]
+  def home
+    index
   end
-
 end

@@ -1,4 +1,5 @@
 class Users::SessionsController < Devise::SessionsController
+  include Scv::OmniauthHelperBehavior
 
   # updates the search counter (allows the show view to paginate)
   def update
@@ -13,7 +14,11 @@ class Users::SessionsController < Devise::SessionsController
       redirect_to :action => "show", :controller => :catalog, :id=>params[:id]
     else
       redirect_to :action => "index", :controller => :catalog
-    end      
+    end
+  end
+
+  def a2fter_sign_out_path_for(resource_or_scope)
+    logged_out_path
   end
 
   protected

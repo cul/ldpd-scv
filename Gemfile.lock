@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: git://github.com/cul/cul_omniauth.git
-  revision: 015f5b7d9cd43358598c53caf18e9c2b31b13f13
+  revision: 9f172ccd2d15aa5b97db4c85690a62f78ce736aa
   branch: master
   specs:
     cul_omniauth (0.0.1)

@@ -1,6 +1,6 @@
 Scv::Application.routes.draw do
 
-  root :to => "catalog#index"
+  root :to => "catalog#home"
   blacklight_for :catalog, :seminars
   devise_for :users, :controllers => {
     omniauth_callbacks: "users/omniauth_callbacks",

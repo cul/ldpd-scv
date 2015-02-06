@@ -30,7 +30,7 @@ module Cul::Scv::Controller
   def require_staff
     if current_user
       unless current_user.cul_staff
-        redirect_to access_denied_url  
+        access_denied  
       end
     elsif !Rails.env.eql?('development')
       store_location
@@ -42,7 +42,7 @@ module Cul::Scv::Controller
   def require_admin
     if current_user
       unless current_user.admin
-        redirect_to access_denied_url  
+        access_denied  
       end
     else
       store_location
@@ -62,9 +62,8 @@ module Cul::Scv::Controller
 
   def require_roles
     if current_user
-      roles = self.class.authorized_roles
       unless can? :"#{controller_name.to_s}##{params[:action].to_s}", Cul::Scv::DownloadProxy
-        redirect_to access_denied_url
+        access_denied
       end
     else
       store_location
@@ -74,8 +73,7 @@ module Cul::Scv::Controller
   end
 
   def redirect_to_login
-    provider = Scv::Application.cas_configuration_opts[:provider]
-    redirect_to user_omniauth_authorize_path(provider: provider)
+    redirect_to user_omniauth_authorize_path(provider: omniauth_provider_key)
   end
 
   def http_client
@@ -83,6 +81,10 @@ module Cul::Scv::Controller
       @http_client ||= HTTPClient.new
     end
     @http_client
+  end
+
+  def omniauth_provider_key
+    @omniauth_provider_key ||= Scv::Application.cas_configuration_opts[:provider]
   end
 
 end

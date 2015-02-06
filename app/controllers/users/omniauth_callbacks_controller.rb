@@ -11,6 +11,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     _result
   end
 
+  def affils(user, affils)
+    affiliations(user, affils)
+  end
   def affiliations(user, affils)
     if set_staff?(affils)
       User.set_staff!([user.login])

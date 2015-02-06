@@ -39,10 +39,6 @@ class ApplicationController < ActionController::Base
     session[:return_to] = nil
   end
 
-  def after_sign_out_path_for(resource_or_scope)
-    logged_out_path
-  end
-
   def openlayers_base
    @olbase ||= 'https://iris.cul.columbia.edu/openlayers'
   end

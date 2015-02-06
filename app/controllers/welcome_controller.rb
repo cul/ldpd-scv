@@ -6,6 +6,8 @@ class WelcomeController < ApplicationController
     dest = URI.escape(dest)
     text = 'Return%20to%20SCV'
     _logout = "https://wind.columbia.edu/logout?destination=#{dest}&destinationtext=#{text}"
-    redirect_to _logout
+    #redirect_to _logout
+  end
+  def access_denied
   end
 end
