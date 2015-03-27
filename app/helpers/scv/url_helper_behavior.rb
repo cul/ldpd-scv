@@ -33,7 +33,7 @@ module Scv
     end
 
     def link_to_mash(doc, opts={:label=>nil, :counter => nil, :results_view => true})
-      opts[:label] ||= blacklight_config.index.show_link.to_sym
+      opts[:label] ||= blacklight_config.index.title_field.to_sym
   # blacklight render_document_index_label will not handle a Symbol key appropriately for a Hash/Mash, and must have a proc
       if opts[:label].instance_of? Symbol
         old_label = opts[:label]

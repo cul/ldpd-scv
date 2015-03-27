@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: git://github.com/cul/cul_omniauth.git
-  revision: b74dd8c326fd45db412aa5cf6e318bc72bf8a339
+  revision: 7a3e1f744ecab05c9b8ad12e9fd3b1b5b9b3b1e9
   branch: master
   specs:
     cul_omniauth (0.0.1)
@@ -85,7 +85,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
-    addressable (2.3.7)
+    addressable (2.3.8)
     arel (6.0.0)
     autoprefixer-rails (5.1.8)
       execjs

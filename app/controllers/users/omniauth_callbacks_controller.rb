@@ -1,7 +1,7 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   include Cul::Omniauth::Callbacks
 
-  AUTOPROVISION = ["cul.cunix.local:columbia.edu","cul2.cunix.local:columbia.edu"]
+  AUTOPROVISION = ["CUNIX_cul","CUNIX_cul2","CUNIX_libinfosys"]
 
   def set_staff?(affils=[])
     _result = false
@@ -15,6 +15,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     affiliations(user, affils)
   end
   def affiliations(user, affils)
+    return unless user && user.login
     if set_staff?(affils)
       User.set_staff!([user.login])
       affils.push("staff:cul.columbia.edu")
