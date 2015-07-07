@@ -2,6 +2,9 @@ Scv::Application.routes.draw do
 
   root :to => "catalog#home"
   blacklight_for :catalog, :seminars
+  get "catalog/:id/proxies" => "catalog#show", as: "catalog_root_proxies".to_sym
+  get "catalog/:id/proxies/*proxy_id" => "catalog#show", as: "catalog_proxy".to_sym, constraints: { proxy_id: /[^\?]+/ }
+
   devise_for :users, :controllers => {
     omniauth_callbacks: "users/omniauth_callbacks",
   }
@@ -46,9 +49,6 @@ Scv::Application.routes.draw do
   
   get '/reports/preview/:category' => 'reports#preview', 
     :category => /(by_collection)/
-  
-  get '/catalog/:id/proxies' => 'catalog#show', as: :root_proxies
-  get '/catalog/:id/proxies/*proxy_id' => 'catalog#show', as: :proxy
 
   get ':controller(/:action(/:id))'
   get ':controller/:action/:id.:format'

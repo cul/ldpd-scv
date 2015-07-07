@@ -1,4 +1,4 @@
-module Cul::Scv
+module Cul
   class DownloadProxy
     attr_accessor :mime_type, :context, :content_models, :publisher
     def initialize(opts = {})

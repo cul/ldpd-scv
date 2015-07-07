@@ -13,7 +13,7 @@
         %td=resource[:mime_type]
         %td=resource[:dimensions]
         %td=resource[:size]
-        - if can? :download, Cul::Scv::DownloadProxy, Cul::Scv::DownloadProxy.new(resource.merge(proxy_opts))
+        - if can? :download, Cul::DownloadProxy, Cul::DownloadProxy.new(resource.merge(proxy_opts))
           %td
             - if resource[:mime_type].match(/tiff$/) or resource[:mime_type].match(/wav$/) or resource[:mime_type].match(/jp2$/)
               = link_to "[Download]", uri_from_resource_parms(resource, "download")

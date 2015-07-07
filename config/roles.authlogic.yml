@@ -1,0 +1,23 @@
+_all_environments:
+  catalog:
+    - "rlb179:users.cul.columbia.edu"
+    - "spd1:users.cul.columbia.edu"
+    - "ba2213:users.cul.columbia.edu"
+    - "staff:scv.cul.columbia.edu"
+    - "staff:cul.columbia.edu"
+  seminars:
+    - "rlb179:users.cul.columbia.edu"
+    - "spd1:users.cul.columbia.edu"
+    - "ba2213:users.cul.columbia.edu"
+    - "staff:scv.cul.columbia.edu"
+    - "staff:cul.columbia.edu"
+    - "sh3040:users.cul.columbia.edu"
+    - "ga2030:users.cul.columbia.edu"
+  previews:
+    - "staff:scv.cul.columbia.edu"
+    - "staff:cul.columbia.edu"
+    - "rlb179:users.cul.columbia.edu"
+    - "spd1:users.cul.columbia.edu"
+    - "ba2213:users.cul.columbia.edu"
+    - "sh3040:users.cul.columbia.edu"
+    - "ga2030:users.cul.columbia.edu"

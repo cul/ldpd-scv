@@ -5,7 +5,7 @@ class ChildrenController < ApplicationController
 
   include Blacklight::Catalog
   include Hydra::Controller::ControllerBehavior
-  include Cul::Scv::Hydra::Resolver
+  include Cul::Hydra::Resolver
   include CatalogHelper
   include ChildrenHelper
 

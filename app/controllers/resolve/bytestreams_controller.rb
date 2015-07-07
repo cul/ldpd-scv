@@ -7,7 +7,7 @@ class Resolve::BytestreamsController < ApplicationController
   include Hydra::Controller::ControllerBehavior
   include Cul::Scv::ApplicationIdBehavior
   include Cul::Scv::RelsIntBehavior
-  include Cul::Scv::Hydra::Resolver
+  include Cul::Hydra::Resolver
   include Cul::Scv::BlacklightConfiguration
   include CatalogHelper
   include ChildrenHelper

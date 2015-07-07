@@ -69,8 +69,7 @@ module Scv::ChildrenHelperBehavior
     end
     return child
   end
-  #TODO: replace this with Cul::Scv::Fedora::FakeObject
-  class IdProxy < Cul::Scv::Fedora::DummyObject
+  class IdProxy < Cul::Hydra::Fedora::DummyObject
     def internal_uri
       @uri ||= "info:fedora/#{@pid}"
     end

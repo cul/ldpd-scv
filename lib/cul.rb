@@ -1,6 +1,7 @@
 module Cul
   require 'cul/fedora'
   require 'cul/scv'
+  autoload :DownloadProxy, 'cul/download_proxy'
 end
 module ActiveFedora
   module Streamable

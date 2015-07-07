@@ -3,6 +3,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   AUTOPROVISION = ["CUNIX_cul","CUNIX_cul2","CUNIX_libinfosys"]
 
+  def developer
+    current_user ||= User.where(login:request.env["omniauth.auth"][:uid].split('@')[0]).first
+    #current_user.staff = true
+    sign_in_and_redirect current_user, :event => :authentication
+  end
+
   def set_staff?(affils=[])
     _result = false
     affils.each { |affil|

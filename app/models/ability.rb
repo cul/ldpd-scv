@@ -9,7 +9,7 @@ class Ability
           if conditions.blank?
             can action, :all
           else
-            can action, Cul::Scv::DownloadProxy do |proxy|
+            can action, Cul::DownloadProxy do |proxy|
               r = true
               unless conditions[:if].blank?
                 conditions[:if].each do |property, comparison|

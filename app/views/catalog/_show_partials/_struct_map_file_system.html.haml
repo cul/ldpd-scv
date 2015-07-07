@@ -1,6 +1,17 @@
-- #cache(struct_metadata_file_system_cache_key(document)) do
-- breadcrumbs().each_with_index do |breadcrumb, ix|
-  - unless ix == 0
-    !="&#187;"
-  = breadcrumb
-= proxies_file_system()
+- ix = -1
+%div.inner.fs-crumbs.well.well-sm
+  - breadcrumbs() do |breadcrumb|
+    - unless (ix += 1) == 0
+      ="&#187;".html_safe
+    = link_to(URI.unescape(breadcrumb[:label]), url_to_proxy(breadcrumb,true), class: "fs-directory")
+  - if params[:proxy_id] && last = params[:proxy_id].split('/').last
+    ="&#187;".html_safe
+    %span.fs-directory= URI.unescape(last)
+%table.file-system.table.table-striped.table-bordered
+  %thead
+    %tr
+      %th{:'data-sort'=>"string", :'data-title'=>"Name"}="Name"
+      %th{:'data-sort'=>"int", :'data-title'=>"Size"}="Size"
+      %th
+  - proxies() do |proxy|
+    = proxy_node(proxy)

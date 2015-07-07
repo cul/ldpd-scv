@@ -144,9 +144,7 @@ GEM
       mime-types (>= 1.16, < 3)
       nokogiri (~> 1.5)
       rails (>= 3, < 5)
-    cul_image_props (0.3.5)
-      nokogiri
-    cul_scv_hydra (0.20.1)
+    cul_hydra (1.0.7)
       active-fedora (~> 7.0)
       active-triples (~> 0.2.2)
       active_fedora_finders (>= 0.5.0)
@@ -156,6 +154,11 @@ GEM
       httpclient
       hydra-head (~> 7)
       mods
+      rdf (>= 1.1.5)
+      sparql (= 1.1.4)
+      thread
+    cul_image_props (0.3.5)
+      nokogiri
     daemons (1.2.2)
     dalli (2.7.4)
     database_cleaner (1.4.1)
@@ -530,9 +533,9 @@ DEPENDENCIES
   crack
   cucumber (>= 0.8.5)
   cucumber-rails (>= 1.0.0)
+  cul_hydra (~> 1.0)
   cul_image_props
   cul_omniauth!
-  cul_scv_hydra (~> 0.20.1)
   dalli
   database_cleaner
   devise

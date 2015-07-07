@@ -62,7 +62,7 @@ module Cul::Scv::Controller
 
   def require_roles
     if current_user
-      unless can? :"#{controller_name.to_s}##{params[:action].to_s}", Cul::Scv::DownloadProxy
+      unless can? :"#{controller_name.to_s}##{params[:action].to_s}", Cul::DownloadProxy
         access_denied
       end
     else

@@ -8,7 +8,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'app','models'))
 libs = File.expand_path(File.dirname(__FILE__) + '/../lib/*.rb')
 require File.expand_path("../../config/environment", __FILE__)
 require 'blacklight'
-require 'cul_scv_hydra'
+require 'cul_hydra'
 require 'rspec/rails'
 require 'rspec/collection_matchers'
 require 'capybara/rspec'

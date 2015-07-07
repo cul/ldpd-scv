@@ -26,3 +26,6 @@ coverage/*
 db/*.sqlite3
 *.tmproj
 *.sw?
+.bundle
+.sass-cache
+sass

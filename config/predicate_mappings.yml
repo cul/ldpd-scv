@@ -55,6 +55,7 @@
     :y_sampling: ySamplingFrequency
     :sampling_unit: samplingFrequencyUnit
   http://purl.org/dc/terms/:
+    :contributor: contributor
     :extent: extent
     :format: format
     :format_of: isFormatOf
@@ -65,6 +66,7 @@
     :x_resolution: xResolution
     :y_resolution: yResolution
     :resolution_unit: resolutionUnit
+    :orientation: orientation
   http://xmlns.com/foaf/0.1/:
     :foaf_image: image
     :foaf_thumbnail: thumbnail
@@ -73,3 +75,5 @@
     :foaf_depiction: depiction
   http://www.w3.org/1999/02/22-rdf-syntax-ns#:
     :rdf_type: type
+  http://www.loc.gov/premis/rdf/v1#:
+    :original_name: hasOriginalName

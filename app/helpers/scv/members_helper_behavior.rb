@@ -32,12 +32,12 @@ module Scv
       end
       klass ||= GenericAggregator
       members = []
-      if klass.include? Cul::Scv::Hydra::Models::Aggregator
+      if klass.include? Cul::Hydra::Models::Aggregator
         agg = klass.load_instance_from_solr(document[:id],document)
         r = agg.parts(response_format: format, rows: rows)
         members = r.collect {|hit| SolrDocument.new(hit) } unless r.blank?
       else
-        Rails.logger.warn("requested members from #{klass}, which is not a Cul::Scv::Hydra::Models::Aggregator")
+        Rails.logger.warn("requested members from #{klass}, which is not a Cul::Hydra::Models::Aggregator")
         return []
       end
       @members = members if memoize

@@ -1,0 +1,67 @@
+_all_environments:
+  'staff:cul.columbia.edu':
+    can:
+      'catalog#index': []
+      'catalog#show': []
+      'previews#index': []
+      'previews#show': []
+      download:
+        unless:
+          mime_type:
+            eql?:
+              - 'image/tiff'
+  download_tiff:
+    can:
+      download:
+        if:
+          mime_type:
+            eql?:
+              - 'image/tiff'
+  seminar_staff:
+    can:
+      'seminars#index': []
+      'seminars#show': []
+      'previews#index': []
+      'previews#show': []
+      download:
+        if:
+          publisher:
+            include?:
+              - "info:fedora/project:usem"
+  'ldpd.cunix.local:columbia.edu':
+    includes:
+      - download_tiff
+  'ba2213:users.cul.columbia.edu':
+    includes:
+      - seminar_staff
+  'dortiz0:users.cul.columbia.edu':
+    includes:
+      - download_tiff
+  'ds2057:users.cul.columbia.edu':
+    includes:
+      - download_tiff
+  'eh2124:users.cul.columbia.edu':
+    includes:
+      - download_tiff
+  'ejs2121:users.cul.columbia.edu':
+    includes:
+      - download_tiff
+  'jeg2:users.cul.columbia.edu':
+    includes:
+      - download_tiff
+  'la2272:users.cul.columbia.edu':
+    includes:
+      - download_tiff
+  'rlb179:users.cul.columbia.edu':
+    includes:
+      - seminar_staff
+  'spd1:users.cul.columbia.edu':
+    includes:
+      - download_all
+      - seminar_staff
+  'sh3040:users.cul.columbia.edu':
+    includes:
+      - seminar_staff
+  'ga2030:users.cul.columbia.edu':
+    includes:
+      - seminar_staff
