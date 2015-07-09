@@ -49,8 +49,8 @@ module Scv
   end
 #-- END OVERRIDE --#
     def download_link(node, label, *classes)
-      dl_proxy = proxy_to_download(node)
-      if can?(:fedora_content, dl_proxy, {:context => :download} ) and node['pid']
+      dl_proxy = proxy_to_download(node,{:context => :download})
+      if can?(:download, dl_proxy, {:context => :download} ) and node['pid']
         args = {uri: node['pid'], filename:node['label_ssi'], block: 'content'}
         args = dl_proxy.to_h.merge(args)
         href = uri_from_resource_parms(args, "download")
@@ -63,31 +63,32 @@ module Scv
     def proxy_node(node)
       filesize = node['extent'] ? proxy_extent(node).html_safe : ''
       label = node['label_ssi']
-      if node["type_ssim"].include? RDF::NFO[:'#FileDataObject']
-        # file
-        if node['pid']
-          content_tag(:tr,nil) do
-            c = ('<td data-title="Name">'+download_link(node, label, ['fs-file',html_class_for_filename(node['label_ssi'])])+' '+ 
-              link_to('<span class="glyphicon glyphicon-info-sign"></span>'.html_safe, url_to_item(node['pid'],{return_to_filesystem:request.original_url}), title: 'Item permanent link')+
-              '</td>').html_safe
-            c += ('<td data-title="Size" data-sort-value="'+node['extent'].to_s+'">'+filesize+'</td>').html_safe
-            #c += content_tag(:a, 'Preview', href: '#', 'data-url'=>url_to_preview(node['pid']), class: 'preview') do 
-            #  content_tag(:i,nil,class:'glyphicon glyphicon-info-sign')
-            #end
-            if node.fetch('format',[]).first =~ /^image/
-              c << ('<td data-title="Thumbnail"><img style="width:100px" src="' << thumbnail_url({id: node['pid']},{type:'square',size:100}) << '"/></td>').html_safe
-            else
-              c << '<td data-title="Thumbnail"></td>'.html_safe
+      content_tag(:tr) do
+        if node["type_ssim"].include? RDF::NFO[:'#FileDataObject']
+          # file
+          if node['pid']
+            c = content_tag(:td,:"data-title"=>'Name') do
+              d = download_link(node, label, ['fs-file',html_class_for_filename(node['label_ssi'])])
+              d << content_tag(:a,title: 'Item permanent link',href:url_to_item(node['pid'],{return_to_filesystem:request.original_url})) do
+                '&nbsp;'.html_safe << content_tag(:span,nil,class:"glyphicon glyphicon-info-sign")
+              end
             end
-            c
+            c << content_tag(:td,filesize, :"data-title" => 'Size', :"data-sort-value" => node['extent'].to_s)
+
+            c << content_tag(:td,class:'fs-file') do
+              if node.fetch('format',[]).first =~ /^image/
+                content_tag(:a, href: '#', :'data-label' => label,:'data-uri'=>thumbnail_url({id: node['pid']},{type:'scaled',size:150}),:"data-id"=>node['pid'], :"data-trigger" => 'focus',class: 'preview') do 
+                  content_tag(:i,'Preview',class:'glyphicon')
+                end
+              end
+            end
           end
-        end
-      else
-        # folder
-        content_tag(:tr, nil) do
-          c = ('<td data-title="Name">'+link_to(label, url_to_proxy({id: node['proxyIn_ssi'].sub('info:fedora/',''), proxy_id: node['id']}), class: 'fs-directory')+'</td>').html_safe
-          c += ('<td data-title="Size" data-sort-value="'+node['extent'].to_s+'">'+filesize+'</td><td></td>').html_safe
-          #content_tag(:a, label, href: url_to_proxy({id: node['proxyIn_ssi'].sub('info:fedora/',''), proxy_id: node['id']}))
+        else # folder
+          c = content_tag(:td,:"data-title"=>'Name') do
+            link_to(label, url_to_proxy({id: node['proxyIn_ssi'].sub('info:fedora/',''), proxy_id: node['id']}), class: 'fs-directory')
+          end
+          c << content_tag(:td,filesize,:"data-title"=>'Size',:"data-sort-value"=>node['extent'].to_s)
+          c << content_tag(:td,nil)
         end
       end
     end

@@ -9,13 +9,15 @@ SCV.Filesystem.folderHandler = function(){
 }
 SCV.Filesystem.fileHandler = function(){
   //TODO: modal for files
-  SCV.Filesystem.modalPreview($(this).attr('data-id'));
+  SCV.Filesystem.popoverPreview($(this),$(this).attr('data-uri'));
   return false;
 }
 SCV.Filesystem.bindHandlers = function() {
-  window.console.log("bindHandlers")
+  window.console.log("bindHandlers");
   //$('LI.fs-directory A').bind('click', SCV.Filesystem.folderHandler);
-  $('LI.fs-file A.preview').bind('click', SCV.Filesystem.fileHandler);
+  var prevent = function(e) {e.preventDefault(); return true;};
+  $('.fs-file A.preview').bind('click', prevent);
+  $('.fs-file A.preview').each(SCV.Filesystem.popoverPreview);
 }
 SCV.Filesystem.modalPreview = function(dataId){
 
@@ -35,5 +37,12 @@ SCV.Filesystem.modalPreview = function(dataId){
   });
 
   return false;
+};
+SCV.Filesystem.popoverPreview = function(index){
+  var dataUri = $(this).attr('data-uri');
+  var label = $(this).attr('data-label');
+  var image = '<div class="thumbnail"><img src="' + dataUri + '"/></div><div class="caption">' + label + '</div>';
+  window.console.log("popoverPreview " + image);
+  $(this).popover({placement: 'bottom', content: image, html: true});
 };
 $(window).load(SCV.Filesystem.bindHandlers);
