@@ -15,7 +15,6 @@ class Ability
                 unless conditions[:if].blank?
                   conditions[:if].each do |property, comparison|
                     comparison.each do |op, value|
-                      puts "p = proxy.send #{property}"
                       p = proxy.send property
                       r &= (p && p.send(op, value))
                     end
