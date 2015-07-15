@@ -45,4 +45,11 @@ SCV.Filesystem.popoverPreview = function(index){
   window.console.log("popoverPreview " + image);
   $(this).popover({placement: 'bottom', content: image, html: true});
 };
+SCV.Filesystem.showLazy = function() {
+  //$("img.lazy").show().lazyload();
+  $("img.lazy").show().lazyload({
+    effect : "fadeIn"
+  });
+};
 $(window).load(SCV.Filesystem.bindHandlers);
+$(window).load(SCV.Filesystem.showLazy);

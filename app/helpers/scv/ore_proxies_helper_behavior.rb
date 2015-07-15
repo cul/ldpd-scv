@@ -78,7 +78,7 @@ module Scv
             c << content_tag(:td,class:'fs-file') do
               if node.fetch('format',[]).first =~ /^image/
                 content_tag(:a, href: '#', :'data-label' => label,:'data-uri'=>thumbnail_url({id: node['pid']},{type:'scaled',size:150}),:"data-id"=>node['pid'], :"data-trigger" => 'focus',class: 'preview') do 
-                  content_tag(:i,'Preview',class:'glyphicon')
+                  image_tag(nil, class: 'lazy preview', :"data-original" => thumbnail_url({id: node['pid']},{type:'square',size:100}), width: 100, height: 100)
                 end
               end
             end

@@ -17,5 +17,7 @@
 //= require jquery-ui
 //= require_tree ./colorbox
 //= require scv/filesystem.js
+//= require lazyload/jquery.lazyload.js
+//= require lazyload/jquery.scrollstop.js
 
 

@@ -1,0 +1,6 @@
+img.lazy {
+    display: none;
+}
+a.preview img.lazy:hover {
+	cursor:zoom-in;
+}
