@@ -10,18 +10,22 @@ class Ability
             can action, :all
           else
             can action, Cul::DownloadProxy do |proxy|
-              r = true
-              unless conditions[:if].blank?
-                conditions[:if].each do |property, comparison|
-                  comparison.each do |op, value|
-                    r &= (proxy.send property).send(op, value)
+              r = !!proxy
+              if r
+                unless conditions[:if].blank?
+                  conditions[:if].each do |property, comparison|
+                    comparison.each do |op, value|
+                      puts "p = proxy.send #{property}"
+                      p = proxy.send property
+                      r &= (p && p.send(op, value))
+                    end
                   end
                 end
-              end
-              unless conditions[:unless].blank?
-                conditions[:unless].each do |property, comparison|
-                  comparison.each do |op, value|
-                    r &= !(proxy.send property).send(op, value)
+                unless conditions[:unless].blank?
+                  conditions[:unless].each do |property, comparison|
+                    comparison.each do |op, value|
+                      r &= !(proxy.send property).send(op, value)
+                    end
                   end
                 end
               end
