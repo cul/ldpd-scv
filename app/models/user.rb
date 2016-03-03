@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
   end
 
   def login
-    uid
+    self.uid
   end
 
   def password
@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
 
   def self.set_staff!(unis = [])
     unis.each do |uni|
-      if (u = User.find(uid: uni))
+      if (u = User.find_by(uid: uni))
         u.update_attributes(:email => uni + "@columbia.edu", :cul_staff => true)
       else
         u = User.create!(:uid => uni, :wind_login => uni, :email => uni + "@columbia.edu", :cul_staff => true, :password => SecureRandom.base64(8))
@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
 
   def self.unset_staff!(unis = [])
     unis.each do |uni|
-      if (u = User.find(uid: uni))
+      if (u = User.find_by(uid: uni))
         u.update_attributes(:email => uni + "@columbia.edu", :cul_staff => false)
       else
         u = User.create!(:uid => uni, :wind_login => uni, :email => uni + "@columbia.edu", :cul_staff => false, :password => SecureRandom.base64(8))

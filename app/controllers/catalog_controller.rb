@@ -19,7 +19,7 @@ class CatalogController < ApplicationController
   layout 'application'
   
   # only requiring roles on :index and :show to allow track action
-  before_filter :authenticate_user!, only:[:index, :show]
+  #before_filter :authenticate_user!, only:[:index, :show]
   before_filter :require_roles, only:[:index, :show]
   before_filter :cache_docs,  only:[:index, :show]
   before_filter :af_object, only:[:show]

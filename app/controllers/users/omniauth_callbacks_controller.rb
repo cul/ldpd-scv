@@ -4,9 +4,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   AUTOPROVISION = ["CUNIX_cul","CUNIX_cul2","CUNIX_libinfosys"]
 
   def developer
-    current_user ||= User.where(login:request.env["omniauth.auth"][:uid].split('@')[0]).first
+    @current_user ||= User.find_or_create(provider: 'developer', uid:request.env["omniauth.auth"][:uid].split('@')[0]).first
     #current_user.staff = true
-    sign_in_and_redirect current_user, :event => :authentication
+
+    sign_in_and_redirect current_user, event: :authentication
   end
 
   def set_staff?(affils=[])
@@ -20,6 +21,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def affils(user, affils)
     affiliations(user, affils)
   end
+
   def affiliations(user, affils)
     return unless user && user.login
     if set_staff?(affils)

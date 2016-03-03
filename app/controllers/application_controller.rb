@@ -9,8 +9,11 @@ class ApplicationController < ActionController::Base
   include Cul::Scv::Controller
   include ApplicationHelper
   include Devise::Controllers::Helpers
+  include Cul::Omniauth::AuthorizingController
+  include Cul::Omniauth::RemoteIpAbility
+
   layout false
-  devise_group :user, contains: [:user]
+
   # share some methods w/ views via helpers
   helper_method :fedora_config, :solr_config, :relative_root
   helper :all # include all helpers, all the time
@@ -28,15 +31,6 @@ class ApplicationController < ActionController::Base
         nil
       end
     end
-  end
-
-  def store_location
-    session[:return_to] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}"
-  end
-
-  def redirect_back_or_default(default)
-    redirect_to(session[:return_to] || default)
-    session[:return_to] = nil
   end
 
   def openlayers_base
