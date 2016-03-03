@@ -35,6 +35,10 @@ class User < ActiveRecord::Base
     return self
   end
 
+  def login
+    uid
+  end
+
   def password
     Devise.friendly_token[0,20]
   end
