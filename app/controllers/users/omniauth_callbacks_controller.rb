@@ -1,7 +1,12 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   include Cul::Omniauth::Callbacks
 
-  AUTOPROVISION = ["CUNIX_cul","CUNIX_cul2","CUNIX_libinfosys"]
+  AUTOPROVISION = [
+    "CUNIX_cul","CUNIX_cul2","CUNIX_libinfosys",
+    "cul.cunix.local:columbia.edu",
+    "cul2.cunix.local:columbia.edu",
+    "libinfosys.cunix.local:columbia.edu"    
+  ]
 
   def developer
     @current_user ||= User.find_or_create(provider: 'developer', uid:request.env["omniauth.auth"][:uid].split('@')[0]).first
