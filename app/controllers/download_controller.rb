@@ -3,6 +3,8 @@ require 'cul_hydra'
 require 'cul'
 class DownloadController  < ActionController::Base
   include Cul::Scv::Controller
+  include Cul::Omniauth::AuthorizingController
+  include Cul::Omniauth::RemoteIpAbility
 
   helper_method :user_session, :current_user, :fedora_config, :solr_config, :relative_root # share some methods w/ views via helpers
   helper :all # include all helpers, all the time

@@ -36,7 +36,11 @@ class User < ActiveRecord::Base
   end
 
   def login
-    self.uid
+    self.uid.split('@').first
+  end
+
+  def email
+    super || "#{login}@columbia.edu"
   end
 
   def password
