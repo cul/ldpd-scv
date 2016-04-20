@@ -3,17 +3,18 @@ require 'spec_helper'
 describe Ability do
   let(:user) do
     user = User.new
-    allow(user).to receive(:role_symbols) { [:foo]}
+    allow(user).to receive(:role_symbols) { [:foo] }
+    allow(user).to receive(:uid) { "test-user@users.org" }
     user
   end
   let(:ok_proxy) do
-    ok_proxy = Cul::DownloadProxy.new
+    ok_proxy = Cul::Omniauth::AbilityProxy.new
     ok_proxy.context = :fedora_content
     ok_proxy.mime_type = "image/jpeg"
     ok_proxy
   end
   let(:no_proxy) do
-    ok_proxy = Cul::DownloadProxy.new
+    ok_proxy = Cul::Omniauth::AbilityProxy.new
     ok_proxy.context = :fedora_content
     ok_proxy.mime_type = "image/tiff"
     ok_proxy
@@ -21,7 +22,7 @@ describe Ability do
   subject { Ability.new(user)}
   describe '#can?' do
     it do
-      subject.can :download, Cul::DownloadProxy do |proxy|
+      subject.can :download, Cul::Omniauth::AbilityProxy do |proxy|
         proxy.context == :fedora_content &&
           !(proxy.mime_type.eql?"image/tiff")
       end

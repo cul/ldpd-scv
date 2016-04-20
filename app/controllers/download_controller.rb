@@ -51,7 +51,7 @@ class DownloadController  < ActionController::Base
     dsid = params[:block]
     @resource ||= GenericResource.find(pid)
     @download ||=download_object_for(@resource,context: :catalog)
-    unless can? :download, Cul::DownloadProxy, @download
+    unless can? :download, Cul::Omniauth::AbilityProxy, @download
       redirect_to access_denied_url
       return
     end
@@ -122,7 +122,7 @@ class DownloadController  < ActionController::Base
     opts[:mime_type] = generic_resource.datastreams['content'].mimeType if generic_resource.datastreams['content']
     opts[:content_models] = generic_resource.relationships(:has_model).collect {|rel| rel.to_s}
     opts[:publisher] = generic_resource.relationships(:publisher).collect {|rel| rel.to_s}
-    Cul::DownloadProxy.new(opts)
+    Cul::Omniauth::AbilityProxy.new(opts)
   end
 end
 
