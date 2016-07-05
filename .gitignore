@@ -1,3 +1,6 @@
+/bundle
+/images
+/public
 config/database.yml
 config/fedora.yml
 config/fedora_credentials.yml

@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 gem 'ruby-prof'
-gem 'rails', '~>4.1'
+gem 'rails', '~>4.2'
 gem 'actionpack-action_caching'
 gem 'dalli'
 gem 'rack-handlers'

@@ -551,7 +551,7 @@ DEPENDENCIES
   rack
   rack-handlers
   rack-test
-  rails (~> 4.1)
+  rails (~> 4.2)
   rake
   rsolr
   rsolr-ext
