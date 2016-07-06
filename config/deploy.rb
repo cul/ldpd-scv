@@ -1,67 +1,65 @@
-set :default_stage, "scv_dev"
-set :stages, %w(scv_dev scv_test scv_prod)
+lock '3.5.0'
 
-require 'capistrano/ext/multistage'
-require 'bundler/capistrano'
-require 'date'
+set :department, 'ldpd'
+set :instance, fetch(:department)
+set :application, 'scv'
+set :repo_name, "#{fetch(:department)}-#{fetch(:application)}"
+set :deploy_name, "#{fetch(:application)}_#{fetch(:stage)}"
+set :rails_env, fetch(:deploy_name)
+set :repo_url,  "git@github.com:cul/#{fetch(:repo_name)}.git"
 
-default_run_options[:pty] = true
+set :remote_user, "#{fetch(:instance)}serv"
+# Default deploy_to directory is /var/www/:application
+# set :deploy_to, '/var/www/my_app_name'
+set :deploy_to,   "/opt/passenger/#{fetch(:instance)}/#{fetch(:deploy_name)}"
 
-set :application, "scv"
-set :branch do
-  default_tag = `git tag`.split("\n").last
+# Default value for :scm is :git
+# set :scm, :git
 
-  tag = Capistrano::CLI.ui.ask "Tag to deploy (make sure to push the tag first): [#{default_tag}] "
-  tag = default_tag if tag.empty?
-  tag
-end
-set :scm, :git
-set :git_enable_submodules, 1
-set :deploy_via, :remote_cache
-set :repository,  "git@github.com:cul/cul-scv.git"
-set :use_sudo, false
+# Default value for :format is :pretty
+# set :format, :pretty
+
+# Default value for :log_level is :debug
+# set :log_level, :debug
+set :log_level, :info
+
+# Default value for linked_dirs is []
+set :linked_dirs, fetch(:linked_dirs, []).push('log')
+
+# Default value for keep_releases is 5
+set :keep_releases, 3
+
+set :passenger_restart_with_touch, true
+
+set :linked_files, fetch(:linked_files, []).push(
+  "config/database.yml",
+  "config/secrets.yml",
+  "config/solr.yml",
+  "config/fedora.yml",
+  "config/cas.yml",
+  "config/roles.yml",
+  "config/images.yml",
+  "config/role_map.yml"
+)
 
 namespace :deploy do
-  desc "Add tag based on current version"
-  task :auto_tag, :roles => :app do
-    current_version = 'v' +
-                      IO.read("VERSION").strip +
-                      "/" +
-                      DateTime.now.strftime("%Y%m%d")
-    tag = Capistrano::CLI.ui.ask "Tag to add: [#{current_version}] "
-    tag = current_version if tag.empty?
+  desc "Report the environment"
+  task :report do
+    run_locally do
+      puts "cap called with stage = \"#{fetch(:stage,'none')}\""
+      puts "cap would deploy to = \"#{fetch(:deploy_to,'none')}\""
+      puts "cap would install from #{fetch(:repo_url)}"
+      puts "cap would install in Rails env #{fetch(:rails_env)}"
+    end
+  end
+
+  desc "Add tag based on current version from VERSION file"
+  task :auto_tag do
+    current_version = "v#{IO.read("VERSION").strip}/#{DateTime.now.strftime("%Y%m%d")}"
+                      
+    ask(:tag, current_version)
+    tag = fetch(:tag)
 
     system("git tag -a #{tag} -m 'auto-tagged' && git push origin --tags")
   end
-  desc "Restart Application"
-  task :restart, :roles => :app do
-    run "mkdir -p #{current_path}/tmp/cookies"
-    run "touch #{current_path}/tmp/restart.txt"
-  end
-
-  task :symlink_shared do
-    run "ln -nfs #{deploy_to}shared/secret_token.rb #{release_path}/config/initializers/secret_token.rb"
-    run "ln -nfs #{deploy_to}shared/database.yml #{release_path}/config/database.yml"
-    run "ln -nfs #{deploy_to}shared/fedora_credentials.yml #{release_path}/config/fedora_credentials.yml"
-    run "ln -nfs #{deploy_to}shared/fedora.yml #{release_path}/config/fedora.yml"
-    run "ln -nfs #{deploy_to}shared/images.yml #{release_path}/config/images.yml"
-    run "ln -nfs #{deploy_to}shared/solr.yml #{release_path}/config/solr.yml"
-    run "ln -nfs #{deploy_to}shared/app_config.yml #{release_path}/config/app_config.yml"
-    run "ln -nfs #{deploy_to}shared/role_map_#{rails_env}.yml #{release_path}/config/role_map_#{rails_env}.yml"
-    run "ln -nfs #{deploy_to}shared/roles.yml #{release_path}/config/roles.yml"
-    run "ln -nfs #{deploy_to}shared/cas.yml #{release_path}/config/cas.yml"
-    run "mkdir -p #{release_path}/db"
-    run "ln -nfs #{deploy_to}shared/#{rails_env}.sqlite3 #{release_path}/db/#{rails_env}.sqlite3"
-  end
-
-  desc "Compile assets"
-  task :assets do
-    run "cd #{release_path}; RAILS_ENV=#{rails_env} bundle exec rake db:migrate assets:clean assets:precompile"
-  end
-
-
 end
-
-
-after 'deploy:update_code', 'deploy:symlink_shared'
-before 'deploy:create_symlink', 'deploy:assets'

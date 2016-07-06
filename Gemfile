@@ -55,7 +55,15 @@ gem 'block_helpers'
 gem 'sanitize'
 gem 'thread', :git=>'git@github.com:meh/ruby-thread.git', :branch=>'master'
 group :development, :test do
-  gem 'capistrano', '~>2.x'
+  gem 'capistrano', '~>3.x', require: false
+# Rails and Bundler integrations were moved out from Capistrano 3
+  gem 'capistrano-rails', '~> 1.1', require: false
+  gem 'capistrano-bundler', '~> 1.1', require: false
+  # "idiomatic support for your preferred ruby version manager"
+  gem 'capistrano-rvm', '~> 0.1', require: false
+  # The `deploy:restart` hook for passenger applications is now in a separate gem
+  # Just add it to your Gemfile and require it in your Capfile.
+  gem 'capistrano-passenger', '~> 0.1', require: false
   gem 'capybara'
   gem 'yard'
   gem 'jettywrapper', ">= 1.4.1"
