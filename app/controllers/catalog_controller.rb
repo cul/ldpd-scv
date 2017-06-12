@@ -15,7 +15,7 @@ class CatalogController < ApplicationController
   configure_blacklight do |config|
     configure_for_scv(config)
   end
-
+  self.solr_search_params_logic += [:fetch_configured_index_fields]
   layout 'application'
   
   # only requiring roles on :index and :show to allow track action

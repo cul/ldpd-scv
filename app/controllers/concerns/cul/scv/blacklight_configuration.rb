@@ -19,6 +19,16 @@ require 'blacklight'
 
 module Cul::Scv::BlacklightConfiguration
   extend ActiveSupport::Concern
+
+  def fetch_configured_index_fields(solr_parameters, user_parameters)
+    index_fields = [:id, :score]
+    self.class.blacklight_config.index_fields.each do |field|
+      index_fields << field.first
+    end
+
+    solr_parameters[:fl] = index_fields.join(',') unless user_parameters[:fl].present?
+  end
+
   module ClassMethods
   def dependent_facet(controller, config, display_facet)
     config[:only] and facet_in_params?(config[:only])
