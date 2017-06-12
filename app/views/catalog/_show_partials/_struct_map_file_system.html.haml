@@ -3,7 +3,7 @@
   - breadcrumbs() do |breadcrumb|
     - unless (ix += 1) == 0
       ="&#187;".html_safe
-    = link_to(URI.unescape(breadcrumb[:label]), url_to_proxy(breadcrumb,true), class: "fs-directory")
+    = link_to(URI.unescape(breadcrumb[:label]), url_to_proxy(breadcrumb), class: "fs-directory")
   - if params[:proxy_id] && last = params[:proxy_id].split('/').last
     ="&#187;".html_safe
     %span.fs-directory= URI.unescape(last)
