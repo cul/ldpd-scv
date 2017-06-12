@@ -6,10 +6,10 @@ module Scv
     proxy_in = opts[:id]
     proxy_uri = "info:fedora/#{proxy_in}"
     proxy_id = opts[:proxy_id]
-    proxy_in_query = "proxyIn_ssi:#{RSolr.escape(proxy_uri)}"
+    proxy_in_query = "proxyIn_ssi:#{RSolr.solr_escape(proxy_uri)}"
     f = [proxy_in_query]
     if proxy_id
-      f << "belongsToContainer_ssi:#{RSolr.escape(proxy_id)}"
+      f << "belongsToContainer_ssi:#{RSolr.solr_escape(proxy_id)}"
     else
       f << "-belongsToContainer_ssi:*"
     end
