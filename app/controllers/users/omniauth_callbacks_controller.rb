@@ -9,10 +9,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   ]
 
   def developer
-    @current_user ||= User.find_or_create(provider: 'developer', uid:request.env["omniauth.auth"][:uid].split('@')[0]).first
-    #current_user.staff = true
+    @current_user ||= User.first_or_initialize(provider: 'developer', uid:request.env["omniauth.auth"][:uid].split('@')[0])
 
-    sign_in_and_redirect current_user, event: :authentication
+    sign_in_and_redirect @current_user, event: :authentication
   end
 
   def set_staff?(affils=[])
