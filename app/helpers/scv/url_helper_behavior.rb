@@ -91,9 +91,12 @@ module Scv
     end
 
     def thumbnail_url(document, opts = {})
-      opts = {type: 'scaled', size: 200}.merge(opts)
-      @img_service ||= IMG_CONFIG['url']
-      "#{@img_service}/#{document[:id]}/#{opts[:type]}/#{opts[:size]}.jpg"
+      @random ||= Random.new
+      opts = {region: 'featured', size: '!256,256'}.merge(opts)
+      img_service = IMG_CONFIG['url'].sub('{x}', @random.rand(1..4).to_s)
+puts IMG_CONFIG.inspect
+puts img_service
+      "#{img_service}/#{document[:id]}/#{opts[:region]}/#{opts[:size]}/0/native.jpg"
     end
   end
 end

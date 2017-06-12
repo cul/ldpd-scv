@@ -78,8 +78,8 @@ module Scv
             c << content_tag(:td,class:'fs-file') do
               node['format'] = MIME::Types.type_for(node['label_ssi']).collect {|x| x.content_type} unless node.fetch('format',[]).first
               if node['format'].first =~ /^image/
-                content_tag(:a, href: '#', :'data-label' => label,:'data-uri'=>thumbnail_url({id: node['pid']},{type:'scaled',size:150}),:"data-id"=>node['pid'], :"data-trigger" => 'focus',class: 'preview') do 
-                  image_tag(nil, class: 'lazy preview', :"data-original" => thumbnail_url({id: node['pid']},{type:'square',size:100}), width: 100, height: 100)
+                content_tag(:a, href: '#', :'data-label' => label,:'data-uri'=>thumbnail_url({id: node['pid']},{region:'full'}),:"data-id"=>node['pid'], :"data-trigger" => 'focus',class: 'preview') do
+                  image_tag(nil, class: 'lazy preview', :"data-original" => thumbnail_url({id: node['pid']},{type:'featured'}), width: 100, height: 100)
                 end
               end
             end
