@@ -3,6 +3,6 @@
     var viewer = OpenSeadragon({
         id: "openseadragon1",
         prefixUrl: "/images/openseadragon/",
-        tileSources: "https://repository-cache.cul.columbia.edu/iiif/1.1/<%= params[:id] %>/info.json"
+        tileSources: "<%= iiif_info_url(params) %>"
     });
 </script>

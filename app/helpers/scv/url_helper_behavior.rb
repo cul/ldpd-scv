@@ -90,13 +90,18 @@ module Scv
       link_to label, {controller: controller, id:object.pid}, :'data-counter' => opts[:counter]
     end
 
-    def thumbnail_url(document, opts = {})
+    def iiif_service_url
       @random ||= Random.new
+      IMG_CONFIG['url'].sub('{x}', @random.rand(1..4).to_s)
+    end
+
+    def thumbnail_url(document, opts = {})
       opts = {region: 'featured', size: '!256,256'}.merge(opts)
-      img_service = IMG_CONFIG['url'].sub('{x}', @random.rand(1..4).to_s)
-puts IMG_CONFIG.inspect
-puts img_service
-      "#{img_service}/#{document[:id]}/#{opts[:region]}/#{opts[:size]}/0/native.jpg"
+      "#{iiif_service_url}/#{document[:id]}/#{opts[:region]}/#{opts[:size]}/0/native.jpg"
+    end
+
+    def iiif_info_url(document, opts = {})
+      "#{iiif_service_url}/#{document[:id]}/info.json"
     end
   end
 end
