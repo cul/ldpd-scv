@@ -48,7 +48,7 @@ gem 'rsolr-ext' # Default to using the version required by Blacklight
 gem 'rubydora', '>=1.8.0'
 gem 'RedCloth', '>=4.2.3'
 gem 'scrypt'
-gem 'solr-ruby' 
+gem 'solr-ruby'
 gem 'term-ansicolor'
 gem 'xml-simple'
 gem 'block_helpers'
@@ -65,9 +65,8 @@ group :development, :test do
   # Just add it to your Gemfile and require it in your Capfile.
   gem 'capistrano-passenger', '~> 0.1', require: false
   gem 'capybara'
-  gem 'yard'
   gem 'jettywrapper', ">= 1.4.1"
-  gem 'rspec', '>= 2.0.0'  
+  gem 'rspec', '>= 2.0.0'
   gem 'rspec-rails', '>= 2.0.0' # rspec-rails 2.0.0 requires Rails 3.
   gem 'rspec-collection_matchers'
   gem 'poltergeist'
