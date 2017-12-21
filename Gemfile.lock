@@ -287,8 +287,7 @@ GEM
     multi_test (0.1.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
-    mysql (2.9.1)
-    mysql2 (0.3.18)
+    mysql2 (0.4.5)
     net-http-persistent (2.9.4)
     net-ldap (0.11)
     net-scp (1.2.1)
@@ -559,8 +558,7 @@ DEPENDENCIES
   loggable
   mime-types
   multipart-post
-  mysql
-  mysql2
+  mysql2 (= 0.4.5)
   net-ldap (>= 0.1.1)
   nokogiri
   om (>= 1.4.0)

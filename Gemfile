@@ -35,7 +35,7 @@ gem 'json_pure', '>1.4.3'
 gem 'loggable'
 gem 'mime-types'
 gem 'multipart-post'
-gem 'mysql'
+gem 'mysql2', '0.4.5'
 gem 'net-ldap', '>=0.1.1'
 gem 'nokogiri' # Default to using the version required by Blacklight
 gem 'om', '>=1.4.0'
@@ -83,6 +83,4 @@ group :assets do
   gem 'coffee-rails'
   gem 'uglifier', '>= 1.0.3'
 end
-group :scv_dev, :scv_test, :scv_prod do
-  gem 'mysql2'
-end
+
