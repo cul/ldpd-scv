@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 gem 'ruby-prof'
-gem 'rails', '~>4.2'
+gem 'rails', '~> 4.2.8'
 gem 'actionpack-action_caching'
 gem 'dalli'
 gem 'rack-handlers'
@@ -13,7 +13,7 @@ gem 'actionmailer'
 gem 'sass'
 gem 'sass-rails', '~>4.0.2'
 gem 'bootstrap-sass', '>= 3.2'
-gem 'jquery-rails', '>= 3.0'
+gem 'jquery-rails', '~> 4.0.4'
 gem 'jquery-ui-rails'
 gem "unicode", :platforms => [:mri_18, :mri_19]
 gem "hydra-head", "~>7"
@@ -48,7 +48,7 @@ gem 'rsolr-ext' # Default to using the version required by Blacklight
 gem 'rubydora', '>=1.8.0'
 gem 'RedCloth', '>=4.2.3'
 gem 'scrypt'
-gem 'solr-ruby' 
+gem 'solr-ruby'
 gem 'term-ansicolor'
 gem 'xml-simple'
 gem 'block_helpers'
@@ -65,9 +65,9 @@ group :development, :test do
   # Just add it to your Gemfile and require it in your Capfile.
   gem 'capistrano-passenger', '~> 0.1', require: false
   gem 'capybara'
-  gem 'yard'
   gem 'jettywrapper', ">= 1.4.1"
-  gem 'rspec', '>= 2.0.0'  
+  gem 'rubyzip', "~> 1.2.1" # Forcing use of 1.2.1, because all previous version present a vurnability.
+  gem 'rspec', '>= 2.0.0'
   gem 'rspec-rails', '>= 2.0.0' # rspec-rails 2.0.0 requires Rails 3.
   gem 'rspec-collection_matchers'
   gem 'poltergeist'
