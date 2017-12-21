@@ -13,7 +13,7 @@ gem 'actionmailer'
 gem 'sass'
 gem 'sass-rails', '~>4.0.2'
 gem 'bootstrap-sass', '>= 3.2'
-gem 'jquery-rails', '>= 3.0'
+gem 'jquery-rails', '~> 4.0.4'
 gem 'jquery-ui-rails'
 gem "unicode", :platforms => [:mri_18, :mri_19]
 gem "hydra-head", "~>7"
