@@ -436,7 +436,7 @@ GEM
       mime-types
       nokogiri
       rest-client
-    rubyzip (1.1.7)
+    rubyzip (1.2.1)
     safe_yaml (1.0.4)
     sanitize (3.1.2)
       crass (~> 1.0.1)
@@ -577,6 +577,7 @@ DEPENDENCIES
   rspec-rails (>= 2.0.0)
   ruby-prof
   rubydora (>= 1.8.0)
+  rubyzip (~> 1.2.1)
   sanitize
   sass
   sass-rails (~> 4.0.2)

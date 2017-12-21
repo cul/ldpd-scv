@@ -66,6 +66,7 @@ group :development, :test do
   gem 'capistrano-passenger', '~> 0.1', require: false
   gem 'capybara'
   gem 'jettywrapper', ">= 1.4.1"
+  gem 'rubyzip', "~> 1.2.1" # Forcing use of 1.2.1, because all previous version present a vurnability.
   gem 'rspec', '>= 2.0.0'
   gem 'rspec-rails', '>= 2.0.0' # rspec-rails 2.0.0 requires Rails 3.
   gem 'rspec-collection_matchers'
